@@ -11,9 +11,9 @@ class ExportClassTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             class BasicClass
     """, ExpectedOutputFile(
                 path = "foo/bar/js/BasicClass.kt",
@@ -24,15 +24,20 @@ class ExportClassTest {
         import foo.bar.BasicClass as CommonBasicClass
         
         @JsExport
-        public class BasicClass()
+        public class BasicClass() {
+            internal lateinit var common: CommonBasicClass
         
-        public fun CommonBasicClass.export() = BasicClass(
+            init {
+                common = CommonBasicClass()}
         
-        )
+            internal constructor(common: CommonBasicClass) : this() {
+                this.common = common
+            }
+        }
         
-        public fun BasicClass.`import`() = CommonBasicClass(
+        public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
         
-        )
+        public fun BasicClass.importBasicClass() = this.common
     """.trimIndent()
             )
         )
@@ -43,9 +48,9 @@ class ExportClassTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             class BasicClass(val id: String)
     """, ExpectedOutputFile(
                 path = "foo/bar/js/BasicClass.kt",
@@ -58,16 +63,28 @@ class ExportClassTest {
         
         @JsExport
         public class BasicClass(
+            id: String
+        ) {
+            internal lateinit var common: CommonBasicClass
+        
+            init {
+                if (id != deezer.kmp.dynamicNull) {
+                    common = CommonBasicClass(
+                        id = id
+                    )
+                }}
+        
             public val id: String
-        )
+                get() = common.id
         
-        public fun CommonBasicClass.export() = BasicClass(
-            id
-        )
+            internal constructor(common: CommonBasicClass) : this(id = deezer.kmp.dynamicNull) {
+                this.common = common
+            }
+        }
         
-        public fun BasicClass.`import`() = CommonBasicClass(
-            id
-        )
+        public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
+        
+        public fun BasicClass.importBasicClass() = this.common
     """.trimIndent()
             )
         )
@@ -80,7 +97,7 @@ class ExportClassTest {
             package foo.bar
             import another.Export
 
-            @Export
+            @KustomExport
             class BasicClass(val id: String)
     """
         )
@@ -93,10 +110,10 @@ class ExportClassTest {
             """
             package foo.bar
             
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
             import kotlin.Any
 
-            @Export
+            @KustomExport
             class BasicClass: Any {
                 override val str: String
             }
@@ -106,21 +123,28 @@ class ExportClassTest {
         package foo.bar.js
 
         import kotlin.String
+        import kotlin.js.Any
         import kotlin.js.JsExport
         import foo.bar.BasicClass as CommonBasicClass
         
         @JsExport
-        public class BasicClass(
-            public override val str: String
-        ) : Any
+        public class BasicClass() : Any {
+            internal lateinit var common: CommonBasicClass
         
-        public fun CommonBasicClass.export() = BasicClass(
-            str
-        )
+            init {
+                common = CommonBasicClass()}
         
-        public fun BasicClass.`import`() = CommonBasicClass(
-            str
-        )
+            public val str: String
+                get() = common.str
+        
+            internal constructor(common: CommonBasicClass) : this() {
+                this.common = common
+            }
+        }
+        
+        public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
+        
+        public fun BasicClass.importBasicClass() = this.common
     """.trimIndent()
             )
         )

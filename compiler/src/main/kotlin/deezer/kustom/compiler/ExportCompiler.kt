@@ -12,6 +12,7 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import deezer.kustom.KustomExport
 import deezer.kustom.compiler.js.pattern.`class`.parseClass
 import deezer.kustom.compiler.js.pattern.`class`.transform
 import deezer.kustom.compiler.js.pattern.`interface`.parseInterface
@@ -36,7 +37,7 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val passId = Random.nextLong()
         val symbols = try {
-            resolver.getSymbolsWithAnnotation(environment.options["annotation"] ?: "")
+            resolver.getSymbolsWithAnnotation(environment.options["annotation"] ?: KustomExport::class.qualifiedName!!)
         } catch (e: Exception) {
             devLog("WTF? ${e.message} // ${e.stackTraceToString()}")
             return emptyList()

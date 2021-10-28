@@ -11,9 +11,9 @@ class ExportedTypesTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface MyLongInterface {
                 var myLong: Long
             }
@@ -33,29 +33,29 @@ class ExportedTypesTest {
         }
         
         private class ImportedMyLongInterface(
-            internal val myLongInterface: MyLongInterface
+            internal val exported: MyLongInterface
         ) : CommonMyLongInterface {
             public override var myLong: Long
-                get() = myLongInterface.myLong.toLong()
+                get() = exported.myLong.toLong()
                 set(`value`) {
-                    myLongInterface.myLong = value.toDouble()
+                    exported.myLong = value.toDouble()
                 }
         }
         
         private class ExportedMyLongInterface(
-            internal val myLongInterface: CommonMyLongInterface
+            internal val common: CommonMyLongInterface
         ) : MyLongInterface {
             public override var myLong: Double
-                get() = myLongInterface.myLong.toDouble()
+                get() = common.myLong.toDouble()
                 set(`value`) {
-                    myLongInterface.myLong = value.toLong()
+                    common.myLong = value.toLong()
                 }
         }
         
-        public fun CommonMyLongInterface.export() = (this as? ImportedMyLongInterface)?.myLongInterface ?:
-                ExportedMyLongInterface(this)
+        public fun CommonMyLongInterface.exportMyLongInterface() = (this as?
+                ImportedMyLongInterface)?.exported ?: ExportedMyLongInterface(this)
         
-        public fun MyLongInterface.`import`() = (this as? ExportedMyLongInterface)?.myLongInterface ?:
+        public fun MyLongInterface.importMyLongInterface() = (this as? ExportedMyLongInterface)?.common ?:
                 ImportedMyLongInterface(this)
     """.trimIndent()
             )
@@ -67,9 +67,9 @@ class ExportedTypesTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface MyLongInterface {
                 var myLong: Long?
             }
@@ -77,7 +77,7 @@ class ExportedTypesTest {
                 path = "foo/bar/js/MyLongInterface.kt",
                 content = """
         package foo.bar.js
-
+        
         import kotlin.Double
         import kotlin.Long
         import kotlin.js.JsExport
@@ -89,29 +89,29 @@ class ExportedTypesTest {
         }
         
         private class ImportedMyLongInterface(
-            internal val myLongInterface: MyLongInterface
+            internal val exported: MyLongInterface
         ) : CommonMyLongInterface {
             public override var myLong: Long?
-                get() = myLongInterface.myLong?.toLong()
+                get() = exported.myLong?.toLong()
                 set(`value`) {
-                    myLongInterface.myLong = value?.toDouble()
+                    exported.myLong = value?.toDouble()
                 }
         }
         
         private class ExportedMyLongInterface(
-            internal val myLongInterface: CommonMyLongInterface
+            internal val common: CommonMyLongInterface
         ) : MyLongInterface {
             public override var myLong: Double?
-                get() = myLongInterface.myLong?.toDouble()
+                get() = common.myLong?.toDouble()
                 set(`value`) {
-                    myLongInterface.myLong = value?.toLong()
+                    common.myLong = value?.toLong()
                 }
         }
         
-        public fun CommonMyLongInterface.export() = (this as? ImportedMyLongInterface)?.myLongInterface ?:
-                ExportedMyLongInterface(this)
+        public fun CommonMyLongInterface.exportMyLongInterface() = (this as?
+                ImportedMyLongInterface)?.exported ?: ExportedMyLongInterface(this)
         
-        public fun MyLongInterface.`import`() = (this as? ExportedMyLongInterface)?.myLongInterface ?:
+        public fun MyLongInterface.importMyLongInterface() = (this as? ExportedMyLongInterface)?.common ?:
                 ImportedMyLongInterface(this)
     """.trimIndent()
             )
@@ -123,9 +123,9 @@ class ExportedTypesTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface MyStringsInterface {
                 var myStrings: List<String>
             }
@@ -146,30 +146,30 @@ class ExportedTypesTest {
         }
         
         private class ImportedMyStringsInterface(
-            internal val myStringsInterface: MyStringsInterface
+            internal val exported: MyStringsInterface
         ) : CommonMyStringsInterface {
             public override var myStrings: List<String>
-                get() = myStringsInterface.myStrings.map { it }
+                get() = exported.myStrings.map { it }
                 set(`value`) {
-                    myStringsInterface.myStrings = value.map { it }.toTypedArray()
+                    exported.myStrings = value.map { it }.toTypedArray()
                 }
         }
         
         private class ExportedMyStringsInterface(
-            internal val myStringsInterface: CommonMyStringsInterface
+            internal val common: CommonMyStringsInterface
         ) : MyStringsInterface {
             public override var myStrings: Array<String>
-                get() = myStringsInterface.myStrings.map { it }.toTypedArray()
+                get() = common.myStrings.map { it }.toTypedArray()
                 set(`value`) {
-                    myStringsInterface.myStrings = value.map { it }
+                    common.myStrings = value.map { it }
                 }
         }
         
-        public fun CommonMyStringsInterface.export() = (this as?
-                ImportedMyStringsInterface)?.myStringsInterface ?: ExportedMyStringsInterface(this)
+        public fun CommonMyStringsInterface.exportMyStringsInterface() = (this as?
+                ImportedMyStringsInterface)?.exported ?: ExportedMyStringsInterface(this)
         
-        public fun MyStringsInterface.`import`() = (this as? ExportedMyStringsInterface)?.myStringsInterface
-                ?: ImportedMyStringsInterface(this)
+        public fun MyStringsInterface.importMyStringsInterface() = (this as?
+                ExportedMyStringsInterface)?.common ?: ImportedMyStringsInterface(this)
     """.trimIndent()
             )
         )
@@ -180,9 +180,9 @@ class ExportedTypesTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface MyLongsInterface {
                 var myLongs: List<Long>
             }
@@ -204,30 +204,30 @@ class ExportedTypesTest {
         }
         
         private class ImportedMyLongsInterface(
-            internal val myLongsInterface: MyLongsInterface
+            internal val exported: MyLongsInterface
         ) : CommonMyLongsInterface {
             public override var myLongs: List<Long>
-                get() = myLongsInterface.myLongs.map { it.toLong() }
+                get() = exported.myLongs.map { it.toLong() }
                 set(`value`) {
-                    myLongsInterface.myLongs = value.map { it.toDouble() }.toTypedArray()
+                    exported.myLongs = value.map { it.toDouble() }.toTypedArray()
                 }
         }
         
         private class ExportedMyLongsInterface(
-            internal val myLongsInterface: CommonMyLongsInterface
+            internal val common: CommonMyLongsInterface
         ) : MyLongsInterface {
             public override var myLongs: Array<Double>
-                get() = myLongsInterface.myLongs.map { it.toDouble() }.toTypedArray()
+                get() = common.myLongs.map { it.toDouble() }.toTypedArray()
                 set(`value`) {
-                    myLongsInterface.myLongs = value.map { it.toLong() }
+                    common.myLongs = value.map { it.toLong() }
                 }
         }
         
-        public fun CommonMyLongsInterface.export() = (this as? ImportedMyLongsInterface)?.myLongsInterface
-                ?: ExportedMyLongsInterface(this)
+        public fun CommonMyLongsInterface.exportMyLongsInterface() = (this as?
+                ImportedMyLongsInterface)?.exported ?: ExportedMyLongsInterface(this)
         
-        public fun MyLongsInterface.`import`() = (this as? ExportedMyLongsInterface)?.myLongsInterface ?:
-                ImportedMyLongsInterface(this)
+        public fun MyLongsInterface.importMyLongsInterface() = (this as? ExportedMyLongsInterface)?.common
+                ?: ImportedMyLongsInterface(this)
     """.trimIndent()
             )
         )
@@ -246,10 +246,10 @@ class ExportedTypesTest {
                     "SachaInterface.kt", """
                 package pokedex
                 
-                import deezer.kmp.Export
+                import deezer.kustom.KustomExport
                 import pokemon.Pikachu
     
-                @Export
+                @KustomExport
                 interface SachaInterface {
                     var pika: Pikachu
                 }
@@ -266,7 +266,10 @@ class ExportedTypesTest {
                 
                 import kotlin.js.JsExport
                 import pokemon.js.Pikachu
+                import pokemon.js.exportPikachu
+                import pokemon.js.importPikachu
                 import pokedex.SachaInterface as CommonSachaInterface
+                import pokemon.Pikachu as CommonPikachu
                 
                 @JsExport
                 public external interface SachaInterface {
@@ -274,29 +277,29 @@ class ExportedTypesTest {
                 }
                 
                 private class ImportedSachaInterface(
-                    internal val sachaInterface: SachaInterface
+                    internal val exported: SachaInterface
                 ) : CommonSachaInterface {
-                    public override var pika: pokemon.Pikachu
-                        get() = sachaInterface.pika.import()
+                    public override var pika: CommonPikachu
+                        get() = exported.pika.importPikachu()
                         set(`value`) {
-                            sachaInterface.pika = value.export()
+                            exported.pika = value.exportPikachu()
                         }
                 }
                 
                 private class ExportedSachaInterface(
-                    internal val sachaInterface: CommonSachaInterface
+                    internal val common: CommonSachaInterface
                 ) : SachaInterface {
                     public override var pika: Pikachu
-                        get() = sachaInterface.pika.export()
+                        get() = common.pika.exportPikachu()
                         set(`value`) {
-                            sachaInterface.pika = value.import()
+                            common.pika = value.importPikachu()
                         }
                 }
                 
-                public fun CommonSachaInterface.export() = (this as? ImportedSachaInterface)?.sachaInterface ?:
-                        ExportedSachaInterface(this)
+                public fun CommonSachaInterface.exportSachaInterface() = (this as? ImportedSachaInterface)?.exported
+                        ?: ExportedSachaInterface(this)
                 
-                public fun SachaInterface.`import`() = (this as? ExportedSachaInterface)?.sachaInterface ?:
+                public fun SachaInterface.importSachaInterface() = (this as? ExportedSachaInterface)?.common ?:
                         ImportedSachaInterface(this)
     """.trimIndent()
                 )

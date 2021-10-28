@@ -12,9 +12,9 @@ class ExportEnumTest {
             """
             package foo.bar
             
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             enum class Season {
                 SPRING,
                 SUMMER,
@@ -36,20 +36,20 @@ class ExportEnumTest {
         ) {
             public val name: String = value.name
         }
-
-        public fun Season.`import`() = value
-
-        public fun CommonSeason.export() = Season(this)
-
+        
+        public fun Season.importSeason() = value
+        
+        public fun CommonSeason.exportSeason() = Season(this)
+        
         @JsExport
         public object Seasons {
-            public val SPRING: Season = CommonSeason.SPRING.export()
-
-            public val SUMMER: Season = CommonSeason.SUMMER.export()
-
-            public val AUTUMN: Season = CommonSeason.AUTUMN.export()
-
-            public val WINTER: Season = CommonSeason.WINTER.export()
+            public val SPRING: Season = CommonSeason.SPRING.exportSeason()
+        
+            public val SUMMER: Season = CommonSeason.SUMMER.exportSeason()
+        
+            public val AUTUMN: Season = CommonSeason.AUTUMN.exportSeason()
+        
+            public val WINTER: Season = CommonSeason.WINTER.exportSeason()
         }
     """.trimIndent()
             )

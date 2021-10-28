@@ -6,33 +6,15 @@ import org.junit.Test
 @KotlinPoetKspPreview
 class ExportInterfaceTest {
 
-
-    @Test
-    fun foo() {
-        assertCompilationOutput(
-            """
-            package flux
-            
-            import deezer.kmp.Export
-
-            @Export
-            interface Exportable {
-                fun bar(flux: List<Flux>)
-            }
-    """, ExpectedOutputFile(
-                path = "flux/js/Exportable.kt",
-                content = ""))
-    }
-
     @Test
     fun emptyInterface() {
         assertCompilationOutput(
             """
             package flux
             
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface Exportable
     """, ExpectedOutputFile(
                 path = "flux/js/Exportable.kt",
@@ -46,17 +28,17 @@ class ExportInterfaceTest {
             public external interface Exportable
             
             private class ImportedExportable(
-                internal val exportable: Exportable
+                internal val exported: Exportable
             ) : CommonExportable
             
             private class ExportedExportable(
-                internal val exportable: CommonExportable
+                internal val common: CommonExportable
             ) : Exportable
             
-            public fun CommonExportable.export() = (this as? ImportedExportable)?.exportable ?:
+            public fun CommonExportable.exportExportable() = (this as? ImportedExportable)?.exported ?:
                     ExportedExportable(this)
             
-            public fun Exportable.`import`() = (this as? ExportedExportable)?.exportable ?:
+            public fun Exportable.importExportable() = (this as? ExportedExportable)?.common ?:
                     ImportedExportable(this)
     """.trimIndent()
             )
@@ -69,9 +51,9 @@ class ExportInterfaceTest {
             """
             package flux
             
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface BasicInterface {
                 val flex: String
             }
@@ -79,7 +61,7 @@ class ExportInterfaceTest {
                 path = "flux/js/BasicInterface.kt",
                 content = """
             package flux.js
-    
+            
             import kotlin.String
             import kotlin.js.JsExport
             import flux.BasicInterface as CommonBasicInterface
@@ -90,23 +72,23 @@ class ExportInterfaceTest {
             }
             
             private class ImportedBasicInterface(
-                internal val basicInterface: BasicInterface
+                internal val exported: BasicInterface
             ) : CommonBasicInterface {
                 public override val flex: String
-                    get() = basicInterface.flex
+                    get() = exported.flex
             }
             
             private class ExportedBasicInterface(
-                internal val basicInterface: CommonBasicInterface
+                internal val common: CommonBasicInterface
             ) : BasicInterface {
                 public override val flex: String
-                    get() = basicInterface.flex
+                    get() = common.flex
             }
             
-            public fun CommonBasicInterface.export() = (this as? ImportedBasicInterface)?.basicInterface ?:
-                    ExportedBasicInterface(this)
+            public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
+                    ?: ExportedBasicInterface(this)
             
-            public fun BasicInterface.`import`() = (this as? ExportedBasicInterface)?.basicInterface ?:
+            public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                     ImportedBasicInterface(this)
     """.trimIndent()
             )
@@ -119,9 +101,9 @@ class ExportInterfaceTest {
             """
             package flux
             
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface BasicInterface {
                 var canChange: String
             }
@@ -129,7 +111,7 @@ class ExportInterfaceTest {
                 path = "flux/js/BasicInterface.kt",
                 content = """
             package flux.js
-    
+            
             import kotlin.String
             import kotlin.js.JsExport
             import flux.BasicInterface as CommonBasicInterface
@@ -140,29 +122,29 @@ class ExportInterfaceTest {
             }
             
             private class ImportedBasicInterface(
-                internal val basicInterface: BasicInterface
+                internal val exported: BasicInterface
             ) : CommonBasicInterface {
                 public override var canChange: String
-                    get() = basicInterface.canChange
+                    get() = exported.canChange
                     set(`value`) {
-                        basicInterface.canChange = value
+                        exported.canChange = value
                     }
             }
             
             private class ExportedBasicInterface(
-                internal val basicInterface: CommonBasicInterface
+                internal val common: CommonBasicInterface
             ) : BasicInterface {
                 public override var canChange: String
-                    get() = basicInterface.canChange
+                    get() = common.canChange
                     set(`value`) {
-                        basicInterface.canChange = value
+                        common.canChange = value
                     }
             }
             
-            public fun CommonBasicInterface.export() = (this as? ImportedBasicInterface)?.basicInterface ?:
-                    ExportedBasicInterface(this)
+            public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
+                    ?: ExportedBasicInterface(this)
             
-            public fun BasicInterface.`import`() = (this as? ExportedBasicInterface)?.basicInterface ?:
+            public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                     ImportedBasicInterface(this)
     """.trimIndent()
             )
@@ -175,9 +157,9 @@ class ExportInterfaceTest {
             """
             package flux
             
-            import deezer.kmp.Export
+            import deezer.kustom.KustomExport
 
-            @Export
+            @KustomExport
             interface BasicInterface {
                 var numbers: List<Long>
             }
@@ -185,7 +167,7 @@ class ExportInterfaceTest {
                 path = "flux/js/BasicInterface.kt",
                 content = """
             package flux.js
-    
+            
             import kotlin.Array
             import kotlin.Double
             import kotlin.Long
@@ -199,29 +181,29 @@ class ExportInterfaceTest {
             }
             
             private class ImportedBasicInterface(
-                internal val basicInterface: BasicInterface
+                internal val exported: BasicInterface
             ) : CommonBasicInterface {
                 public override var numbers: List<Long>
-                    get() = basicInterface.numbers.map { it.toLong() }
+                    get() = exported.numbers.map { it.toLong() }
                     set(`value`) {
-                        basicInterface.numbers = value.map { it.toDouble() }.toTypedArray()
+                        exported.numbers = value.map { it.toDouble() }.toTypedArray()
                     }
             }
             
             private class ExportedBasicInterface(
-                internal val basicInterface: CommonBasicInterface
+                internal val common: CommonBasicInterface
             ) : BasicInterface {
                 public override var numbers: Array<Double>
-                    get() = basicInterface.numbers.map { it.toDouble() }.toTypedArray()
+                    get() = common.numbers.map { it.toDouble() }.toTypedArray()
                     set(`value`) {
-                        basicInterface.numbers = value.map { it.toLong() }
+                        common.numbers = value.map { it.toLong() }
                     }
             }
             
-            public fun CommonBasicInterface.export() = (this as? ImportedBasicInterface)?.basicInterface ?:
-                    ExportedBasicInterface(this)
+            public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
+                    ?: ExportedBasicInterface(this)
             
-            public fun BasicInterface.`import`() = (this as? ExportedBasicInterface)?.basicInterface ?:
+            public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                     ImportedBasicInterface(this)
     """.trimIndent()
             )
@@ -245,10 +227,10 @@ class ExportInterfaceTest {
                     content = """
                         package flux
                         
-                        import deezer.kmp.Export
+                        import deezer.kustom.KustomExport
                         import bar.Bar
             
-                        @Export
+                        @KustomExport
                         interface BasicInterface {
                             fun foo(bar: Bar)
                         }
@@ -260,8 +242,10 @@ class ExportInterfaceTest {
                     path = "flux/js/BasicInterface.kt",
                     content = """
                         package flux.js
-                
+                        
                         import bar.js.Bar
+                        import bar.js.exportBar
+                        import bar.js.importBar
                         import kotlin.Unit
                         import kotlin.js.JsExport
                         import bar.Bar as CommonBar
@@ -273,25 +257,25 @@ class ExportInterfaceTest {
                         }
                         
                         private class ImportedBasicInterface(
-                            internal val basicInterface: BasicInterface
+                            internal val exported: BasicInterface
                         ) : CommonBasicInterface {
-                            public override fun foo(bar: CommonBar): Unit = basicInterface.foo(
-                                bar = bar.export()
+                            public override fun foo(bar: CommonBar): Unit = exported.foo(
+                                bar = bar.exportBar()
                             )
                         }
                         
                         private class ExportedBasicInterface(
-                            internal val basicInterface: CommonBasicInterface
+                            internal val common: CommonBasicInterface
                         ) : BasicInterface {
-                            public override fun foo(bar: Bar): Unit = basicInterface.foo(
-                                bar = bar.import()
+                            public override fun foo(bar: Bar): Unit = common.foo(
+                                bar = bar.importBar()
                             )
                         }
                         
-                        public fun CommonBasicInterface.export() = (this as? ImportedBasicInterface)?.basicInterface ?:
-                                ExportedBasicInterface(this)
+                        public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
+                                ?: ExportedBasicInterface(this)
                         
-                        public fun BasicInterface.`import`() = (this as? ExportedBasicInterface)?.basicInterface ?:
+                        public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                                 ImportedBasicInterface(this)
                 """.trimIndent()
                 )
@@ -316,10 +300,10 @@ class ExportInterfaceTest {
                     content = """
                         package flux
                         
-                        import deezer.kmp.Export
+                        import deezer.kustom.KustomExport
                         import bar.Bar
             
-                        @Export
+                        @KustomExport
                         interface BasicInterface {
                             fun foo(bar: Bar): List<Long>
                         }
@@ -331,8 +315,10 @@ class ExportInterfaceTest {
                     path = "flux/js/BasicInterface.kt",
                     content = """
                         package flux.js
-                
+                        
                         import bar.js.Bar
+                        import bar.js.exportBar
+                        import bar.js.importBar
                         import kotlin.Array
                         import kotlin.Double
                         import kotlin.Long
@@ -347,25 +333,25 @@ class ExportInterfaceTest {
                         }
                         
                         private class ImportedBasicInterface(
-                            internal val basicInterface: BasicInterface
+                            internal val exported: BasicInterface
                         ) : CommonBasicInterface {
-                            public override fun foo(bar: CommonBar): List<Long> = basicInterface.foo(
-                                bar = bar.export()
+                            public override fun foo(bar: CommonBar): List<Long> = exported.foo(
+                                bar = bar.exportBar()
                             ).map { it.toLong() }
                         }
                         
                         private class ExportedBasicInterface(
-                            internal val basicInterface: CommonBasicInterface
+                            internal val common: CommonBasicInterface
                         ) : BasicInterface {
-                            public override fun foo(bar: Bar): Array<Double> = basicInterface.foo(
-                                bar = bar.import()
+                            public override fun foo(bar: Bar): Array<Double> = common.foo(
+                                bar = bar.importBar()
                             ).map { it.toDouble() }.toTypedArray()
                         }
                         
-                        public fun CommonBasicInterface.export() = (this as? ImportedBasicInterface)?.basicInterface ?:
-                                ExportedBasicInterface(this)
+                        public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
+                                ?: ExportedBasicInterface(this)
                         
-                        public fun BasicInterface.`import`() = (this as? ExportedBasicInterface)?.basicInterface ?:
+                        public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                                 ImportedBasicInterface(this)
                 """.trimIndent()
                 )

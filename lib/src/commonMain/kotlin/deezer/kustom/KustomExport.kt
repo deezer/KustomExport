@@ -13,6 +13,6 @@ enum class ExportMode {
 
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
-internal annotation class KustomExport(
+annotation class KustomExport(
     val mode: ExportMode = ExportMode.IMPORT_EXPORT
 )

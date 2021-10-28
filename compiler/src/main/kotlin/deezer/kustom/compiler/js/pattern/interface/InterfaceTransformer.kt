@@ -74,7 +74,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         )
         .addType(
             buildWrapperClass(
-                delegateName = "targetJs",//delegateName,
+                delegateName = "exported",
                 originalClass = originalClass,
                 import = true,
                 properties = origin.properties,
@@ -93,7 +93,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         .addFunction(
             FunSpec.builder("export${origin.classSimpleName}")
                 .receiver(originalClass)
-                .addStatement("return (this as? ${importedClass.simpleName})?.targetJs ?: ${exportedClass.simpleName}(this)")
+                .addStatement("return (this as? ${importedClass.simpleName})?.exported ?: ${exportedClass.simpleName}(this)")
                 .build()
         )
         .addFunction(
