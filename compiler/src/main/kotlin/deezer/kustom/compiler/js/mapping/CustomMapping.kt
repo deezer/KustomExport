@@ -1,8 +1,5 @@
 package deezer.kustom.compiler.js.mapping
 
-import deezer.kustom.compiler.firstParameterizedType
-import deezer.kustom.compiler.js.mapping.CustomMappings.MappingOutput
-import deezer.kustom.compiler.js.pattern.qdot
 import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.ClassName
@@ -15,15 +12,18 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
+import deezer.kustom.compiler.firstParameterizedType
+import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
+import deezer.kustom.compiler.js.pattern.qdot
 
 const val INDENTATION = "    "
 
-//val FUNCTION1 = ClassName("kotlin", "Function1")
+// val FUNCTION1 = ClassName("kotlin", "Function1")
 val EXCEPTION = ClassName("kotlin", "Exception")
 val EXCEPTION_JS = ClassName("deezer.kmp", "Exception")
 
 fun initCustomMapping() {
-    CustomMappings.mappings += mapOf<TypeName, MappingOutput>(
+    TypeMapping.mappings += mapOf<TypeName, MappingOutput>(
         STRING to MappingOutput(
             exportType = { STRING },
             importMethod = { "" },
@@ -57,9 +57,9 @@ fun initCustomMapping() {
             exportMethod = { "${it.qdot}toDouble()" },
         ),
         LIST to MappingOutput(
-            exportType = { ARRAY.parameterizedBy(CustomMappings.exportedType(it.firstParameterizedType())) },
-            importMethod = { "${it.qdot}map { it${CustomMappings.importMethod(it.firstParameterizedType())} }" },
-            exportMethod = { "${it.qdot}map { it${CustomMappings.exportMethod(it.firstParameterizedType())} }${it.qdot}toTypedArray()" },
+            exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(it.firstParameterizedType())) },
+            importMethod = { "${it.qdot}map { it${TypeMapping.importMethod(it.firstParameterizedType())} }" },
+            exportMethod = { "${it.qdot}map { it${TypeMapping.exportMethod(it.firstParameterizedType())} }${it.qdot}toTypedArray()" },
         ),
         EXCEPTION to MappingOutput(
             exportType = { EXCEPTION_JS },

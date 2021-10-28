@@ -1,21 +1,21 @@
 package deezer.kustom.compiler.js.pattern.`interface`
 
-import deezer.kustom.compiler.Logger
-import deezer.kustom.compiler.js.InterfaceDescriptor
-import deezer.kustom.compiler.js.MethodNameDisambiguation
-import deezer.kustom.compiler.js.jsExport
-import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.CustomMappings.exportedType
-import deezer.kustom.compiler.js.mapping.INDENTATION
-import deezer.kustom.compiler.js.pattern.autoImport
-import deezer.kustom.compiler.js.pattern.buildWrapperClass
-import deezer.kustom.compiler.js.pattern.toFunSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.InterfaceDescriptor
+import deezer.kustom.compiler.js.MethodNameDisambiguation
+import deezer.kustom.compiler.js.jsExport
+import deezer.kustom.compiler.js.jsPackage
+import deezer.kustom.compiler.js.mapping.INDENTATION
+import deezer.kustom.compiler.js.mapping.TypeMapping.exportedType
+import deezer.kustom.compiler.js.pattern.autoImport
+import deezer.kustom.compiler.js.pattern.buildWrapperClass
+import deezer.kustom.compiler.js.pattern.toFunSpec
 import java.util.Locale
 
 fun InterfaceDescriptor.transform() = transformInterface(this)
@@ -28,7 +28,6 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
     val importedClass = ClassName(jsClassPackage, "Imported${origin.classSimpleName}")
     val exportedClass = ClassName(jsClassPackage, "Exported${origin.classSimpleName}")
-
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(originalClass, "Common${origin.classSimpleName}")
@@ -60,15 +59,15 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                     origin.functions
                         .filter { !it.isOverride }
                         .forEach { func ->
-                        builder.addFunction(
-                            func.toFunSpec(
-                                body = false,
-                                import = false,
-                                delegateName = delegateName,
-                                mnd = mnd
+                            builder.addFunction(
+                                func.toFunSpec(
+                                    body = false,
+                                    import = false,
+                                    delegateName = delegateName,
+                                    mnd = mnd
+                                )
                             )
-                        )
-                    }
+                        }
                 }
                 .build()
         )
@@ -83,7 +82,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         )
         .addType(
             buildWrapperClass(
-                delegateName = "common",//delegateName,
+                delegateName = "common", // delegateName,
                 originalClass = originalClass,
                 import = false,
                 properties = origin.properties,

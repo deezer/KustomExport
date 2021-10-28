@@ -21,7 +21,8 @@ class ExportEnumTest {
                 AUTUMN,
                 WINTER
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/Season.kt",
                 content = """
         package foo.bar.js
@@ -51,7 +52,7 @@ class ExportEnumTest {
         
             public val WINTER: Season = CommonSeason.WINTER.exportSeason()
         }
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }

@@ -1,16 +1,16 @@
 package deezer.kustom.compiler.js.pattern
 
-import deezer.kustom.compiler.js.FunctionDescriptor
-import deezer.kustom.compiler.js.MethodNameDisambiguation
-import deezer.kustom.compiler.js.PropertyDescriptor
-import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.CustomMappings
-import deezer.kustom.compiler.js.mapping.INDENTATION
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.js.FunctionDescriptor
+import deezer.kustom.compiler.js.MethodNameDisambiguation
+import deezer.kustom.compiler.js.PropertyDescriptor
+import deezer.kustom.compiler.js.jsPackage
+import deezer.kustom.compiler.js.mapping.INDENTATION
+import deezer.kustom.compiler.js.mapping.TypeMapping
 
 fun FunctionDescriptor.toFunSpec(
     body: Boolean,
@@ -21,29 +21,29 @@ fun FunctionDescriptor.toFunSpec(
 ): FunSpec {
     val funExportedName = mnd.getMethodName(this)
     val fb = FunSpec.builder(if (!import) funExportedName else name)
-        .returns(if (import) returnType else CustomMappings.exportedType(returnType))
+        .returns(if (import) returnType else TypeMapping.exportedType(returnType))
 
     if (forceOverride || isOverride) {
         fb.addModifiers(KModifier.OVERRIDE)
     } // else = interface defines the method
 
     parameters.forEach {
-        fb.addParameter(it.name, if (import) it.type else CustomMappings.exportedType(it.type))
+        fb.addParameter(it.name, if (import) it.type else TypeMapping.exportedType(it.type))
     }
 
     if (body) {
         val funcName = if (import) funExportedName else name
         fb.addStatement(
             "return $delegateName.$funcName(${
-                parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
-                    INDENTATION + it.name + " = " + it.name + if (import) CustomMappings.exportMethod(it.type) else CustomMappings.importMethod(
-                        it.type
-                    )
-                })
-            })${if (import) CustomMappings.importMethod(returnType) else CustomMappings.exportMethod(returnType)}"
+            parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
+                INDENTATION + it.name + " = " + it.name + if (import) TypeMapping.exportMethod(it.type) else TypeMapping.importMethod(
+                    it.type
+                )
+            })
+            })${if (import) TypeMapping.importMethod(returnType) else TypeMapping.exportMethod(returnType)}"
         )
     }
-return fb.build()
+    return fb.build()
 }
 
 fun buildWrapperClass(
@@ -96,22 +96,22 @@ fun overrideGetterSetter(
     prop: PropertyDescriptor,
     target: String,
     import: Boolean,
-    forceOverride: Boolean// true for interface
+    forceOverride: Boolean // true for interface
 ): PropertySpec {
     val fieldName = prop.name
-    val exportedType = CustomMappings.exportedType(prop.type)
+    val exportedType = TypeMapping.exportedType(prop.type)
     val fieldClass = if (import) prop.type else exportedType
     val setterValueClass = if (import) exportedType else prop.type
 
     val getterMappingMethod =
-        if (import) CustomMappings.importMethod(prop.type) else CustomMappings.exportMethod(prop.type)
+        if (import) TypeMapping.importMethod(prop.type) else TypeMapping.exportMethod(prop.type)
     val setterMappingMethod =
-        if (import) CustomMappings.exportMethod(prop.type) else CustomMappings.importMethod(prop.type)
+        if (import) TypeMapping.exportMethod(prop.type) else TypeMapping.importMethod(prop.type)
 
     val modifiers = if (forceOverride || prop.isOverride) listOf(KModifier.OVERRIDE) else emptyList()
 
     return PropertySpec.builder(fieldName, fieldClass, modifiers)
-        //.getter(FunSpec.getterBuilder().addCode("$target.$fieldName").build())
+        // .getter(FunSpec.getterBuilder().addCode("$target.$fieldName").build())
         // One-line version `get() = ...` is less verbose
         .getter(
             FunSpec.getterBuilder()

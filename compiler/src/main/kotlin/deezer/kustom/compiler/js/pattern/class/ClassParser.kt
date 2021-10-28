@@ -1,15 +1,15 @@
 package deezer.kustom.compiler.js.pattern.`class`
 
+import com.google.devtools.ksp.getAllSuperTypes
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import com.squareup.kotlinpoet.ksp.toTypeName
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.ParameterDescriptor
 import deezer.kustom.compiler.js.pattern.parseFunctions
 import deezer.kustom.compiler.js.pattern.parseProperties
 import deezer.kustom.compiler.js.pattern.toTypeNamePatch
-import com.google.devtools.ksp.getAllSuperTypes
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
-import com.squareup.kotlinpoet.ksp.toTypeName
 
 @KotlinPoetKspPreview
 fun parseClass(classDeclaration: KSClassDeclaration): ClassDescriptor {
@@ -26,9 +26,8 @@ fun parseClass(classDeclaration: KSClassDeclaration): ClassDescriptor {
             Logger.warn(" - $it -> ${it.toTypeName()}")
         }
 
-        //Logger.error("END")
+        // Logger.error("END")
     }
-
 
     return ClassDescriptor(
         packageName = classDeclaration.packageName.asString(),

@@ -17,7 +17,8 @@ class ExportedTypesTest {
             interface MyLongInterface {
                 var myLong: Long
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/MyLongInterface.kt",
                 content = """
         package foo.bar.js
@@ -57,7 +58,7 @@ class ExportedTypesTest {
         
         public fun MyLongInterface.importMyLongInterface() = (this as? ExportedMyLongInterface)?.common ?:
                 ImportedMyLongInterface(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -73,7 +74,8 @@ class ExportedTypesTest {
             interface MyLongInterface {
                 var myLong: Long?
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/MyLongInterface.kt",
                 content = """
         package foo.bar.js
@@ -113,7 +115,7 @@ class ExportedTypesTest {
         
         public fun MyLongInterface.importMyLongInterface() = (this as? ExportedMyLongInterface)?.common ?:
                 ImportedMyLongInterface(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -129,7 +131,8 @@ class ExportedTypesTest {
             interface MyStringsInterface {
                 var myStrings: List<String>
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/MyStringsInterface.kt",
                 content = """
         package foo.bar.js
@@ -170,7 +173,7 @@ class ExportedTypesTest {
         
         public fun MyStringsInterface.importMyStringsInterface() = (this as?
                 ExportedMyStringsInterface)?.common ?: ImportedMyStringsInterface(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -186,7 +189,8 @@ class ExportedTypesTest {
             interface MyLongsInterface {
                 var myLongs: List<Long>
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/MyLongsInterface.kt",
                 content = """
         package foo.bar.js
@@ -228,7 +232,7 @@ class ExportedTypesTest {
         
         public fun MyLongsInterface.importMyLongsInterface() = (this as? ExportedMyLongsInterface)?.common
                 ?: ImportedMyLongsInterface(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -238,12 +242,15 @@ class ExportedTypesTest {
         assertCompilationOutput(
             inputFiles = listOf(
                 InputFile(
-                    "Pikachu.kt", """
+                    "Pikachu.kt",
+                    """
                 package pokemon
                 class Pikachu
-            """.trimIndent()
-                ), InputFile(
-                    "SachaInterface.kt", """
+                    """.trimIndent()
+                ),
+                InputFile(
+                    "SachaInterface.kt",
+                    """
                 package pokedex
                 
                 import deezer.kustom.KustomExport
@@ -301,7 +308,7 @@ class ExportedTypesTest {
                 
                 public fun SachaInterface.importSachaInterface() = (this as? ExportedSachaInterface)?.common ?:
                         ImportedSachaInterface(this)
-    """.trimIndent()
+                    """.trimIndent()
                 )
             )
         )

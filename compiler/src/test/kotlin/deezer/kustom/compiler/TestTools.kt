@@ -29,7 +29,7 @@ fun assertCompilationOutput(inputFiles: List<InputFile>, expectedOutputFiles: Li
             // Java8:
             val generatedContent = Files.readAllLines(path).joinToString("\n")
             // Java11: (also includes last empty line = closer to actual output)
-            //val generatedContent = Files.readString(path)
+            // val generatedContent = Files.readString(path)
             assertEquals(expectedFile.content, generatedContent)
         } else {
             println("--------")

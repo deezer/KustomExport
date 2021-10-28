@@ -1,7 +1,7 @@
 package deezer.kustom.compiler.js.pattern.enum
 
-import deezer.kustom.compiler.js.EnumDescriptor
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import deezer.kustom.compiler.js.EnumDescriptor
 
 fun parseEnum(classDeclaration: KSClassDeclaration): EnumDescriptor {
     return EnumDescriptor(

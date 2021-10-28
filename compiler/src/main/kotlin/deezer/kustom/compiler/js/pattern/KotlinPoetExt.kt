@@ -1,7 +1,5 @@
 package deezer.kustom.compiler.js.pattern
 
-import deezer.kustom.compiler.Logger
-import deezer.kustom.compiler.js.mapping.EXCEPTION
 import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSType
@@ -14,6 +12,8 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toTypeName
+import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.mapping.EXCEPTION
 import java.io.File
 
 val TypeName.qdot: String
@@ -52,19 +52,21 @@ public fun KSType?.toTypeNamePatch(containingFile: KSFile?): TypeName {
     Logger.warn("----------------- SUBTYPE START")
     if (this == null) return ANY
     if (this.isError) return ANY
-    return (try {
-        toTypeName()
-    } catch (e: Exception) {
-        Logger.error("cannot toTypeName = ${e.message} - ${this.isError}")
+    return (
+        try {
+            toTypeName()
+        } catch (e: Exception) {
+            Logger.error("cannot toTypeName = ${e.message} - ${this.isError}")
 
-        return guessClassFromImports(containingFile, classSimpleName = this.toString())
-        // TODO handle support for stdlib
+            return guessClassFromImports(containingFile, classSimpleName = this.toString())
+                // TODO handle support for stdlib
         /*?: guessFromStdlib(
             this.toString(),
             *declaration.typeParameters.map { ... }.toTypedArray()
         )*/
-            ?: ClassName(declaration.packageName.asString(), declaration.simpleName.asString())
-    }).also {
+                ?: ClassName(declaration.packageName.asString(), declaration.simpleName.asString())
+        }
+        ).also {
         Logger.warn("----------------- SUBTYPE END")
     }
 }
@@ -75,7 +77,7 @@ private fun getPackageFromFile(containingFile: KSFile?): String {
     file.readLines().forEach { line ->
         if (line.startsWith("package ")) return line.substringAfter("package ")
     }
-    return ""// No package = default empty package
+    return "" // No package = default empty package
 }
 
 private fun guessClassFromImports(containingFile: KSFile?, classSimpleName: String): ClassName? {

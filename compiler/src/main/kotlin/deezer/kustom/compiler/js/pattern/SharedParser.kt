@@ -1,15 +1,15 @@
 package deezer.kustom.compiler.js.pattern
 
-import deezer.kustom.compiler.Logger
-import deezer.kustom.compiler.js.FunctionDescriptor
-import deezer.kustom.compiler.js.ParameterDescriptor
-import deezer.kustom.compiler.js.PropertyDescriptor
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.isPrivate
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.FunctionDescriptor
+import deezer.kustom.compiler.js.ParameterDescriptor
+import deezer.kustom.compiler.js.PropertyDescriptor
 
 private val nonExportableFunctions = listOf(
     "<init>",
@@ -24,7 +24,7 @@ fun KSClassDeclaration.parseFunctions(): List<FunctionDescriptor> {
     val declaredNames = getDeclaredFunctions().mapNotNull { it.simpleName }
     return getAllFunctions()
         .filter { it.simpleName.asString() !in nonExportableFunctions }
-        .also { it.forEach { f -> Logger.warn("Function ${f}") } }
+        .also { it.forEach { f -> Logger.warn("Function $f") } }
         .filter { it.isPublic() }
         .map { func ->
             FunctionDescriptor(
@@ -58,7 +58,7 @@ fun KSClassDeclaration.parseProperties(): List<PropertyDescriptor> {
     val declaredNames = getDeclaredProperties().mapNotNull { it.simpleName }
     return getAllProperties().mapNotNull { prop ->
         if (prop.isPrivate()) {
-            null// Cannot be accessed
+            null // Cannot be accessed
         } else {
             PropertyDescriptor(
                 name = prop.simpleName.asString(),

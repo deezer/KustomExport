@@ -1,15 +1,5 @@
 package deezer.kustom.compiler.js.pattern.`class`
 
-import deezer.kustom.compiler.Logger
-import deezer.kustom.compiler.js.ClassDescriptor
-import deezer.kustom.compiler.js.MethodNameDisambiguation
-import deezer.kustom.compiler.js.jsExport
-import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.CustomMappings
-import deezer.kustom.compiler.js.mapping.INDENTATION
-import deezer.kustom.compiler.js.pattern.autoImport
-import deezer.kustom.compiler.js.pattern.overrideGetterSetter
-import deezer.kustom.compiler.js.pattern.toFunSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -19,6 +9,16 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.ClassDescriptor
+import deezer.kustom.compiler.js.MethodNameDisambiguation
+import deezer.kustom.compiler.js.jsExport
+import deezer.kustom.compiler.js.jsPackage
+import deezer.kustom.compiler.js.mapping.INDENTATION
+import deezer.kustom.compiler.js.mapping.TypeMapping
+import deezer.kustom.compiler.js.pattern.autoImport
+import deezer.kustom.compiler.js.pattern.overrideGetterSetter
+import deezer.kustom.compiler.js.pattern.toFunSpec
 
 fun ClassDescriptor.transform() = transformClass(this)
 
@@ -58,7 +58,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     FunSpec.constructorBuilder()
                         .also { b ->
                             origin.constructorParams.forEach {
-                                b.addParameter(ParameterSpec(it.name, CustomMappings.exportedType(it.type)))
+                                b.addParameter(ParameterSpec(it.name, TypeMapping.exportedType(it.type)))
                             }
                         }
                         .build()
@@ -75,7 +75,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                 )
                 .addProperty(
                     PropertySpec.builder("common", originalClass, KModifier.INTERNAL, KModifier.LATEINIT)
-                        .mutable(true)// because lateinit
+                        .mutable(true) // because lateinit
                         .build()
                 )
                 .addInitializerBlock(
@@ -86,12 +86,14 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             """
                             |if (${firstCtorParam.name} != $ctorDyn) {
                             |${INDENTATION}common = Common${origin.classSimpleName}(${
-                                        (origin.constructorParams.joinToString(
-                                            ",\n$INDENTATION$INDENTATION",
-                                            prefix = "\n$INDENTATION$INDENTATION",
-                                            postfix = "\n"
-                                        ) { it.name + "·=·" + it.name + CustomMappings.importMethod(it.type) })
-                                    }${INDENTATION})
+                            (
+                                origin.constructorParams.joinToString(
+                                    ",\n$INDENTATION$INDENTATION",
+                                    prefix = "\n$INDENTATION$INDENTATION",
+                                    postfix = "\n"
+                                ) { it.name + "·=·" + it.name + TypeMapping.importMethod(it.type) }
+                                )
+                            }$INDENTATION)
                             |}
                             """.trimMargin()
                         }

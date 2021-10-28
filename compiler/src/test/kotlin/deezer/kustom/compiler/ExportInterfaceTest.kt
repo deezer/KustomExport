@@ -16,7 +16,8 @@ class ExportInterfaceTest {
 
             @KustomExport
             interface Exportable
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "flux/js/Exportable.kt",
                 content = """
             package flux.js
@@ -40,7 +41,7 @@ class ExportInterfaceTest {
             
             public fun Exportable.importExportable() = (this as? ExportedExportable)?.common ?:
                     ImportedExportable(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -57,7 +58,8 @@ class ExportInterfaceTest {
             interface BasicInterface {
                 val flex: String
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "flux/js/BasicInterface.kt",
                 content = """
             package flux.js
@@ -90,7 +92,7 @@ class ExportInterfaceTest {
             
             public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                     ImportedBasicInterface(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -107,7 +109,8 @@ class ExportInterfaceTest {
             interface BasicInterface {
                 var canChange: String
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "flux/js/BasicInterface.kt",
                 content = """
             package flux.js
@@ -146,7 +149,7 @@ class ExportInterfaceTest {
             
             public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                     ImportedBasicInterface(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -163,7 +166,8 @@ class ExportInterfaceTest {
             interface BasicInterface {
                 var numbers: List<Long>
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "flux/js/BasicInterface.kt",
                 content = """
             package flux.js
@@ -205,7 +209,7 @@ class ExportInterfaceTest {
             
             public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                     ImportedBasicInterface(this)
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -277,7 +281,7 @@ class ExportInterfaceTest {
                         
                         public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                                 ImportedBasicInterface(this)
-                """.trimIndent()
+                    """.trimIndent()
                 )
             )
         )
@@ -353,7 +357,7 @@ class ExportInterfaceTest {
                         
                         public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
                                 ImportedBasicInterface(this)
-                """.trimIndent()
+                    """.trimIndent()
                 )
             )
         )

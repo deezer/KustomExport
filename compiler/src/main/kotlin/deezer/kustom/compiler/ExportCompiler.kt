@@ -15,10 +15,10 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustom.KustomExport
 import deezer.kustom.compiler.js.pattern.`class`.parseClass
 import deezer.kustom.compiler.js.pattern.`class`.transform
-import deezer.kustom.compiler.js.pattern.`interface`.parseInterface
-import deezer.kustom.compiler.js.pattern.`interface`.transform
 import deezer.kustom.compiler.js.pattern.enum.parseEnum
 import deezer.kustom.compiler.js.pattern.enum.transform
+import deezer.kustom.compiler.js.pattern.`interface`.parseInterface
+import deezer.kustom.compiler.js.pattern.`interface`.transform
 import kotlin.random.Random
 
 // Trick to share the Logger everywhere without injecting the dependency everywhere
@@ -47,14 +47,17 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         // ------------------------------------------------------------------------------------------------
         // Hack to avoid compilation on Android/iOS : create a dummy file, then check generated file path
         // https://github.com/google/ksp/issues/641
-        symbols.firstOrNull()?.accept(object : KSVisitorVoid() {
-            // For some reasons on KSP 1.5.31-1.0 not using the Visitor pattern lead to gradle freeze
-            override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-                devLog("Creating the placeholder...")
-                FileSpec.builder("", "placeholder")
-                    .build().writeCode(environment)
-            }
-        }, Unit)
+        symbols.firstOrNull()?.accept(
+            object : KSVisitorVoid() {
+                // For some reasons on KSP 1.5.31-1.0 not using the Visitor pattern lead to gradle freeze
+                override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
+                    devLog("Creating the placeholder...")
+                    FileSpec.builder("", "placeholder")
+                        .build().writeCode(environment)
+                }
+            },
+            Unit
+        )
         val generatedPath = environment.codeGenerator.generatedFile.firstOrNull().toString()
         val isJsBuild = generatedPath.contains("/jsMain/")
         // Please don't ask why there is multiple possible values here, I've no clue, but it's working
@@ -70,10 +73,10 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
             .forEach {
                 devLog("----- Symbol $it")
                 it.accept(ExportVisitor(), Unit)
-                //it.accept(LoggerVisitor(environment), Unit)
+                // it.accept(LoggerVisitor(environment), Unit)
             }
 
-        return emptyList()// ret
+        return emptyList() // ret
     }
 
     @KotlinPoetKspPreview

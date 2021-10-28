@@ -1,15 +1,14 @@
 package deezer.kustom.compiler.js.mapping
 
-import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.pattern.asClassName
-import deezer.kustom.compiler.js.pattern.importExportPrefix
-import deezer.kustom.compiler.js.pattern.qdot
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
+import deezer.kustom.compiler.js.jsPackage
+import deezer.kustom.compiler.js.pattern.asClassName
+import deezer.kustom.compiler.js.pattern.qdot
 
-object CustomMappings {
+object TypeMapping {
     val mappings = mutableMapOf<TypeName, MappingOutput>()
 
     init {
@@ -50,7 +49,7 @@ object CustomMappings {
     fun exportMethod(origin: TypeName): String {
         return getMapping(origin)?.exportMethod?.invoke(origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
-            //origin.qdot + "${importExportPrefix(origin.asClassName().packageName)}jExport()"
+            // origin.qdot + "${importExportPrefix(origin.asClassName().packageName)}jExport()"
             origin.qdot + "export${origin.asClassName().simpleName}()"
         }
     }
@@ -58,7 +57,7 @@ object CustomMappings {
     fun importMethod(origin: TypeName): String {
         return getMapping(origin)?.importMethod?.invoke(origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
-            //origin.qdot + "${importExportPrefix(origin.asClassName().packageName)}jImport()"
+            // origin.qdot + "${importExportPrefix(origin.asClassName().packageName)}jImport()"
             origin.qdot + "import${origin.asClassName().simpleName}()"
         }
     }

@@ -1,9 +1,5 @@
 package deezer.kustom.compiler.js.pattern.enum
 
-import deezer.kustom.compiler.js.EnumDescriptor
-import deezer.kustom.compiler.js.jsExport
-import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.INDENTATION
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -11,6 +7,10 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.js.EnumDescriptor
+import deezer.kustom.compiler.js.jsExport
+import deezer.kustom.compiler.js.jsPackage
+import deezer.kustom.compiler.js.mapping.INDENTATION
 
 fun EnumDescriptor.transform() = transformEnum(this)
 

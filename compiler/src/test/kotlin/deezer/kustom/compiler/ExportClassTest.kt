@@ -15,7 +15,8 @@ class ExportClassTest {
 
             @KustomExport
             class BasicClass
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/BasicClass.kt",
                 content = """
         package foo.bar.js
@@ -38,7 +39,7 @@ class ExportClassTest {
         public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
         
         public fun BasicClass.importBasicClass() = this.common
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -52,7 +53,8 @@ class ExportClassTest {
 
             @KustomExport
             class BasicClass(val id: String)
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/BasicClass.kt",
                 content = """
         package foo.bar.js
@@ -85,7 +87,7 @@ class ExportClassTest {
         public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
         
         public fun BasicClass.importBasicClass() = this.common
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
@@ -103,7 +105,6 @@ class ExportClassTest {
         )
     }
 
-
     @Test
     fun classGeneratedShouldKeepSuperTypes() {
         assertCompilationOutput(
@@ -117,7 +118,8 @@ class ExportClassTest {
             class BasicClass: Any {
                 override val str: String
             }
-    """, ExpectedOutputFile(
+    """,
+            ExpectedOutputFile(
                 path = "foo/bar/js/BasicClass.kt",
                 content = """
         package foo.bar.js
@@ -145,9 +147,8 @@ class ExportClassTest {
         public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
         
         public fun BasicClass.importBasicClass() = this.common
-    """.trimIndent()
+                """.trimIndent()
             )
         )
     }
-
 }
