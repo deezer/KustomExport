@@ -1,6 +1,8 @@
 plugins {
     kotlin("jvm")
+    id("maven-publish")
 }
+
 
 repositories {
     mavenCentral()
@@ -19,6 +21,19 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+
 sourceSets.main {
     java.srcDirs("src/main/kotlin")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.deezer.kustom"
+            artifactId = "compiler"
+            version = "0.0.1"
+
+            from(components["java"])
+        }
+    }
 }
