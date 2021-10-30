@@ -36,9 +36,9 @@ class ExportClassTest {
             }
         }
         
-        public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
+        public fun CommonBasicClass.exportBasicClass(): BasicClass = BasicClass(this)
         
-        public fun BasicClass.importBasicClass() = this.common
+        public fun BasicClass.importBasicClass(): CommonBasicClass = this.common
                 """.trimIndent()
             )
         )
@@ -84,9 +84,9 @@ class ExportClassTest {
             }
         }
         
-        public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
+        public fun CommonBasicClass.exportBasicClass(): BasicClass = BasicClass(this)
         
-        public fun BasicClass.importBasicClass() = this.common
+        public fun BasicClass.importBasicClass(): CommonBasicClass = this.common
                 """.trimIndent()
             )
         )
@@ -144,9 +144,9 @@ class ExportClassTest {
             }
         }
         
-        public fun CommonBasicClass.exportBasicClass() = BasicClass(this)
+        public fun CommonBasicClass.exportBasicClass(): BasicClass = BasicClass(this)
         
-        public fun BasicClass.importBasicClass() = this.common
+        public fun BasicClass.importBasicClass(): CommonBasicClass = this.common
                 """.trimIndent()
             )
         )

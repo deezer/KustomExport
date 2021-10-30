@@ -36,11 +36,11 @@ class ExportInterfaceTest {
                 internal val common: CommonExportable
             ) : Exportable
             
-            public fun CommonExportable.exportExportable() = (this as? ImportedExportable)?.exported ?:
-                    ExportedExportable(this)
+            public fun CommonExportable.exportExportable(): Exportable = (this as? ImportedExportable)?.exported
+                    ?: ExportedExportable(this)
             
-            public fun Exportable.importExportable() = (this as? ExportedExportable)?.common ?:
-                    ImportedExportable(this)
+            public fun Exportable.importExportable(): CommonExportable = (this as? ExportedExportable)?.common
+                    ?: ImportedExportable(this)
                 """.trimIndent()
             )
         )
@@ -87,11 +87,11 @@ class ExportInterfaceTest {
                     get() = common.flex
             }
             
-            public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
-                    ?: ExportedBasicInterface(this)
+            public fun CommonBasicInterface.exportBasicInterface(): BasicInterface = (this as?
+                    ImportedBasicInterface)?.exported ?: ExportedBasicInterface(this)
             
-            public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
-                    ImportedBasicInterface(this)
+            public fun BasicInterface.importBasicInterface(): CommonBasicInterface = (this as?
+                    ExportedBasicInterface)?.common ?: ImportedBasicInterface(this)
                 """.trimIndent()
             )
         )
@@ -144,11 +144,11 @@ class ExportInterfaceTest {
                     }
             }
             
-            public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
-                    ?: ExportedBasicInterface(this)
+            public fun CommonBasicInterface.exportBasicInterface(): BasicInterface = (this as?
+                    ImportedBasicInterface)?.exported ?: ExportedBasicInterface(this)
             
-            public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
-                    ImportedBasicInterface(this)
+            public fun BasicInterface.importBasicInterface(): CommonBasicInterface = (this as?
+                    ExportedBasicInterface)?.common ?: ImportedBasicInterface(this)
                 """.trimIndent()
             )
         )
@@ -204,11 +204,11 @@ class ExportInterfaceTest {
                     }
             }
             
-            public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
-                    ?: ExportedBasicInterface(this)
+            public fun CommonBasicInterface.exportBasicInterface(): BasicInterface = (this as?
+                    ImportedBasicInterface)?.exported ?: ExportedBasicInterface(this)
             
-            public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
-                    ImportedBasicInterface(this)
+            public fun BasicInterface.importBasicInterface(): CommonBasicInterface = (this as?
+                    ExportedBasicInterface)?.common ?: ImportedBasicInterface(this)
                 """.trimIndent()
             )
         )
@@ -276,11 +276,11 @@ class ExportInterfaceTest {
                             )
                         }
                         
-                        public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
-                                ?: ExportedBasicInterface(this)
+                        public fun CommonBasicInterface.exportBasicInterface(): BasicInterface = (this as?
+                                ImportedBasicInterface)?.exported ?: ExportedBasicInterface(this)
                         
-                        public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
-                                ImportedBasicInterface(this)
+                        public fun BasicInterface.importBasicInterface(): CommonBasicInterface = (this as?
+                                ExportedBasicInterface)?.common ?: ImportedBasicInterface(this)
                     """.trimIndent()
                 )
             )
@@ -352,11 +352,11 @@ class ExportInterfaceTest {
                             ).map { it.toDouble() }.toTypedArray()
                         }
                         
-                        public fun CommonBasicInterface.exportBasicInterface() = (this as? ImportedBasicInterface)?.exported
-                                ?: ExportedBasicInterface(this)
+                        public fun CommonBasicInterface.exportBasicInterface(): BasicInterface = (this as?
+                                ImportedBasicInterface)?.exported ?: ExportedBasicInterface(this)
                         
-                        public fun BasicInterface.importBasicInterface() = (this as? ExportedBasicInterface)?.common ?:
-                                ImportedBasicInterface(this)
+                        public fun BasicInterface.importBasicInterface(): CommonBasicInterface = (this as?
+                                ExportedBasicInterface)?.common ?: ImportedBasicInterface(this)
                     """.trimIndent()
                 )
             )

@@ -7,6 +7,167 @@ import org.junit.Test
 class ExportedTypesTest {
 
     @Test
+    fun kotlinExportedTypeAreNotChanged() {
+        assertCompilationOutput(
+            """
+            package foo.bar
+            import deezer.kustom.KustomExport
+
+            @KustomExport
+            class AllTypesHandledByKotlinJs {
+                var myBoolean: Boolean
+                var myByte: Byte
+                var myChar: Char
+                var myShort: Short
+                var myInt: Int
+                var myFloat: Float
+                var myDouble: Double
+                var myString: String
+                var myBooleanArray: BooleanArray
+                var myByteArray: ByteArray
+                var myCharArray: CharArray
+                var myShortArray: ShortArray
+                var myIntArray: IntArray
+                var myFloatArray: FloatArray
+                var myDoubleArray: DoubleArray
+            }
+    """,
+            ExpectedOutputFile(
+                path = "foo/bar/js/AllTypesHandledByKotlinJs.kt",
+                content = """
+                    package foo.bar.js
+                    
+                    import kotlin.Boolean
+                    import kotlin.BooleanArray
+                    import kotlin.Byte
+                    import kotlin.ByteArray
+                    import kotlin.Char
+                    import kotlin.CharArray
+                    import kotlin.Double
+                    import kotlin.DoubleArray
+                    import kotlin.Float
+                    import kotlin.FloatArray
+                    import kotlin.Int
+                    import kotlin.IntArray
+                    import kotlin.Short
+                    import kotlin.ShortArray
+                    import kotlin.String
+                    import kotlin.js.JsExport
+                    import foo.bar.AllTypesHandledByKotlinJs as CommonAllTypesHandledByKotlinJs
+                    
+                    @JsExport
+                    public class AllTypesHandledByKotlinJs() {
+                        internal lateinit var common: CommonAllTypesHandledByKotlinJs
+                    
+                        init {
+                            common = CommonAllTypesHandledByKotlinJs()}
+                    
+                        public var myBoolean: Boolean
+                            get() = common.myBoolean
+                            set(`value`) {
+                                common.myBoolean = value
+                            }
+                    
+                        public var myByte: Byte
+                            get() = common.myByte
+                            set(`value`) {
+                                common.myByte = value
+                            }
+                    
+                        public var myChar: Char
+                            get() = common.myChar
+                            set(`value`) {
+                                common.myChar = value
+                            }
+                    
+                        public var myShort: Short
+                            get() = common.myShort
+                            set(`value`) {
+                                common.myShort = value
+                            }
+                    
+                        public var myInt: Int
+                            get() = common.myInt
+                            set(`value`) {
+                                common.myInt = value
+                            }
+                    
+                        public var myFloat: Float
+                            get() = common.myFloat
+                            set(`value`) {
+                                common.myFloat = value
+                            }
+                    
+                        public var myDouble: Double
+                            get() = common.myDouble
+                            set(`value`) {
+                                common.myDouble = value
+                            }
+                    
+                        public var myString: String
+                            get() = common.myString
+                            set(`value`) {
+                                common.myString = value
+                            }
+                    
+                        public var myBooleanArray: BooleanArray
+                            get() = common.myBooleanArray
+                            set(`value`) {
+                                common.myBooleanArray = value
+                            }
+                    
+                        public var myByteArray: ByteArray
+                            get() = common.myByteArray
+                            set(`value`) {
+                                common.myByteArray = value
+                            }
+                    
+                        public var myCharArray: CharArray
+                            get() = common.myCharArray
+                            set(`value`) {
+                                common.myCharArray = value
+                            }
+                    
+                        public var myShortArray: ShortArray
+                            get() = common.myShortArray
+                            set(`value`) {
+                                common.myShortArray = value
+                            }
+                    
+                        public var myIntArray: IntArray
+                            get() = common.myIntArray
+                            set(`value`) {
+                                common.myIntArray = value
+                            }
+                    
+                        public var myFloatArray: FloatArray
+                            get() = common.myFloatArray
+                            set(`value`) {
+                                common.myFloatArray = value
+                            }
+                    
+                        public var myDoubleArray: DoubleArray
+                            get() = common.myDoubleArray
+                            set(`value`) {
+                                common.myDoubleArray = value
+                            }
+                    
+                        internal constructor(common: CommonAllTypesHandledByKotlinJs) : this() {
+                            this.common = common
+                        }
+                    }
+                    
+                    public fun CommonAllTypesHandledByKotlinJs.exportAllTypesHandledByKotlinJs():
+                            AllTypesHandledByKotlinJs = AllTypesHandledByKotlinJs(this)
+                    
+                    public fun AllTypesHandledByKotlinJs.importAllTypesHandledByKotlinJs():
+                            CommonAllTypesHandledByKotlinJs = this.common
+                """.trimIndent()
+            )
+        )
+    }
+
+    @Test
     fun from_Long_to_Double() {
         assertCompilationOutput(
             """
@@ -14,225 +175,208 @@ class ExportedTypesTest {
             import deezer.kustom.KustomExport
 
             @KustomExport
-            interface MyLongInterface {
+            class MyLongClass {
                 var myLong: Long
+                var myLongArray: LongArray
             }
     """,
             ExpectedOutputFile(
-                path = "foo/bar/js/MyLongInterface.kt",
+                path = "foo/bar/js/MyLongClass.kt",
                 content = """
-        package foo.bar.js
+                    package foo.bar.js
 
-        import kotlin.Double
-        import kotlin.Long
-        import kotlin.js.JsExport
-        import foo.bar.MyLongInterface as CommonMyLongInterface
-        
-        @JsExport
-        public external interface MyLongInterface {
-            public var myLong: Double
-        }
-        
-        private class ImportedMyLongInterface(
-            internal val exported: MyLongInterface
-        ) : CommonMyLongInterface {
-            public override var myLong: Long
-                get() = exported.myLong.toLong()
-                set(`value`) {
-                    exported.myLong = value.toDouble()
-                }
-        }
-        
-        private class ExportedMyLongInterface(
-            internal val common: CommonMyLongInterface
-        ) : MyLongInterface {
-            public override var myLong: Double
-                get() = common.myLong.toDouble()
-                set(`value`) {
-                    common.myLong = value.toLong()
-                }
-        }
-        
-        public fun CommonMyLongInterface.exportMyLongInterface() = (this as?
-                ImportedMyLongInterface)?.exported ?: ExportedMyLongInterface(this)
-        
-        public fun MyLongInterface.importMyLongInterface() = (this as? ExportedMyLongInterface)?.common ?:
-                ImportedMyLongInterface(this)
+                    import kotlin.Array
+                    import kotlin.Double
+                    import kotlin.js.JsExport
+                    import foo.bar.MyLongClass as CommonMyLongClass
+
+                    @JsExport
+                    public class MyLongClass() {
+                        internal lateinit var common: CommonMyLongClass
+
+                        init {
+                            common = CommonMyLongClass()}
+
+                        public var myLong: Double
+                            get() = common.myLong.toDouble()
+                            set(`value`) {
+                                common.myLong = value.toLong()
+                            }
+
+                        public var myLongArray: Array<Double>
+                            get() = common.myLongArray.map { it.toDouble() }.toTypedArray()
+                            set(`value`) {
+                                common.myLongArray = value.map { it.toLong() }.toLongArray()
+                            }
+
+                        internal constructor(common: CommonMyLongClass) : this() {
+                            this.common = common
+                        }
+                    }
+
+                    public fun CommonMyLongClass.exportMyLongClass(): MyLongClass = MyLongClass(this)
+
+                    public fun MyLongClass.importMyLongClass(): CommonMyLongClass = this.common
                 """.trimIndent()
             )
         )
     }
 
     @Test
-    fun from_nullableLong_to_nullableDouble() {
+    fun nullables() {
         assertCompilationOutput(
             """
             package foo.bar
             import deezer.kustom.KustomExport
 
             @KustomExport
-            interface MyLongInterface {
-                var myLong: Long?
+            class Nullables {
+                var myNullableString: String?
+                var myNullableArray: Array<String>?
+                var myArrayOfNullables: Array<String?>
+                var myNullableArrayOfNullables: Array<String?>?
             }
-    """,
+            """,
             ExpectedOutputFile(
-                path = "foo/bar/js/MyLongInterface.kt",
+                path = "foo/bar/js/Nullables.kt",
                 content = """
-        package foo.bar.js
-        
-        import kotlin.Double
-        import kotlin.Long
-        import kotlin.js.JsExport
-        import foo.bar.MyLongInterface as CommonMyLongInterface
-        
-        @JsExport
-        public external interface MyLongInterface {
-            public var myLong: Double?
-        }
-        
-        private class ImportedMyLongInterface(
-            internal val exported: MyLongInterface
-        ) : CommonMyLongInterface {
-            public override var myLong: Long?
-                get() = exported.myLong?.toLong()
-                set(`value`) {
-                    exported.myLong = value?.toDouble()
+                package foo.bar.js
+
+                import kotlin.Array
+                import kotlin.String
+                import kotlin.js.JsExport
+                import foo.bar.Nullables as CommonNullables
+
+                @JsExport
+                public class Nullables() {
+                    internal lateinit var common: CommonNullables
+
+                    init {
+                        common = CommonNullables()}
+
+                    public var myNullableString: String?
+                        get() = common.myNullableString
+                        set(`value`) {
+                            common.myNullableString = value
+                        }
+
+                    public var myNullableArray: Array<String>?
+                        get() = common.myNullableArray
+                        set(`value`) {
+                            common.myNullableArray = value
+                        }
+
+                    public var myArrayOfNullables: Array<String?>
+                        get() = common.myArrayOfNullables
+                        set(`value`) {
+                            common.myArrayOfNullables = value
+                        }
+
+                    public var myNullableArrayOfNullables: Array<String?>?
+                        get() = common.myNullableArrayOfNullables
+                        set(`value`) {
+                            common.myNullableArrayOfNullables = value
+                        }
+
+                    internal constructor(common: CommonNullables) : this() {
+                        this.common = common
+                    }
                 }
-        }
-        
-        private class ExportedMyLongInterface(
-            internal val common: CommonMyLongInterface
-        ) : MyLongInterface {
-            public override var myLong: Double?
-                get() = common.myLong?.toDouble()
-                set(`value`) {
-                    common.myLong = value?.toLong()
-                }
-        }
-        
-        public fun CommonMyLongInterface.exportMyLongInterface() = (this as?
-                ImportedMyLongInterface)?.exported ?: ExportedMyLongInterface(this)
-        
-        public fun MyLongInterface.importMyLongInterface() = (this as? ExportedMyLongInterface)?.common ?:
-                ImportedMyLongInterface(this)
+
+                public fun CommonNullables.exportNullables(): Nullables = Nullables(this)
+
+                public fun Nullables.importNullables(): CommonNullables = this.common
                 """.trimIndent()
             )
         )
     }
 
     @Test
-    fun from_List_to_Array() {
+    fun arrays() {
         assertCompilationOutput(
-            """
-            package foo.bar
-            import deezer.kustom.KustomExport
+            inputFiles = listOf(
+                InputFile(
+                    "Pikachu.kt",
+                    """
+                    package pokemon
+                    class Pikachu
+                    """.trimIndent()
+                ),
+                InputFile(
+                    "Arrays.kt",
+                    """
+                    package foo.bar
 
-            @KustomExport
-            interface MyStringsInterface {
-                var myStrings: List<String>
-            }
-    """,
-            ExpectedOutputFile(
-                path = "foo/bar/js/MyStringsInterface.kt",
-                content = """
-        package foo.bar.js
+                    import pokemon.Pikachu
+                    import deezer.kustom.KustomExport
         
-        import kotlin.Array
-        import kotlin.String
-        import kotlin.collections.List
-        import kotlin.js.JsExport
-        import foo.bar.MyStringsInterface as CommonMyStringsInterface
-        
-        @JsExport
-        public external interface MyStringsInterface {
-            public var myStrings: Array<String>
-        }
-        
-        private class ImportedMyStringsInterface(
-            internal val exported: MyStringsInterface
-        ) : CommonMyStringsInterface {
-            public override var myStrings: List<String>
-                get() = exported.myStrings.map { it }
-                set(`value`) {
-                    exported.myStrings = value.map { it }.toTypedArray()
-                }
-        }
-        
-        private class ExportedMyStringsInterface(
-            internal val common: CommonMyStringsInterface
-        ) : MyStringsInterface {
-            public override var myStrings: Array<String>
-                get() = common.myStrings.map { it }.toTypedArray()
-                set(`value`) {
-                    common.myStrings = value.map { it }
-                }
-        }
-        
-        public fun CommonMyStringsInterface.exportMyStringsInterface() = (this as?
-                ImportedMyStringsInterface)?.exported ?: ExportedMyStringsInterface(this)
-        
-        public fun MyStringsInterface.importMyStringsInterface() = (this as?
-                ExportedMyStringsInterface)?.common ?: ImportedMyStringsInterface(this)
-                """.trimIndent()
-            )
-        )
-    }
+                    @KustomExport
+                    class Arrays {
+                        var myBasicArray: Array<String>
+                        var myCustomArray: Array<Pikachu>
+                        var myArrayOfNullables: Array<Unit?>
+                        var myNullableArrayOfNullables: Array<String?>?
+                    }
+                    """
+                )
+            ),
+            expectedOutputFiles = listOf(
+                ExpectedOutputFile(
+                    path = "foo/bar/js/Arrays.kt",
+                    content = """
+                    package foo.bar.js
 
-    @Test
-    fun from_ListLong_to_ArrayDouble() {
-        assertCompilationOutput(
-            """
-            package foo.bar
-            import deezer.kustom.KustomExport
+                    import kotlin.Array
+                    import kotlin.String
+                    import kotlin.Unit
+                    import kotlin.js.JsExport
+                    import pokemon.js.Pikachu
+                    import pokemon.js.exportPikachu
+                    import pokemon.js.importPikachu
+                    import foo.bar.Arrays as CommonArrays
+                    import pokemon.Pikachu as CommonPikachu
 
-            @KustomExport
-            interface MyLongsInterface {
-                var myLongs: List<Long>
-            }
-    """,
-            ExpectedOutputFile(
-                path = "foo/bar/js/MyLongsInterface.kt",
-                content = """
-        package foo.bar.js
-        
-        import kotlin.Array
-        import kotlin.Double
-        import kotlin.Long
-        import kotlin.collections.List
-        import kotlin.js.JsExport
-        import foo.bar.MyLongsInterface as CommonMyLongsInterface
-        
-        @JsExport
-        public external interface MyLongsInterface {
-            public var myLongs: Array<Double>
-        }
-        
-        private class ImportedMyLongsInterface(
-            internal val exported: MyLongsInterface
-        ) : CommonMyLongsInterface {
-            public override var myLongs: List<Long>
-                get() = exported.myLongs.map { it.toLong() }
-                set(`value`) {
-                    exported.myLongs = value.map { it.toDouble() }.toTypedArray()
-                }
-        }
-        
-        private class ExportedMyLongsInterface(
-            internal val common: CommonMyLongsInterface
-        ) : MyLongsInterface {
-            public override var myLongs: Array<Double>
-                get() = common.myLongs.map { it.toDouble() }.toTypedArray()
-                set(`value`) {
-                    common.myLongs = value.map { it.toLong() }
-                }
-        }
-        
-        public fun CommonMyLongsInterface.exportMyLongsInterface() = (this as?
-                ImportedMyLongsInterface)?.exported ?: ExportedMyLongsInterface(this)
-        
-        public fun MyLongsInterface.importMyLongsInterface() = (this as? ExportedMyLongsInterface)?.common
-                ?: ImportedMyLongsInterface(this)
-                """.trimIndent()
+                    @JsExport
+                    public class Arrays() {
+                        internal lateinit var common: CommonArrays
+
+                        init {
+                            common = CommonArrays()}
+
+                        public var myBasicArray: Array<String>
+                            get() = common.myBasicArray
+                            set(`value`) {
+                                common.myBasicArray = value
+                            }
+
+                        public var myCustomArray: Array<Pikachu>
+                            get() = common.myCustomArray.map { it.exportPikachu() }.toTypedArray()
+                            set(`value`) {
+                                common.myCustomArray = value.map { it.importPikachu() }.toTypedArray()
+                            }
+
+                        public var myArrayOfNullables: Array<Unit?>
+                            get() = common.myArrayOfNullables
+                            set(`value`) {
+                                common.myArrayOfNullables = value
+                            }
+
+                        public var myNullableArrayOfNullables: Array<String?>?
+                            get() = common.myNullableArrayOfNullables
+                            set(`value`) {
+                                common.myNullableArrayOfNullables = value
+                            }
+
+                        internal constructor(common: CommonArrays) : this() {
+                            this.common = common
+                        }
+                    }
+
+                    public fun CommonArrays.exportArrays(): Arrays = Arrays(this)
+
+                    public fun Arrays.importArrays(): CommonArrays = this.common
+                    """.trimIndent()
+                )
             )
         )
     }
@@ -303,11 +447,11 @@ class ExportedTypesTest {
                         }
                 }
                 
-                public fun CommonSachaInterface.exportSachaInterface() = (this as? ImportedSachaInterface)?.exported
-                        ?: ExportedSachaInterface(this)
+                public fun CommonSachaInterface.exportSachaInterface(): SachaInterface = (this as?
+                        ImportedSachaInterface)?.exported ?: ExportedSachaInterface(this)
                 
-                public fun SachaInterface.importSachaInterface() = (this as? ExportedSachaInterface)?.common ?:
-                        ImportedSachaInterface(this)
+                public fun SachaInterface.importSachaInterface(): CommonSachaInterface = (this as?
+                        ExportedSachaInterface)?.common ?: ImportedSachaInterface(this)
                     """.trimIndent()
                 )
             )

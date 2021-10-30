@@ -39,9 +39,8 @@ fun initCustomMapping() {
     // No special mappings
     TypeMapping.mappings += listOf(
         // TODO: Check that 'char' is properly re-interpreted
-        BOOLEAN, BYTE, SHORT, INT, CHAR, FLOAT, DOUBLE, // => Js "number"
+        BOOLEAN, BYTE, CHAR, SHORT, INT, FLOAT, DOUBLE, // => Js "number"
         STRING, // => Js "string"
-        ARRAY, // => Js "array"
         BOOLEAN_ARRAY, BYTE_ARRAY, // => Js "Int8Array"
         SHORT_ARRAY, // => Js "Int16Array"
         INT_ARRAY, // => Js "Int32Array"
@@ -67,11 +66,28 @@ fun initCustomMapping() {
             exportMethod = { "${it.qdot}toDouble()" },
         ),
 
-        // TODO: LongArray to be tested!
         LONG_ARRAY to MappingOutput(
+            exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(LONG)) },
+            // TODO: improve perf by avoiding useless double transformation
+            // LongArray(value.size) { index -> value[index].toLong() }
+            importMethod = { "${it.qdot}map { it${TypeMapping.importMethod(LONG)} }${it.qdot}toLongArray()" },
+            exportMethod = { "${it.qdot}map { it${TypeMapping.exportMethod(LONG)} }${it.qdot}toTypedArray()" },
+        ),
+
+        ARRAY to MappingOutput(
             exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(it.firstParameterizedType())) },
-            importMethod = { "${it.qdot}map { it${TypeMapping.importMethod(it.firstParameterizedType())} }" },
-            exportMethod = { "${it.qdot}map { it${TypeMapping.exportMethod(it.firstParameterizedType())} }${it.qdot}toTypedArray()" },
+            importMethod = {
+                val importMethod = TypeMapping.importMethod(it.firstParameterizedType())
+                if (importMethod == "") "" else {
+                    "${it.qdot}map { it$importMethod }${it.qdot}toTypedArray()"
+                }
+            },
+            exportMethod = {
+                val exportMethod = TypeMapping.exportMethod(it.firstParameterizedType())
+                if (exportMethod == "") "" else {
+                    "${it.qdot}map { it$exportMethod }${it.qdot}toTypedArray()"
+                }
+            },
         ),
 
         LIST to MappingOutput(

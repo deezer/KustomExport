@@ -92,12 +92,14 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         .addFunction(
             FunSpec.builder("export${origin.classSimpleName}")
                 .receiver(originalClass)
+                .returns(jsExportedClass)
                 .addStatement("return (this as? ${importedClass.simpleName})?.exported ?: ${exportedClass.simpleName}(this)")
                 .build()
         )
         .addFunction(
             FunSpec.builder("import${origin.classSimpleName}")
                 .receiver(jsExportedClass)
+                .returns(originalClass)
                 .addStatement("return (this as? ${exportedClass.simpleName})?.common ?: ${importedClass.simpleName}(this)")
                 .build()
         )

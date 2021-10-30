@@ -147,12 +147,14 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         .addFunction(
             FunSpec.builder("export${origin.classSimpleName}")
                 .receiver(originalClass)
+                .returns(jsExportedClass)
                 .addStatement("return ${origin.classSimpleName}(this)")
                 .build()
         )
         .addFunction(
             FunSpec.builder("import${origin.classSimpleName}")
                 .receiver(jsExportedClass)
+                .returns(originalClass)
                 .addStatement("return this.common")
                 .build()
         )
