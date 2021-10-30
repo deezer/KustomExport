@@ -3,7 +3,6 @@ plugins {
     id("maven-publish")
 }
 
-
 repositories {
     mavenCentral()
 }
@@ -20,7 +19,6 @@ dependencies {
     testImplementation("junit:junit:4.12")
     testImplementation(kotlin("test"))
 }
-
 
 sourceSets.main {
     java.srcDirs("src/main/kotlin")

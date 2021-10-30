@@ -40,12 +40,14 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
         .addFunction(
             FunSpec.builder("import${origin.classSimpleName}")
                 .receiver(jsExportedClass)
+                .returns(originalClass)
                 .addStatement("return $delegateName")
                 .build()
         )
         .addFunction(
             FunSpec.builder("export${origin.classSimpleName}")
                 .receiver(originalClass)
+                .returns(jsExportedClass)
                 .addStatement("return ${origin.classSimpleName}(this)")
                 .build()
         )

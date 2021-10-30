@@ -1,7 +1,29 @@
 package deezer.kustom.compiler.js.mapping
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.ARRAY
+import com.squareup.kotlinpoet.BOOLEAN
+import com.squareup.kotlinpoet.BOOLEAN_ARRAY
+import com.squareup.kotlinpoet.BYTE
+import com.squareup.kotlinpoet.BYTE_ARRAY
+import com.squareup.kotlinpoet.CHAR
+import com.squareup.kotlinpoet.CHAR_ARRAY
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.DOUBLE
+import com.squareup.kotlinpoet.DOUBLE_ARRAY
+import com.squareup.kotlinpoet.FLOAT
+import com.squareup.kotlinpoet.FLOAT_ARRAY
+import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.INT_ARRAY
+import com.squareup.kotlinpoet.LIST
+import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.LONG_ARRAY
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.SHORT
+import com.squareup.kotlinpoet.SHORT_ARRAY
+import com.squareup.kotlinpoet.STRING
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.UNIT
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustom.compiler.js.pattern.qdot
@@ -18,6 +40,7 @@ fun initCustomMapping() {
     TypeMapping.mappings += listOf(
         // TODO: Check that 'char' is properly re-interpreted
         BOOLEAN, BYTE, SHORT, INT, CHAR, FLOAT, DOUBLE, // => Js "number"
+        STRING, // => Js "string"
         ARRAY, // => Js "array"
         BOOLEAN_ARRAY, BYTE_ARRAY, // => Js "Int8Array"
         SHORT_ARRAY, // => Js "Int16Array"

@@ -11,7 +11,7 @@ enum class ExportMode {
     ONLY_IMPORT, ONLY_EXPORT, IMPORT_EXPORT
 }
 
-//@Retention(AnnotationRetention.SOURCE)
+// @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 public annotation class KustomExport(
     public val mode: ExportMode = ExportMode.IMPORT_EXPORT

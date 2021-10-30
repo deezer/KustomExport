@@ -38,9 +38,9 @@ class ExportEnumTest {
             public val name: String = value.name
         }
         
-        public fun Season.importSeason() = value
+        public fun Season.importSeason(): CommonSeason = value
         
-        public fun CommonSeason.exportSeason() = Season(this)
+        public fun CommonSeason.exportSeason(): Season = Season(this)
         
         @JsExport
         public object Seasons {
