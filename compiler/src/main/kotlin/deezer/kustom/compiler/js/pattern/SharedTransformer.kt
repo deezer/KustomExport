@@ -34,13 +34,18 @@ fun FunctionDescriptor.toFunSpec(
     if (body) {
         val funcName = if (import) funExportedName else name
         fb.addStatement(
-            "return $delegateName.$funcName(${
+            """
+            val result = $delegateName.$funcName(${
                 parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
                     INDENTATION + it.name + " = " +
                         if (import) TypeMapping.exportMethod(it.name, it.type)
                         else TypeMapping.importMethod(it.name, it.type)
                 })
-            })${if (import) TypeMapping.importMethod("", returnType) else TypeMapping.exportMethod("", returnType)}"
+            });
+            return ${
+                if (import) TypeMapping.importMethod("result", returnType)
+                else TypeMapping.exportMethod("result", returnType)
+            }""".trimIndent()
         )
     }
     return fb.build()
@@ -104,7 +109,10 @@ fun overrideGetterSetter(
     val setterValueClass = if (import) exportedType else prop.type
 
     val getterMappingMethod =
-        if (import) TypeMapping.importMethod("$target.$fieldName", prop.type) else TypeMapping.exportMethod("$target.$fieldName", prop.type)
+        if (import) TypeMapping.importMethod(
+            "$target.$fieldName",
+            prop.type
+        ) else TypeMapping.exportMethod("$target.$fieldName", prop.type)
     val setterMappingMethod =
         if (import) TypeMapping.exportMethod(fieldName, prop.type) else TypeMapping.importMethod(fieldName, prop.type)
 
