@@ -104,7 +104,7 @@ fun overrideGetterSetter(
     val setterValueClass = if (import) exportedType else prop.type
 
     val getterMappingMethod =
-        if (import) TypeMapping.importMethod(fieldName, prop.type) else TypeMapping.exportMethod(fieldName, prop.type)
+        if (import) TypeMapping.importMethod("$target.$fieldName", prop.type) else TypeMapping.exportMethod("$target.$fieldName", prop.type)
     val setterMappingMethod =
         if (import) TypeMapping.exportMethod(fieldName, prop.type) else TypeMapping.importMethod(fieldName, prop.type)
 
@@ -115,7 +115,7 @@ fun overrideGetterSetter(
         // One-line version `get() = ...` is less verbose
         .getter(
             FunSpec.getterBuilder()
-                .addStatement("return $target.$getterMappingMethod")
+                .addStatement("return $getterMappingMethod")
                 .build()
         )
         .also { builder ->

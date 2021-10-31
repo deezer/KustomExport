@@ -32,18 +32,6 @@ fun KSClassDeclaration.parseFunctions(): List<FunctionDescriptor> {
                 isOverride = func.findOverridee() != null || !declaredNames.contains(func.simpleName),
                 returnType = func.returnType.toTypeNamePatch(),
                 parameters = func.parameters.map { p ->
-
-                    /*
-                    val maybeName = try { p.name?.asString() } catch (t:Throwable) { null }
-                    logger.error(maybeName ?: "null name")
-                    logger.warn(
-                        "param $maybeName of type " +
-                            "${p.type} < ${
-                                p.type.element?.typeArguments?.map { it.type.toTypeNamePatch() }?.joinToString()
-                            } > " +
-                            "-> ${p.type.toTypeNamePatch()}"
-                    )*/
-
                     ParameterDescriptor(
                         name = p.name?.asString() ?: TODO("not sure what we want here"),
                         type = p.type.toTypeNamePatch(),
@@ -60,11 +48,22 @@ fun KSClassDeclaration.parseProperties(): List<PropertyDescriptor> {
         if (prop.isPrivate()) {
             null // Cannot be accessed
         } else {
+            val type = prop.type.toTypeNamePatch()
+            // Retrieve the names of function arguments, like: (*MyName*: String) -> Unit
+            // Problem: we use KotlinPoet TypeName for the mapping, and it doesn't have the value available right now.
+            // Keeping this snippet for now, not sure if it would make more sense in KotlinPoet-Ksp eventually...
+            val namedArgs: List<String> = if (type.isKotlinFunction()) {
+                prop.type.resolve().arguments.map { arg ->
+                    arg.annotations.firstOrNull { it.shortName.asString() == "ParameterName" }?.arguments?.get(0)?.value.toString()
+                }
+            } else emptyList()
+
             PropertyDescriptor(
                 name = prop.simpleName.asString(),
-                type = prop.type.toTypeNamePatch(),
+                type = type,
                 isMutable = prop.isMutable,
-                isOverride = prop.findOverridee() != null || !declaredNames.contains(prop.simpleName)
+                isOverride = prop.findOverridee() != null || !declaredNames.contains(prop.simpleName),
+                //namedArgs = namedArgs
             )
         }
     }.toList()

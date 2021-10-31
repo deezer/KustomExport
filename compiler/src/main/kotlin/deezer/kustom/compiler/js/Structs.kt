@@ -9,7 +9,8 @@ data class PropertyDescriptor(
     val name: String,
     val type: TypeName, // Shortcut: type should be recursive and handle nullability+multiple generics
     val isMutable: Boolean,
-    val isOverride: Boolean
+    val isOverride: Boolean,
+    // val namedArgs: List<String>, // Names of property arguments, for lambda (not sure if we want that here)
 )
 
 data class ParameterDescriptor(

@@ -457,4 +457,67 @@ class ExportedTypesTest {
             )
         )
     }
+
+    @Test
+    fun lambda() {
+        /**
+         * What we want : (drop in draft)
+        class Bar {
+        var foo: (Long, y: Long) -> Unit = { x, y ->
+        println("x=$x / y=$y")
+        }
+        }
+
+        class Wrapper {
+        private val bar = Bar()
+        var foo: (Double, Double) -> Unit
+        get() = { a, y -> bar.foo(a.toLong(), y.toLong()) }
+        set(value) {
+        bar.foo = { a, y -> value(a.toDouble(), y.toDouble()) }
+        }
+        }
+
+        val wrapper = Wrapper()
+        wrapper.foo(12.2, 34.0)
+        wrapper.foo = { x, y ->
+        println("NICER PRINT $x : $y")
+        }
+        wrapper.foo(12.2, 34.0)
+         */
+        assertCompilationOutput(
+            inputFiles = listOf(
+                InputFile(
+                    "Pikachu.kt",
+                    """
+                    package pokemon
+                    class Pikachu
+                    """.trimIndent()
+                ),
+                InputFile(
+                    "Lambdas.kt",
+                    """
+                    package foo
+                    import deezer.kustom.KustomExport
+                    import pokemon.Pikachu
+        
+                    @KustomExport
+                    class Lambdas {
+                        var floatToUnit: (Float) -> Unit
+                        var pikachuToPikachu: (index: Int, pika: Pikachu, Long) -> Pikachu
+                        /*fun foo(block: (index: Int, pika: Pikachu, Float) -> Pikachu): (Int, Pikachu, Float) -> Pikachu {
+                            return block
+                        }*/
+                    }
+                    """.trimIndent()
+                )
+            ),
+            expectedOutputFiles = listOf(
+                ExpectedOutputFile(
+                    path = "foo/js/Lambdas.kt",
+                    content = """
+                        """.trimIndent()
+                )
+            )
+        )
+    }
 }

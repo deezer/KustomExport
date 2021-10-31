@@ -28,7 +28,6 @@ fun parseClass(classDeclaration: KSClassDeclaration): ClassDescriptor {
 
         // Logger.error("END")
     }
-
     return ClassDescriptor(
         packageName = classDeclaration.packageName.asString(),
         classSimpleName = classDeclaration.simpleName.asString(),

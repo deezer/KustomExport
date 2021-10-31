@@ -71,6 +71,10 @@ public fun KSType?.toTypeNamePatch(containingFile: KSFile?): TypeName {
     }
 }
 
+private val regexFunctionX = Regex("kotlin\\.Function[0-9]+")
+fun TypeName.isKotlinFunction() =
+    this is ParameterizedTypeName && regexFunctionX.matches(this.rawType.canonicalName)
+
 private fun getPackageFromFile(containingFile: KSFile?): String {
     // Best workaround so far, expect the import is visible in the file.
     val file = File(containingFile!!.filePath)
