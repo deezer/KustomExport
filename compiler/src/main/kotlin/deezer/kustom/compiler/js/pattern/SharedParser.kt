@@ -63,7 +63,7 @@ fun KSClassDeclaration.parseProperties(): List<PropertyDescriptor> {
                 type = type,
                 isMutable = prop.isMutable,
                 isOverride = prop.findOverridee() != null || !declaredNames.contains(prop.simpleName),
-                //namedArgs = namedArgs
+                // namedArgs = namedArgs
             )
         }
     }.toList()

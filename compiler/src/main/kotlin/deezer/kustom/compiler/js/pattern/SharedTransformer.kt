@@ -36,16 +36,17 @@ fun FunctionDescriptor.toFunSpec(
         fb.addStatement(
             """
             val result = $delegateName.$funcName(${
-                parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
-                    INDENTATION + it.name + " = " +
-                        if (import) TypeMapping.exportMethod(it.name, it.type)
-                        else TypeMapping.importMethod(it.name, it.type)
-                })
+            parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
+                INDENTATION + it.name + " = " +
+                    if (import) TypeMapping.exportMethod(it.name, it.type)
+                    else TypeMapping.importMethod(it.name, it.type)
+            })
             });
             return ${
-                if (import) TypeMapping.importMethod("result", returnType)
-                else TypeMapping.exportMethod("result", returnType)
-            }""".trimIndent()
+            if (import) TypeMapping.importMethod("result", returnType)
+            else TypeMapping.exportMethod("result", returnType)
+            }
+            """.trimIndent()
         )
     }
     return fb.build()

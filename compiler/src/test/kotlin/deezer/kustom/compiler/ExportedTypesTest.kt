@@ -559,7 +559,7 @@ class ExportedTypesTest {
                         public fun CommonLambdas.exportLambdas(): Lambdas = Lambdas(this)
 
                         public fun Lambdas.importLambdas(): CommonLambdas = this.common
-                        """.trimIndent()
+                    """.trimIndent()
                 )
             )
         )
