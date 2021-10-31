@@ -35,12 +35,12 @@ fun FunctionDescriptor.toFunSpec(
         val funcName = if (import) funExportedName else name
         fb.addStatement(
             "return $delegateName.$funcName(${
-            parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
-                INDENTATION + it.name + " = " + it.name + if (import) TypeMapping.exportMethod(it.type) else TypeMapping.importMethod(
-                    it.type
-                )
-            })
-            })${if (import) TypeMapping.importMethod(returnType) else TypeMapping.exportMethod(returnType)}"
+                parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
+                    INDENTATION + it.name + " = " +
+                        if (import) TypeMapping.exportMethod(it.name, it.type)
+                        else TypeMapping.importMethod(it.name, it.type)
+                })
+            })${if (import) TypeMapping.importMethod("", returnType) else TypeMapping.exportMethod("", returnType)}"
         )
     }
     return fb.build()
@@ -104,9 +104,9 @@ fun overrideGetterSetter(
     val setterValueClass = if (import) exportedType else prop.type
 
     val getterMappingMethod =
-        if (import) TypeMapping.importMethod(prop.type) else TypeMapping.exportMethod(prop.type)
+        if (import) TypeMapping.importMethod(fieldName, prop.type) else TypeMapping.exportMethod(fieldName, prop.type)
     val setterMappingMethod =
-        if (import) TypeMapping.exportMethod(prop.type) else TypeMapping.importMethod(prop.type)
+        if (import) TypeMapping.exportMethod(fieldName, prop.type) else TypeMapping.importMethod(fieldName, prop.type)
 
     val modifiers = if (forceOverride || prop.isOverride) listOf(KModifier.OVERRIDE) else emptyList()
 
@@ -115,7 +115,7 @@ fun overrideGetterSetter(
         // One-line version `get() = ...` is less verbose
         .getter(
             FunSpec.getterBuilder()
-                .addStatement("return $target.$fieldName$getterMappingMethod")
+                .addStatement("return $target.$getterMappingMethod")
                 .build()
         )
         .also { builder ->
@@ -124,8 +124,8 @@ fun overrideGetterSetter(
                     .mutable()
                     .setter(
                         FunSpec.setterBuilder()
-                            .addParameter("value", setterValueClass)
-                            .addStatement("$target.$fieldName = value$setterMappingMethod")
+                            .addParameter(fieldName, setterValueClass)
+                            .addStatement("$target.$fieldName = $setterMappingMethod")
                             .build()
                     )
             }

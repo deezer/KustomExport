@@ -19,8 +19,8 @@ object TypeMapping {
     // Mapped with the domain/origin type as key
     data class MappingOutput(
         val exportType: (TypeName) -> TypeName,
-        val importMethod: (TypeName) -> String, // Translates a domainType to an exportType
-        val exportMethod: (TypeName) -> String, // Translates an exportType to a domainType
+        val importMethod: (targetName: String, TypeName) -> String, // Translates a domainType to an exportType
+        val exportMethod: (targetName: String, TypeName) -> String, // Translates an exportType to a domainType
     )
 
     private fun getMapping(origin: TypeName): MappingOutput? =
@@ -46,19 +46,17 @@ object TypeMapping {
             }
     }
 
-    fun exportMethod(origin: TypeName): String {
-        return getMapping(origin)?.exportMethod?.invoke(origin) ?: run {
+    fun exportMethod(targetName: String, origin: TypeName): String {
+        return getMapping(origin)?.exportMethod?.invoke(targetName, origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
-            // origin.qdot + "${importExportPrefix(origin.asClassName().packageName)}jExport()"
-            origin.qdot + "export${origin.asClassName().simpleName}()"
+            "$targetName${origin.qdot}export${origin.asClassName().simpleName}()"
         }
     }
 
-    fun importMethod(origin: TypeName): String {
-        return getMapping(origin)?.importMethod?.invoke(origin) ?: run {
+    fun importMethod(targetName: String, origin: TypeName): String {
+        return getMapping(origin)?.importMethod?.invoke(targetName, origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
-            // origin.qdot + "${importExportPrefix(origin.asClassName().packageName)}jImport()"
-            origin.qdot + "import${origin.asClassName().simpleName}()"
+            "$targetName${origin.qdot}import${origin.asClassName().simpleName}()"
         }
     }
 }

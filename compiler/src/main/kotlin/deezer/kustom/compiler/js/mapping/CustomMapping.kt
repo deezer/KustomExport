@@ -52,8 +52,8 @@ fun initCustomMapping() {
     ).map { exportableType ->
         exportableType to MappingOutput(
             exportType = { exportableType },
-            importMethod = { "" },
-            exportMethod = { "" },
+            importMethod = { targetName, _ -> targetName },
+            exportMethod = { targetName, _ -> targetName },
         )
     }
 
@@ -62,45 +62,60 @@ fun initCustomMapping() {
         // doc: kotlin.Long is not mapped to any JavaScript object, as there is no 64-bit integer number type in JavaScript. It is emulated by a Kotlin class.
         LONG to MappingOutput(
             exportType = { DOUBLE },
-            importMethod = { "${it.qdot}toLong()" },
-            exportMethod = { "${it.qdot}toDouble()" },
+            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}toLong()" },
+            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}toDouble()" },
         ),
 
         LONG_ARRAY to MappingOutput(
             exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(LONG)) },
             // TODO: improve perf by avoiding useless double transformation
             // LongArray(value.size) { index -> value[index].toLong() }
-            importMethod = { "${it.qdot}map { it${TypeMapping.importMethod(LONG)} }${it.qdot}toLongArray()" },
-            exportMethod = { "${it.qdot}map { it${TypeMapping.exportMethod(LONG)} }${it.qdot}toTypedArray()" },
+            importMethod = { targetName, typeName ->
+                targetName +
+                    "${typeName.qdot}map { ${TypeMapping.importMethod("it", LONG)} }" +
+                    "${typeName.qdot}toLongArray()"
+            },
+            exportMethod = { targetName, typeName ->
+                targetName +
+                    "${typeName.qdot}map { ${TypeMapping.exportMethod("it", LONG)} }" +
+                    "${typeName.qdot}toTypedArray()"
+            },
         ),
 
         ARRAY to MappingOutput(
             exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(it.firstParameterizedType())) },
-            importMethod = {
-                val importMethod = TypeMapping.importMethod(it.firstParameterizedType())
-                if (importMethod == "") "" else {
-                    "${it.qdot}map { it$importMethod }${it.qdot}toTypedArray()"
+            importMethod = { targetName, typeName ->
+                val importMethod = TypeMapping.importMethod("it", typeName.firstParameterizedType())
+                if (importMethod == "it") targetName else {
+                    "$targetName${typeName.qdot}map { $importMethod }${typeName.qdot}toTypedArray()"
                 }
             },
-            exportMethod = {
-                val exportMethod = TypeMapping.exportMethod(it.firstParameterizedType())
-                if (exportMethod == "") "" else {
-                    "${it.qdot}map { it$exportMethod }${it.qdot}toTypedArray()"
+            exportMethod = { targetName, typeName ->
+                val exportMethod = TypeMapping.exportMethod("it", typeName.firstParameterizedType())
+                if (exportMethod == "it") targetName else {
+                    "$targetName${typeName.qdot}map { $exportMethod }${typeName.qdot}toTypedArray()"
                 }
             },
         ),
 
         LIST to MappingOutput(
             exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(it.firstParameterizedType())) },
-            importMethod = { "${it.qdot}map { it${TypeMapping.importMethod(it.firstParameterizedType())} }" },
-            exportMethod = { "${it.qdot}map { it${TypeMapping.exportMethod(it.firstParameterizedType())} }${it.qdot}toTypedArray()" },
+            importMethod = { targetName, typeName ->
+                targetName +
+                    "${typeName.qdot}map { ${TypeMapping.importMethod("it", typeName.firstParameterizedType())} }"
+            },
+            exportMethod = { targetName, typeName ->
+                targetName +
+                    "${typeName.qdot}map { ${TypeMapping.exportMethod("it", typeName.firstParameterizedType())} }" +
+                    "${typeName.qdot}toTypedArray()"
+            },
         ),
         // TODO: Handle other collections
 
         EXCEPTION to MappingOutput(
             exportType = { EXCEPTION_JS },
-            importMethod = { "${it.qdot}import()" },
-            exportMethod = { "${it.qdot}export()" },
+            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
+            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
         )
 
         // TODO: Implement all lambda possible? -> just enforce SAM interface for now...
