@@ -28,3 +28,9 @@ jobs:
       # Runs a single command using the runners shell
       - name: Verify PR - unit tests & code style
         run: ./gradlew check
+        
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: test-results/**/*.xml
