@@ -7,16 +7,13 @@ buildscript {
     dependencies {
         // For now we cannot upgrade the version of BuildKonfig because we'll need to build with Java 11
         classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.10.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0-RC")
     }
 }
-
-val kmpGroup by extra("com.deezer.kmp")
-val versionBase by extra("0.15.0")
 
 plugins {
     id("maven-publish")
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
-    // kotlin("multiplatform") apply false
 }
 
 allprojects {

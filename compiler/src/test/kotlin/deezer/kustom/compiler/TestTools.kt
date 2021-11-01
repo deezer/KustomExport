@@ -5,23 +5,33 @@ import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.intellij.lang.annotations.Language
 import java.nio.file.Files
 import kotlin.io.path.Path
 import kotlin.io.path.exists
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-data class InputFile(val path: String, val content: String)
-data class ExpectedOutputFile(val path: String, val content: String)
+data class InputFile(val path: String, @Language("kotlin") val content: String)
+data class ExpectedOutputFile(val path: String, @Language("kotlin") val content: String)
 
 @KotlinPoetKspPreview
-fun assertCompilationOutput(fileContent: String, vararg files: ExpectedOutputFile) {
+fun assertCompilationOutput(@Language("kotlin") fileContent: String, vararg files: ExpectedOutputFile) {
     assertCompilationOutput(listOf(InputFile("Main.kt", fileContent)), files.asList())
 }
 
 @KotlinPoetKspPreview
 fun assertCompilationOutput(inputFiles: List<InputFile>, expectedOutputFiles: List<ExpectedOutputFile>) {
-    val compilation = compile(inputFiles.map { SourceFile.kotlin(it.path, it.content) })
+    // Requires to add the annotation here
+    val kustomExport = SourceFile.kotlin(
+        name = "KustomExport.kt",
+        contents = """
+            package deezer.kustom
+            internal annotation class KustomExport
+        """.trimIndent()
+    )
+
+    val compilation = compile(inputFiles.map { SourceFile.kotlin(it.path, it.content) } + kustomExport)
     expectedOutputFiles.forEach { expectedFile ->
         val targetPath = compilation.kspSourcesDir.path + "/kotlin/" + expectedFile.path
         val path = Path(targetPath)
@@ -32,10 +42,11 @@ fun assertCompilationOutput(inputFiles: List<InputFile>, expectedOutputFiles: Li
             // val generatedContent = Files.readString(path)
             assertEquals(expectedFile.content, generatedContent)
         } else {
-            println("--------")
-            println(compilation.kspSourcesDir.walkTopDown().joinToString())
-            println("--------")
-            fail("Expected a file at path $targetPath but nothing was there.")
+            fail(
+                "Expected a file at path $targetPath but nothing was there.\n" +
+                    "Files:\n" +
+                    compilation.kspSourcesDir.walkTopDown().joinToString("\n")
+            )
         }
     }
 }
