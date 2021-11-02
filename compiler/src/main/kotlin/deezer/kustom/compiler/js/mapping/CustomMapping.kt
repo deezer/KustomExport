@@ -32,7 +32,7 @@ const val INDENTATION = "    "
 
 // val FUNCTION1 = ClassName("kotlin", "Function1")
 val EXCEPTION = ClassName("kotlin", "Exception")
-val EXCEPTION_JS = ClassName("deezer.kmp", "Exception")
+val EXCEPTION_JS = ClassName("deezer.kustom", "Exception")
 
 fun initCustomMapping() {
     // Doc interop: https://kotlinlang.org/docs/js-to-kotlin-interop.html#primitive-arrays
