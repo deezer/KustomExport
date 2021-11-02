@@ -11,7 +11,10 @@ buildscript {
 }
 
 val localProperties = java.util.Properties().apply {
-    load(java.io.FileInputStream(File(rootProject.rootDir, "local.properties")))
+    val propPath = "local.properties"
+    if (File(propPath).exists()) {
+        load(java.io.FileInputStream(File(rootProject.rootDir, propPath)))
+    }
 }
 
 plugins {
@@ -41,15 +44,17 @@ subprojects {
 
     group = "com.deezer.kustom"
 
-    publishing {
-        version = "0.0.1-SNAPSHOT"
+    if (localProperties.getProperty("REPOSITORY_URL") != null) {
+        publishing {
+            version = "0.0.1-SNAPSHOT"
 
-        repositories {
-            maven {
-                url = uri(localProperties.getProperty("REPOSITORY_URL"))
-                credentials {
-                    username = localProperties.getProperty("REPOSITORY_USERNAME")
-                    password = localProperties.getProperty("REPOSITORY_PASSWORD")
+            repositories {
+                maven {
+                    url = uri(localProperties.getProperty("REPOSITORY_URL"))
+                    credentials {
+                        username = localProperties.getProperty("REPOSITORY_USERNAME")
+                        password = localProperties.getProperty("REPOSITORY_PASSWORD")
+                    }
                 }
             }
         }
