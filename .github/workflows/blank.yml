@@ -27,10 +27,33 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Verify PR - unit tests & code style
-        run: ./gradlew check
-        
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
+        run: |
+          ./gradlew compileKotlinJs -PenableKsp=true
+          ./gradlew check
+
+      # Commented plugin for now as it only supports ubuntu
+      #- name: Publish Unit Test Results
+      #  uses: EnricoMi/publish-unit-test-result-action@v1
+      #  if: always()
+      #  with:
+      #    files: compiler/build/test-results/**/*.xml
+
+      - name: Run integration tests
+        run: ./gradlew jsBrowserProductionLibraryDistribution
+      #    ./samples/_run.sh > build/reports/tests/integration.txt
+
+      - id: get-comment-body
+        run: |
+          body="$(./samples/_run.sh)"
+          echo "::set-output name=body::$body"
+
+      - name: Echo env vars
+        run: |
+          echo $GITHUB_EVENT_NAME
+          echo $GITHUB_HEAD_REF
+
+      - name: Post integartion test result
+        uses: peter-evans/create-or-update-comment@v1
         with:
-          files: compiler/build/test-results/**/*.xml
+          issue-number: 1
+          body: ${{ steps.get-comment-body.outputs.body }}
