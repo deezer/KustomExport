@@ -1,13 +1,8 @@
+import { runTest } from "../../shared_ts/RunTest"
+import { assert } from "../../shared_ts/Assert"
 import Samples from '@kustom/Samples'
 
-try {
+runTest("SimpleClass", () : void => {
     var simpleClass = new Samples.sample._class.simple.js.SimpleClass()
-    if (simpleClass.simpleValue == 42) {
-        console.log("✅  SimpleClass: can retrieve the value")
-    } else {
-        console.log("❌  SimpleClass: can retrieve the value")
-    }
-} catch(error) {
-    console.log("🔥  SimpleClass")
-    console.error(error)
-}
+    assert(simpleClass.simpleValue == 42, "can retrieve value")
+})

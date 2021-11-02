@@ -1,9 +1,8 @@
+import { runTest } from "../../shared_ts/RunTest"
+import { assert } from "../../shared_ts/Assert"
 import Samples from '@kustom/Samples'
 
-try {
+runTest("EmptyClass", () : void => {
     var emptyClass = new Samples.sample._class.empty.js.EmptyClass()
-    console.log("✅  EmptyClass: Can instantiate")
-} catch(error) {
-    console.log("❌  EmptyClass: Cannot instantiate")
-    console.error(error)
-}
+    assert(true, "can instantiate")
+})

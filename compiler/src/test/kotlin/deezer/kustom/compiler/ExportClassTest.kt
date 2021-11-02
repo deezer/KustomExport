@@ -70,7 +70,7 @@ class ExportClassTest {
             internal lateinit var common: CommonBasicClass
         
             init {
-                if (id != deezer.kmp.dynamicNull) {
+                if (id != deezer.kustom.dynamicNull) {
                     common = CommonBasicClass(
                         id = id
                     )
@@ -79,7 +79,7 @@ class ExportClassTest {
             public val id: String
                 get() = common.id
         
-            internal constructor(common: CommonBasicClass) : this(id = deezer.kmp.dynamicNull) {
+            internal constructor(common: CommonBasicClass) : this(id = deezer.kustom.dynamicNull) {
                 this.common = common
             }
         }

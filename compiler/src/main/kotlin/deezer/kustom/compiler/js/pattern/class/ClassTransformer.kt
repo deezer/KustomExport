@@ -39,9 +39,9 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
     val firstCtorParam = origin.constructorParams.firstOrNull()
     val ctorDyn = when {
         firstCtorParam == null -> null
-        !firstCtorParam.type.isNullable -> "deezer.kmp.dynamicNull"
-        firstCtorParam.type != STRING -> "deezer.kmp.dynamicString"
-        else -> "deezer.kmp.dynamicNotString"
+        !firstCtorParam.type.isNullable -> "deezer.kustom.dynamicNull"
+        firstCtorParam.type != STRING -> "deezer.kustom.dynamicString"
+        else -> "deezer.kustom.dynamicNotString"
     }
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
