@@ -10,8 +10,9 @@ buildscript {
     }
 }
 
-val kmpGroup by extra("com.deezer.kmp")
-val versionBase by extra("0.15.0")
+val localProperties = java.util.Properties().apply {
+    load(java.io.FileInputStream(File(rootProject.rootDir, "local.properties")))
+}
 
 plugins {
     id("maven-publish")
@@ -41,6 +42,16 @@ subprojects {
     group = "com.deezer.kustom"
 
     publishing {
-        // TODO
+        version = "0.0.1-SNAPSHOT"
+
+        repositories {
+            maven {
+                url = uri(localProperties.getProperty("REPOSITORY_URL"))
+                credentials {
+                    username = localProperties.getProperty("REPOSITORY_USERNAME")
+                    password = localProperties.getProperty("REPOSITORY_PASSWORD")
+                }
+            }
+        }
     }
 }

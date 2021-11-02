@@ -29,7 +29,6 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.deezer.kustom"
             artifactId = "compiler"
-            version = "0.0.1"
 
             from(components["java"])
         }
