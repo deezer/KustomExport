@@ -11,6 +11,10 @@ buildscript {
     }
 }
 
+val localProperties = java.util.Properties().apply {
+    load(java.io.FileInputStream(File(rootProject.rootDir, "local.properties")))
+}
+
 plugins {
     id("maven-publish")
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
@@ -38,6 +42,16 @@ subprojects {
     group = "com.deezer.kustom"
 
     publishing {
-        // TODO
+        version = "0.0.1-SNAPSHOT"
+
+        repositories {
+            maven {
+                url = uri(localProperties.getProperty("REPOSITORY_URL"))
+                credentials {
+                    username = localProperties.getProperty("REPOSITORY_USERNAME")
+                    password = localProperties.getProperty("REPOSITORY_PASSWORD")
+                }
+            }
+        }
     }
 }
