@@ -86,13 +86,13 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             """
                             |if (${firstCtorParam.name} != $ctorDyn) {
                             |${INDENTATION}common = Common${origin.classSimpleName}(${
-                                (
-                                    origin.constructorParams.joinToString(
-                                        ",\n$INDENTATION$INDENTATION",
-                                        prefix = "\n$INDENTATION$INDENTATION",
-                                        postfix = "\n"
-                                    ) { it.name + "·=·" + TypeMapping.importMethod(it.name, it.type) }
-                                    )
+                            (
+                                origin.constructorParams.joinToString(
+                                    ",\n$INDENTATION$INDENTATION",
+                                    prefix = "\n$INDENTATION$INDENTATION",
+                                    postfix = "\n"
+                                ) { it.name + "·=·" + TypeMapping.importMethod(it.name, it.type) }
+                                )
                             }$INDENTATION)
                             |}
                             """.trimMargin()
