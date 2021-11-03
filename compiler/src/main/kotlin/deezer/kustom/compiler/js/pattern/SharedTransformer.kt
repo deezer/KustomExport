@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.PropertyDescriptor
@@ -59,7 +60,7 @@ fun buildWrapperClass(
     properties: List<PropertyDescriptor>,
     functions: List<FunctionDescriptor>
 ): TypeSpec {
-    val jsClassPackage = originalClass.packageName.jsPackage()
+    val jsClassPackage = if (CompilerArgs.erasePackage) "" else originalClass.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName)
     val wrapperPrefix = if (import) "Imported" else "Exported"
     val wrapperClass =

@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
+import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ClassDescriptor
@@ -48,7 +49,7 @@ private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder
                 }
             } else {
                 addAliasedImport(className, "Common${className.simpleName}")
-                val jsPackage = className.packageName.jsPackage()
+                val jsPackage = if (CompilerArgs.erasePackage) "" else className.packageName.jsPackage()
                 // if (packageName != jsPackage) { // Useless import if same package
                 // addAliasedImport(MemberName(jsPackage, "import"), "${importExportPrefix(jsPackage)}Import")
                 // addAliasedImport(MemberName(jsPackage, "export"), "${importExportPrefix(jsPackage)}Export")

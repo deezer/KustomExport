@@ -3,6 +3,7 @@ package deezer.kustom.compiler.js.mapping
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
+import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.pattern.asClassName
@@ -47,9 +48,10 @@ object TypeMapping {
                 assert(origin is ClassName) {
                     "$origin (${origin::class.java}) is not a ClassName instance, we can't ensure the portability yet."
                 }
+                origin as ClassName
 
                 return ClassName(
-                    packageName = (origin as ClassName).packageName.jsPackage(),
+                    packageName = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage(),
                     simpleNames = listOf(origin.simpleName)
                 ).copy(nullable = origin.isNullable)
             }

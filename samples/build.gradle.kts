@@ -37,3 +37,7 @@ dependencies {
         add("kspJs", project(":compiler"))
     }
 }
+
+ksp {
+    arg("erasePackage", "false")
+}

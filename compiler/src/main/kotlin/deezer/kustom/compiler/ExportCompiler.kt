@@ -14,16 +14,20 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustom.compiler.js.pattern.`class`.parseClass
 import deezer.kustom.compiler.js.pattern.`class`.transform
-import deezer.kustom.compiler.js.pattern.enum.parseEnum
-import deezer.kustom.compiler.js.pattern.enum.transform
 import deezer.kustom.compiler.js.pattern.`interface`.parseInterface
 import deezer.kustom.compiler.js.pattern.`interface`.transform
+import deezer.kustom.compiler.js.pattern.enum.parseEnum
+import deezer.kustom.compiler.js.pattern.enum.transform
 import kotlin.random.Random
 
 // Trick to share the Logger everywhere without injecting the dependency everywhere
 internal lateinit var sharedLogger: KSPLogger
 
-object Logger : KSPLogger by sharedLogger
+internal object Logger : KSPLogger by sharedLogger
+
+internal object CompilerArgs {
+    var erasePackage: Boolean = false
+}
 
 @KotlinPoetKspPreview
 class ExportCompiler(private val environment: SymbolProcessorEnvironment) : SymbolProcessor {
@@ -35,6 +39,7 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
     @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val passId = Random.nextLong()
+        CompilerArgs.erasePackage = environment.options["erasePackage"] == "true"
         val symbols = try {
             resolver.getSymbolsWithAnnotation(environment.options["annotation"] ?: "deezer.kustom.KustomExport")
         } catch (e: Exception) {

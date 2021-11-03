@@ -6,6 +6,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
@@ -24,7 +25,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
     val originalClass = ClassName(origin.packageName, origin.classSimpleName)
 
     val delegateName = origin.classSimpleName.replaceFirstChar { it.lowercase(Locale.getDefault()) }
-    val jsClassPackage = origin.packageName.jsPackage()
+    val jsClassPackage = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
     val importedClass = ClassName(jsClassPackage, "Imported${origin.classSimpleName}")
     val exportedClass = ClassName(jsClassPackage, "Exported${origin.classSimpleName}")

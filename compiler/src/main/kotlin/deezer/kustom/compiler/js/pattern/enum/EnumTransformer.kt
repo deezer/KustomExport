@@ -7,6 +7,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
@@ -15,7 +16,7 @@ import deezer.kustom.compiler.js.mapping.INDENTATION
 fun EnumDescriptor.transform() = transformEnum(this)
 
 fun transformEnum(origin: EnumDescriptor): FileSpec {
-    val jsClassPackage = origin.packageName.jsPackage()
+    val jsClassPackage = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage()
     val originalClass = ClassName(origin.packageName, origin.classSimpleName)
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 

@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
@@ -25,7 +26,7 @@ fun ClassDescriptor.transform() = transformClass(this)
 fun transformClass(origin: ClassDescriptor): FileSpec {
     val originalClass = ClassName(origin.packageName, origin.classSimpleName)
 
-    val jsClassPackage = origin.packageName.jsPackage()
+    val jsClassPackage = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 
     // Primary constructor should respect the original class signature, and creates a 'common' instance.
