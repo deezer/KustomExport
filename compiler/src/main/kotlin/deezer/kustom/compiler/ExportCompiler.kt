@@ -14,10 +14,10 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustom.compiler.js.pattern.`class`.parseClass
 import deezer.kustom.compiler.js.pattern.`class`.transform
-import deezer.kustom.compiler.js.pattern.`interface`.parseInterface
-import deezer.kustom.compiler.js.pattern.`interface`.transform
 import deezer.kustom.compiler.js.pattern.enum.parseEnum
 import deezer.kustom.compiler.js.pattern.enum.transform
+import deezer.kustom.compiler.js.pattern.`interface`.parseInterface
+import deezer.kustom.compiler.js.pattern.`interface`.transform
 import kotlin.random.Random
 
 // Trick to share the Logger everywhere without injecting the dependency everywhere
