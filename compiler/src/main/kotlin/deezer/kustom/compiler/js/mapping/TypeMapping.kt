@@ -1,15 +1,16 @@
 package deezer.kustom.compiler.js.mapping
 
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
+import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.pattern.asClassName
 import deezer.kustom.compiler.js.pattern.qdot
 
 object TypeMapping {
     val mappings = mutableMapOf<TypeName, MappingOutput>()
+    val advancedMappings = mutableMapOf<(TypeName) -> Boolean, MappingOutput>()
 
     init {
         // TODO: make it dynamic to open-source the project and be extensible enough
@@ -23,13 +24,21 @@ object TypeMapping {
         val exportMethod: (targetName: String, TypeName) -> String, // Translates an exportType to a domainType
     )
 
-    private fun getMapping(origin: TypeName): MappingOutput? =
-        when (origin) {
-            // Mapping is defined for non-nullable type only, nullable type follow the same transformations pattern than their non-null counterparts.
-            is ParameterizedTypeName -> mappings[origin.rawType.copy(nullable = false)]
-            is LambdaTypeName -> error("foo")
-            else -> mappings[origin.copy(nullable = false)]
+    private fun getMapping(origin: TypeName): MappingOutput? {
+        Logger.warn("getMapping $origin (${origin::class}")
+        return when (origin) {
+            // Simple mapping is defined for non-nullable type only,
+            // nullable type follow the same transformations pattern than their non-null counterparts.
+            // Advanced mappings requires the original type without transformation
+            is ParameterizedTypeName -> {
+                mappings[origin.rawType.copy(nullable = false)]
+                    ?: advancedMappings.firstNotNullOfOrNull { if (it.key(origin)) it.value else null }
+            }
+            else ->
+                mappings[origin.copy(nullable = false)]
+                    ?: advancedMappings.firstNotNullOfOrNull { if (it.key(origin)) it.value else null }
         }
+    }
 
     fun exportedType(origin: TypeName): TypeName {
         return getMapping(origin)?.exportType?.invoke(origin)?.copy(nullable = origin.isNullable)

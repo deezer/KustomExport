@@ -263,17 +263,23 @@ class ExportInterfaceTest {
                         private class ImportedBasicInterface(
                             internal val exported: BasicInterface
                         ) : CommonBasicInterface {
-                            public override fun foo(bar: CommonBar): Unit = exported.foo(
-                                bar = bar.exportBar()
-                            )
+                            public override fun foo(bar: CommonBar): Unit {
+                                            val result = exported.foo(
+                                            bar = bar.exportBar()
+                                        );
+                                                    return result
+                            }
                         }
                         
                         private class ExportedBasicInterface(
                             internal val common: CommonBasicInterface
                         ) : BasicInterface {
-                            public override fun foo(bar: Bar): Unit = common.foo(
-                                bar = bar.importBar()
-                            )
+                            public override fun foo(bar: Bar): Unit {
+                                            val result = common.foo(
+                                            bar = bar.importBar()
+                                        );
+                                                    return result
+                            }
                         }
                         
                         public fun CommonBasicInterface.exportBasicInterface(): BasicInterface = (this as?
@@ -339,17 +345,23 @@ class ExportInterfaceTest {
                         private class ImportedBasicInterface(
                             internal val exported: BasicInterface
                         ) : CommonBasicInterface {
-                            public override fun foo(bar: CommonBar): List<Long> = exported.foo(
-                                bar = bar.exportBar()
-                            ).map { it.toLong() }
+                            public override fun foo(bar: CommonBar): List<Long> {
+                                            val result = exported.foo(
+                                            bar = bar.exportBar()
+                                        );
+                                                    return result.map { it.toLong() }
+                            }
                         }
                         
                         private class ExportedBasicInterface(
                             internal val common: CommonBasicInterface
                         ) : BasicInterface {
-                            public override fun foo(bar: Bar): Array<Double> = common.foo(
-                                bar = bar.importBar()
-                            ).map { it.toDouble() }.toTypedArray()
+                            public override fun foo(bar: Bar): Array<Double> {
+                                            val result = common.foo(
+                                            bar = bar.importBar()
+                                        );
+                                                    return result.map { it.toDouble() }.toTypedArray()
+                            }
                         }
                         
                         public fun CommonBasicInterface.exportBasicInterface(): BasicInterface = (this as?

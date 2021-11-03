@@ -26,3 +26,4 @@ fun OutputStream.appendText(str: String) {
 }
 
 fun TypeName.firstParameterizedType() = (this as ParameterizedTypeName).typeArguments.first()
+fun TypeName.secondParameterizedType() = (this as ParameterizedTypeName).typeArguments[1]

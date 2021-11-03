@@ -457,4 +457,111 @@ class ExportedTypesTest {
             )
         )
     }
+
+    @Test
+    fun lambda() {
+        assertCompilationOutput(
+            inputFiles = listOf(
+                InputFile(
+                    "Pikachu.kt",
+                    """
+                    package pokemon
+                    class Pikachu
+                    """.trimIndent()
+                ),
+                InputFile(
+                    "Lambdas.kt",
+                    """
+                    package foo
+                    import deezer.kustom.KustomExport
+                    import pokemon.Pikachu
+        
+                    @KustomExport
+                    class Lambdas {
+                        var floatToUnit: (Float) -> Unit = {}
+                        var complexFun: (index: Int, pika: Pikachu, Long) -> Pikachu = { _, pika, _ -> pika }
+                        fun returnParam(block: (index: Int, pika: Pikachu, Long) -> Pikachu): (Int, Pikachu, Long) -> Pikachu {
+                            return block
+                        }
+                    }
+                    """.trimIndent()
+                )
+            ),
+            expectedOutputFiles = listOf(
+                ExpectedOutputFile(
+                    path = "foo/js/Lambdas.kt",
+                    content = """
+                        package foo.js
+
+                        import kotlin.Double
+                        import kotlin.Float
+                        import kotlin.Int
+                        import kotlin.Unit
+                        import kotlin.js.JsExport
+                        import pokemon.js.Pikachu
+                        import foo.Lambdas as CommonLambdas
+
+                        @JsExport
+                        public class Lambdas() {
+                            internal lateinit var common: CommonLambdas
+
+                            init {
+                                common = CommonLambdas()}
+
+                            public var floatToUnit: (Float) -> Unit
+                                get() = { a: kotlin.Float ->
+                                    common.floatToUnit(a)
+                                }
+                                set(floatToUnit) {
+                                    common.floatToUnit = { a: kotlin.Float ->
+                                                floatToUnit(a)
+                                            }
+                                }
+
+                            public var complexFun: (
+                                Int,
+                                Pikachu,
+                                Double
+                            ) -> pokemon.Pikachu
+                                get() = { a: kotlin.Int, b: pokemon.js.Pikachu, c: kotlin.Double ->
+                                    common.complexFun(a, b.importPikachu(), c.toLong()).exportPikachu()
+                                }
+                                set(complexFun) {
+                                    common.complexFun = { a: kotlin.Int, b: pokemon.Pikachu, c: kotlin.Long ->
+                                                complexFun(a, b.exportPikachu(), c.toDouble()).importPikachu()
+                                            }
+                                }
+
+                            internal constructor(common: CommonLambdas) : this() {
+                                this.common = common
+                            }
+
+                            public fun returnParam(block: (
+                                Int,
+                                Pikachu,
+                                Double
+                            ) -> pokemon.Pikachu): (
+                                Int,
+                                Pikachu,
+                                Double
+                            ) -> pokemon.Pikachu {
+                                            val result = common.returnParam(
+                                            block = { a: kotlin.Int, b: pokemon.Pikachu, c: kotlin.Long ->
+                                            block(a, b.exportPikachu(), c.toDouble()).importPikachu()
+                                        }
+                                        );
+                                                    return { a: kotlin.Int, b: pokemon.js.Pikachu, c: kotlin.Double ->
+                                            result(a, b.importPikachu(), c.toLong()).exportPikachu()
+                                        }
+                            }
+                        }
+
+                        public fun CommonLambdas.exportLambdas(): Lambdas = Lambdas(this)
+
+                        public fun Lambdas.importLambdas(): CommonLambdas = this.common
+                    """.trimIndent()
+                )
+            )
+        )
+    }
 }

@@ -1,10 +1,10 @@
 pluginManagement {
     plugins {
-        id("com.google.devtools.ksp") version "1.5.31-1.0.0"
+        id("com.google.devtools.ksp") version "1.6.0-RC-1.0.1-RC"
     }
     repositories {
         gradlePluginPortal()
     }
 }
 
-include(":lib", ":compiler")
+include(":lib", ":compiler", ":samples")
