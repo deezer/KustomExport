@@ -30,6 +30,10 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
     val importedClass = ClassName(jsClassPackage, "Imported${origin.classSimpleName}")
     val exportedClass = ClassName(jsClassPackage, "Exported${origin.classSimpleName}")
 
+    if (origin.generics.isNotEmpty()) {
+        Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.generics}")
+    }
+
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(originalClass, "Common${origin.classSimpleName}")
         .autoImport(origin)

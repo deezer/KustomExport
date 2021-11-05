@@ -3,6 +3,7 @@ package deezer.kustom.compiler.js.mapping
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.jsPackage
@@ -44,6 +45,9 @@ object TypeMapping {
     fun exportedType(origin: TypeName): TypeName {
         return getMapping(origin)?.exportType?.invoke(origin)?.copy(nullable = origin.isNullable)
             ?: run {
+                if (origin is TypeVariableName) {
+                    return ClassName("just.a", "test")
+                }
                 // If no mapping, assume it's a project class, and it has a generated file
                 assert(origin is ClassName) {
                     "$origin (${origin::class.java}) is not a ClassName instance, we can't ensure the portability yet."
@@ -60,14 +64,22 @@ object TypeMapping {
     fun exportMethod(targetName: String, origin: TypeName): String {
         return getMapping(origin)?.exportMethod?.invoke(targetName, origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
-            "$targetName${origin.qdot}export${origin.asClassName().simpleName}()"
+            if (origin is TypeVariableName) {
+                "TBD"
+            } else {
+                "$targetName${origin.qdot}export${origin.asClassName().simpleName}()"
+            }
         }
     }
 
     fun importMethod(targetName: String, origin: TypeName): String {
         return getMapping(origin)?.importMethod?.invoke(targetName, origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
-            "$targetName${origin.qdot}import${origin.asClassName().simpleName}()"
+            if (origin is TypeVariableName) {
+                "TBD"
+            } else {
+                "$targetName${origin.qdot}import${origin.asClassName().simpleName}()"
+            }
         }
     }
 }

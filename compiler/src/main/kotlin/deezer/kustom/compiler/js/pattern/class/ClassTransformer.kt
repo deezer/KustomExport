@@ -6,6 +6,8 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
@@ -43,6 +45,10 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         !firstCtorParam.type.isNullable -> "deezer.kustom.dynamicNull"
         firstCtorParam.type != STRING -> "deezer.kustom.dynamicString"
         else -> "deezer.kustom.dynamicNotString"
+    }
+
+    if (origin.generics.isNotEmpty()) {
+        Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.generics}")
     }
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
@@ -117,12 +123,15 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             }
                             Logger.error("boom")
                         }
-                        if (!superType.toString().contains("ERROR") &&
-                            superType is ClassName
-                        ) {
+                        if (superType.toString().contains("ERROR")) return@forEach
+                        if (superType is ClassName) {
                             val superClassName = ClassName(superType.packageName.jsPackage(), superType.simpleName)
                             b.addSuperinterface(superClassName)
-                        } else {
+                        } else if (superType is ParameterizedTypeName) {
+                            val superClassName =
+                                ClassName(superType.rawType.packageName.jsPackage(), superType.rawType.simpleName)
+                            superClassName.parameterizedBy(superType.typeArguments)
+                            b.addSuperinterface(superClassName)
                             Logger.warn("ClassTransformer - ${origin.classSimpleName} superTypes - ClassName($jsClassPackage, $superType)")
                         }
                     }

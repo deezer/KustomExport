@@ -39,6 +39,7 @@ private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder
         }
     }
         .distinct()
+        .filter { it !is TypeVariableName } // Ignore generics
         .map { it.asClassName() }
         .filterNot { it.isFromStdlib() && it != EXCEPTION }
         .forEach { className ->
