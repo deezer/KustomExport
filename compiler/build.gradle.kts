@@ -12,6 +12,7 @@ dependencies {
     implementation("com.squareup:kotlinpoet:1.10.2") {
         exclude(module = "kotlin-reflect")
     }
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.0-RC")
     implementation("com.squareup:kotlinpoet-ksp:1.10.2")
     implementation("com.google.devtools.ksp:symbol-processing-api:1.6.0-RC-1.0.1-RC") // TODO: reuse version
 

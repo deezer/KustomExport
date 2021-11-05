@@ -1,9 +1,6 @@
 package deezer.kustom.compiler.js.pattern
 
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName
-import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.*
 import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType

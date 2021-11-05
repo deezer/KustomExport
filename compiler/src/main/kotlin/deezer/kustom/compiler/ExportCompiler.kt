@@ -6,18 +6,18 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
-import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
-import com.squareup.kotlinpoet.FileSpec
+import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
-import deezer.kustom.compiler.js.pattern.`class`.parseClass
+import deezer.kustom.compiler.js.ClassDescriptor
+import deezer.kustom.compiler.js.EnumDescriptor
+import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.pattern.`class`.transform
-import deezer.kustom.compiler.js.pattern.enum.parseEnum
 import deezer.kustom.compiler.js.pattern.enum.transform
-import deezer.kustom.compiler.js.pattern.`interface`.parseInterface
 import deezer.kustom.compiler.js.pattern.`interface`.transform
+import deezer.kustom.compiler.js.pattern.parseClass
 import kotlin.random.Random
 
 // Trick to share the Logger everywhere without injecting the dependency everywhere
@@ -38,7 +38,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
 
     @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        val passId = Random.nextLong()
         CompilerArgs.erasePackage = environment.options["erasePackage"] == "true"
         val symbols = try {
             resolver.getSymbolsWithAnnotation(environment.options["annotation"] ?: "deezer.kustom.KustomExport")
@@ -46,11 +45,14 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
             devLog("WTF? ${e.message} // ${e.stackTraceToString()}")
             return emptyList()
         }
+
+        val passId = Random.nextLong()
         devLog("passId: $passId - symbols: ${symbols.count()} - first: ${symbols.firstOrNull()?.location}")
 
         // ------------------------------------------------------------------------------------------------
         // Hack to avoid compilation on Android/iOS : create a dummy file, then check generated file path
         // https://github.com/google/ksp/issues/641
+        /*
         symbols.firstOrNull()?.accept(
             object : KSVisitorVoid() {
                 // For some reasons on KSP 1.5.31-1.0 not using the Visitor pattern lead to gradle freeze
@@ -69,41 +71,30 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
             generatedPath.contains("/T/junit") || generatedPath.contains("/T/Kotlin-Compilation") || generatedPath == "null"
         devLog("isJsBuild=$isJsBuild isUnitTest=$isUnitTest generatedPath=$generatedPath")
         if (!isUnitTest && !isJsBuild) return emptyList() // Disable compilation
+        */
         // ------------------------------------------------------------------------------------------------
 
         symbols
-            // Filter when dev is ended, for now we want to log everything
-            /*.filter { it is KSClassDeclaration && it.validate() }*/
+            .filter { it is KSClassDeclaration && it.validate() }
             .forEach {
                 devLog("----- Symbol $it")
                 it.accept(ExportVisitor(), Unit)
-                // it.accept(LoggerVisitor(environment), Unit)
             }
 
-        return emptyList() // ret
+        return symbols.filter { !it.validate() }.toList()
     }
 
     @KotlinPoetKspPreview
     inner class ExportVisitor : KSVisitorVoid() {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             devLog("----- visitClassDeclaration $classDeclaration - classKind = ${classDeclaration.classKind}")
-            when (classDeclaration.classKind) {
-                ClassKind.INTERFACE -> {
-                    parseInterface(classDeclaration)
-                        .transform()
-                        .writeCode(environment, classDeclaration.containingFile!!)
-                }
-                ClassKind.ENUM_CLASS -> {
-                    parseEnum(classDeclaration)
-                        .transform()
-                        .writeCode(environment, classDeclaration.containingFile!!)
-                }
-                ClassKind.CLASS -> {
-                    parseClass(classDeclaration)
-                        .transform()
-                        .writeCode(environment, classDeclaration.containingFile!!)
-                }
-                else -> error("The compiler can't handle '${classDeclaration.classKind}' class kind")
+            when (val descriptor = parseClass(classDeclaration)) {
+                is ClassDescriptor -> descriptor.transform()
+                    .writeCode(environment, classDeclaration.containingFile!!)
+                is EnumDescriptor -> descriptor.transform()
+                    .writeCode(environment, classDeclaration.containingFile!!)
+                is InterfaceDescriptor -> descriptor.transform()
+                    .writeCode(environment, classDeclaration.containingFile!!)
             }
         }
     }

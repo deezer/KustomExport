@@ -1,5 +1,6 @@
 package deezer.kustom.compiler.js
 
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 
 // Describes format used between the parser and the writer
@@ -25,13 +26,23 @@ data class FunctionDescriptor(
     val parameters: List<ParameterDescriptor>,
 )
 
+sealed class Descriptor
+
 data class InterfaceDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val superTypes: List<TypeName>, // Shortcut: allow automatic imports via KotlinPoet
     val properties: List<PropertyDescriptor>,
     val functions: List<FunctionDescriptor>,
-)
+) : Descriptor() {
+    val generics: List<TypeName> by lazy {
+        superTypes
+            .filterIsInstance<ParameterizedTypeName>()
+            .flatMap {
+                it.typeArguments
+            }
+    }
+}
 
 data class ClassDescriptor(
     val packageName: String,
@@ -40,12 +51,20 @@ data class ClassDescriptor(
     val constructorParams: List<ParameterDescriptor>,
     val properties: List<PropertyDescriptor>,
     val functions: List<FunctionDescriptor>
-)
+) : Descriptor() {
+    val generics: List<TypeName> by lazy {
+        superTypes
+            .filterIsInstance<ParameterizedTypeName>()
+            .flatMap {
+                it.typeArguments
+            }
+    }
+}
 
 data class EnumDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val entries: List<Entry>
-) {
+) : Descriptor() {
     data class Entry(val name: String)
 }

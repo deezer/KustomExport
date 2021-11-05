@@ -11,7 +11,7 @@ class ExceptionBuilder {
 @KustomExport
 class ExceptionConsumer {
     fun consume(e: Exception) {
-        when(e) {
+        when (e) {
             is IllegalStateException -> println("IllegalStateException")
             is Exception -> println("Exception")
             else -> println("Not an exception!!!")

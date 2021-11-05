@@ -4,11 +4,11 @@ package deezer.kustom
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.Exception as CommonException
-import kotlin.RuntimeException as CommonRuntimeException
 import kotlin.IllegalArgumentException as CommonIllegalArgumentException
 import kotlin.IllegalStateException as CommonIllegalStateException
+import kotlin.RuntimeException as CommonRuntimeException
 
-//TODO : Error
+// TODO : Error
 
 /**
  * Cannot define this file in jsMain, Kotlin Js-IR limitation?
@@ -32,24 +32,23 @@ class IllegalArgumentException(val stackTrace: String)
 fun IllegalArgumentException.import() = CommonIllegalArgumentException(stackTrace)
 fun CommonIllegalArgumentException.export() = IllegalArgumentException(message + "\n" + stackTraceToString())
 
-
 @JsExport
 class IllegalStateException(val stackTrace: String)
 
 fun IllegalStateException.import() = CommonIllegalStateException(stackTrace)
 fun CommonIllegalStateException.export() = IllegalStateException(message + "\n" + stackTraceToString())
 
-//TODO : RuntimeException
-//TODO : IllegalArgumentException
-//TODO : IllegalStateException
-//TODO : IndexOutOfBoundsException
-//TODO : ConcurrentModificationException
-//TODO : UnsupportedOperationException
-//TODO : NumberFormatException
-//TODO : NullPointerException
-//TODO : ClassCastException
-//TODO : AssertionError
-//TODO : NoSuchElementException
-//TODO : ArithmeticException
-//TODO : NoWhenBranchMatchedException
-//TODO : UninitializedPropertyAccessException
+// TODO : RuntimeException
+// TODO : IllegalArgumentException
+// TODO : IllegalStateException
+// TODO : IndexOutOfBoundsException
+// TODO : ConcurrentModificationException
+// TODO : UnsupportedOperationException
+// TODO : NumberFormatException
+// TODO : NullPointerException
+// TODO : ClassCastException
+// TODO : AssertionError
+// TODO : NoSuchElementException
+// TODO : ArithmeticException
+// TODO : NoWhenBranchMatchedException
+// TODO : UninitializedPropertyAccessException
