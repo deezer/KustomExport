@@ -3,7 +3,12 @@
 # Export path for using in IDEA
 export PATH=/usr/local/bin/:$PATH
 
-../gradlew compileKotlinJs -PenableKsp=true
-../gradlew jsBrowserProductionLibraryDistribution
+../gradlew compileKotlinJs -PenableKsp=true && \
+  ../gradlew jsBrowserProductionLibraryDistribution && \
+  cd ../build/js/packages/@kustom/Samples && \
+  npm link && \
+  cd - && \
+  npm link @kustom/Samples && \
+  ./_run.sh
 
-./_run.sh
+

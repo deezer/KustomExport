@@ -4,7 +4,7 @@
 export PATH=/usr/local/bin/:$PATH
 
 # 2 gradle steps due to a possible Kotlin JsIr issue
-../gradlew clear compileKotlinJs -PenableKsp=true
+../gradlew clean compileKotlinJs -PenableKsp=true
 ../gradlew jsBrowserProductionLibraryDistribution
 
 #cd build/productionLibrary

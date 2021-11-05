@@ -40,7 +40,9 @@ import deezer.kustom.compiler.shortNamesForIndex
 const val INDENTATION = "    "
 
 val EXCEPTION = ClassName("kotlin", "Exception")
+val ILLEGAL_STATE_EXCEPTION = ClassName("kotlin", "IllegalStateException")
 val EXCEPTION_JS = ClassName("deezer.kustom", "Exception")
+val ILLEGAL_STATE_EXCEPTION_JS = ClassName("deezer.kustom", "IllegalStateException")
 
 fun initCustomMapping() {
     // Doc interop: https://kotlinlang.org/docs/js-to-kotlin-interop.html#primitive-arrays
@@ -56,7 +58,7 @@ fun initCustomMapping() {
         DOUBLE_ARRAY, // => Js "Float64Array"
         CHAR_ARRAY, // => Js "UInt16Array"
         ANY, // => Js "Object"
-        UNIT // => disappear?
+        UNIT, // => disappear?
     ).map { exportableType ->
         exportableType to MappingOutput(
             exportType = { exportableType },
@@ -122,6 +124,11 @@ fun initCustomMapping() {
 
         EXCEPTION to MappingOutput(
             exportType = { EXCEPTION_JS },
+            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
+            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
+        ),
+        ILLEGAL_STATE_EXCEPTION to MappingOutput(
+            exportType = { ILLEGAL_STATE_EXCEPTION_JS },
             importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
             exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
         )

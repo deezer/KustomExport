@@ -25,7 +25,12 @@ fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
 }
 
 fun FileSpec.Builder.autoImport(origin: ClassDescriptor): FileSpec.Builder {
-    return autoImport(origin.superTypes + origin.properties.map { it.type })
+    return autoImport(
+        origin.superTypes +
+            origin.properties.map { it.type } +
+            origin.functions.flatMap { it.parameters }.map { it.type } +
+            origin.functions.map { it.returnType }
+    )
 }
 
 private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder {
@@ -49,10 +54,9 @@ private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder
                 }
             } else {
                 addAliasedImport(className, "Common${className.simpleName}")
-                val jsPackage = if (CompilerArgs.erasePackage) "" else className.packageName.jsPackage()
+                if (CompilerArgs.erasePackage) return@forEach // No need to import ext func from the same package
+                val jsPackage = className.packageName.jsPackage()
                 // if (packageName != jsPackage) { // Useless import if same package
-                // addAliasedImport(MemberName(jsPackage, "import"), "${importExportPrefix(jsPackage)}Import")
-                // addAliasedImport(MemberName(jsPackage, "export"), "${importExportPrefix(jsPackage)}Export")
                 addImport(jsPackage, "import${className.simpleName}")
                 addImport(jsPackage, "export${className.simpleName}")
                 // }
