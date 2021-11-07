@@ -3,51 +3,90 @@ package deezer.kustom.compiler.js.pattern
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.INDENTATION
 import deezer.kustom.compiler.js.mapping.TypeMapping
+import deezer.kustom.compiler.js.mapping.TypeMapping.exportedType
 
-fun FunctionDescriptor.toFunSpec(
+fun FunctionDescriptor.buildWrappingFunction(
     body: Boolean,
     import: Boolean,
     delegateName: String,
     mnd: MethodNameDisambiguation,
-    forceOverride: Boolean = false // TODO: rework that shortcut for testing...
+    forceOverride: Boolean = false, // TODO: rework that shortcut for testing...
+    typeParametersMap: List<Pair<TypeVariableName, TypeVariableName>> = emptyList()
 ): FunSpec {
     val funExportedName = mnd.getMethodName(this)
+
     val fb = FunSpec.builder(if (!import) funExportedName else name)
-        .returns(if (import) returnType else TypeMapping.exportedType(returnType))
+    if (returnType is TypeVariableName) {
+        if (import) {
+            fb.returns(returnType)
+        } else {
+            fb.returns(typeParametersMap.first { (origin, exported) -> returnType == origin }.second)
+        }
+    } else
+        fb.returns(if (import) returnType else exportedType(returnType))
 
     if (forceOverride || isOverride) {
         fb.addModifiers(KModifier.OVERRIDE)
-    } // else = interface defines the method
+    }
 
-    parameters.forEach {
-        fb.addParameter(it.name, if (import) it.type else TypeMapping.exportedType(it.type))
+    parameters.forEach { param ->
+        if (param.type is TypeVariableName) {
+            if (import) {
+                fb.addParameter(param.name, param.type)
+            } else {
+                fb.addParameter(param.name, typeParametersMap.first { (origin, _) -> param.type == origin }.second)
+            }
+        } else {
+            fb.addParameter(param.name, if (import) param.type else exportedType(param.type))
+        }
     }
 
     if (body) {
         val funcName = if (import) funExportedName else name
         fb.addStatement(
+            "val result = $delegateName.$funcName(" +
+                (if (parameters.isNotEmpty()) "\n" else "") +
+                parameters.joinToString(",\n", transform = {
+                    it.name + " = " +
+                        if (import) TypeMapping.exportMethod(it.name, it.type)
+                        else TypeMapping.importMethod(it.name, it.type)
+                }) +
+                (if (parameters.isNotEmpty()) "" else ")")
+        )
+        if (parameters.isNotEmpty())
+            fb.addStatement(")")
+        /*
+        fb.addStatement(
             """
-            val result = $delegateName.$funcName(${
-            parameters.joinToString(", ", prefix = "\n", postfix = "\n", transform = {
-                INDENTATION + it.name + " = " +
-                    if (import) TypeMapping.exportMethod(it.name, it.type)
-                    else TypeMapping.importMethod(it.name, it.type)
-            })
-            });
-            return ${
-            if (import) TypeMapping.importMethod("result", returnType)
-            else TypeMapping.exportMethod("result", returnType)
+        |
+        val result = $delegateName.$funcName(${
+            (if (parameters.isNotEmpty()) "\n" else "") +
+                parameters.joinToString(",\n", transform = {
+                    "|" + INDENTATION + it.name + " = " +
+                        if (import) TypeMapping.exportMethod(it.name, it.type)
+                        else TypeMapping.importMethod(it.name, it.type)
+                }) +
+                (if (parameters.isNotEmpty()) "\n" else "")
+        })""".trimMargin())
+        */
+        fb.addStatement(
+            """
+        |return ${
+                if (import) TypeMapping.importMethod("result", returnType)
+                else TypeMapping.exportMethod("result", returnType)
             }
-            """.trimIndent()
+        """.trimMargin()
         )
     }
     return fb.build()
@@ -55,21 +94,37 @@ fun FunctionDescriptor.toFunSpec(
 
 fun buildWrapperClass(
     delegateName: String,
-    originalClass: ClassName,
+    originalClass: TypeName,
+    typeParameters: Map<String, TypeVariableName>,
     import: Boolean,
     properties: List<PropertyDescriptor>,
-    functions: List<FunctionDescriptor>
+    functions: List<FunctionDescriptor>,
 ): TypeSpec {
-    val jsClassPackage = if (CompilerArgs.erasePackage) "" else originalClass.packageName.jsPackage()
-    val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName)
+    val typeParametersMap = typeParameters.map { (_, value) ->
+        value to TypeVariableName("__" + value.name, value.bounds.map { exportedType(it) })
+    }
+    val allTypeParameters = typeParametersMap.flatMap { (origin, exported) -> listOf(origin, exported) }
+
+    val jsClassPackage = if (CompilerArgs.erasePackage) "" else originalClass.packageName().jsPackage()
+    val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName()).let {
+        if (typeParameters.isNotEmpty()) {
+            it.parameterizedBy(typeParametersMap.map { (_, exportedTp) -> exportedTp })
+        } else it
+    }
     val wrapperPrefix = if (import) "Imported" else "Exported"
     val wrapperClass =
-        ClassName(jsClassPackage, wrapperPrefix + originalClass.simpleName)
+        ClassName(jsClassPackage, wrapperPrefix + originalClass.simpleName())
     val delegatedClass = if (import) jsExportedClass else originalClass
     val superClass = if (import) originalClass else jsExportedClass
 
+
     return TypeSpec.classBuilder(wrapperClass)
         .addModifiers(KModifier.PRIVATE)
+        .also { b ->
+            allTypeParameters.forEach {
+                b.addTypeVariable(it)
+            }
+        }
         .primaryConstructor(
             FunSpec.constructorBuilder()
                 .addParameter(delegateName, delegatedClass, KModifier.INTERNAL)
@@ -86,12 +141,13 @@ fun buildWrapperClass(
             val mnd = MethodNameDisambiguation()
             functions.forEach { func ->
                 builder.addFunction(
-                    func.toFunSpec(
+                    func.buildWrappingFunction(
                         body = true,
                         import = import,
                         delegateName = delegateName,
                         mnd = mnd,
                         forceOverride = true,
+                        typeParametersMap = typeParametersMap,
                     )
                 )
             }

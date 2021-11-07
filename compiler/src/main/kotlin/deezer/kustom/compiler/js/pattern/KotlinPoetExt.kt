@@ -15,3 +15,9 @@ fun TypeName.asClassName(): ClassName =
 private val regexFunctionX = Regex("kotlin\\.Function[0-9]+")
 fun TypeName.isKotlinFunction() =
     this is ParameterizedTypeName && regexFunctionX.matches(this.rawType.canonicalName)
+
+fun TypeName.packageName(): String =
+    (this as? ClassName)?.packageName ?: (this as? ParameterizedTypeName)?.rawType?.packageName ?: TODO("$this")
+
+fun TypeName.simpleName(): String =
+    (this as? ClassName)?.simpleName ?: (this as? ParameterizedTypeName)?.rawType?.simpleName ?: TODO("$this")

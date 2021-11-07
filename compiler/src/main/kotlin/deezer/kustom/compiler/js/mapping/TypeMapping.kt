@@ -46,18 +46,21 @@ object TypeMapping {
         return getMapping(origin)?.exportType?.invoke(origin)?.copy(nullable = origin.isNullable)
             ?: run {
                 if (origin is TypeVariableName) {
-                    return ClassName("just.a", "test")
+                    val exportedBounds = origin.bounds.map { exportedType(it) }
+                    return TypeVariableName(
+                        origin.name,
+                        exportedBounds
+                    )
                 }
                 // If no mapping, assume it's a project class, and it has a generated file
-                assert(origin is ClassName) {
-                    "$origin (${origin::class.java}) is not a ClassName instance, we can't ensure the portability yet."
+                if (origin is ClassName) {
+                    return ClassName(
+                        packageName = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage(),
+                        simpleNames = listOf(origin.simpleName)
+                    ).copy(nullable = origin.isNullable)
                 }
-                origin as ClassName
 
-                return ClassName(
-                    packageName = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage(),
-                    simpleNames = listOf(origin.simpleName)
-                ).copy(nullable = origin.isNullable)
+                error("$origin (${origin::class.java}) is not supported yet. Please open an issue on our github.")
             }
     }
 
@@ -65,7 +68,7 @@ object TypeMapping {
         return getMapping(origin)?.exportMethod?.invoke(targetName, origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
             if (origin is TypeVariableName) {
-                "TBD"
+                "$targetName${origin.qdot}export${origin.bounds.first().asClassName().simpleName}()"
             } else {
                 "$targetName${origin.qdot}export${origin.asClassName().simpleName}()"
             }
@@ -76,7 +79,7 @@ object TypeMapping {
         return getMapping(origin)?.importMethod?.invoke(targetName, origin) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
             if (origin is TypeVariableName) {
-                "TBD"
+                "$targetName${origin.qdot}import${origin.bounds.first().asClassName().simpleName}()"
             } else {
                 "$targetName${origin.qdot}import${origin.asClassName().simpleName}()"
             }

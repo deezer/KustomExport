@@ -23,6 +23,7 @@ import deezer.kustom.compiler.js.PropertyDescriptor
 @KotlinPoetKspPreview
 fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
     val typeParamResolver = classDeclaration.typeParameters.toTypeParameterResolver()
+    val generics = typeParamResolver.parametersMap
 
     val packageName = classDeclaration.packageName.asString()
     val classSimpleName = classDeclaration.simpleName.asString()
@@ -48,6 +49,7 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
             InterfaceDescriptor(
                 packageName = packageName,
                 classSimpleName = classSimpleName,
+                typeParameters = generics,
                 superTypes = superTypes,
                 properties = properties,
                 functions = functions,
@@ -56,6 +58,7 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
         ClassKind.CLASS -> ClassDescriptor(
             packageName = packageName,
             classSimpleName = classSimpleName,
+            typeParameters = generics,
             superTypes = superTypes,
             constructorParams = constructorParams,
             properties = properties,

@@ -1,6 +1,10 @@
 package deezer.kustom.compiler.js.pattern
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType
@@ -15,6 +19,7 @@ import deezer.kustom.compiler.js.mapping.EXCEPTION_JS
 fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
     return autoImport(
         origin.superTypes +
+            origin.typeParameters.values.flatMap { it.bounds } +
             origin.properties.map { it.type } +
             origin.functions.flatMap { it.parameters }.map { it.type } +
             origin.functions.map { it.returnType }
@@ -24,6 +29,7 @@ fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
 fun FileSpec.Builder.autoImport(origin: ClassDescriptor): FileSpec.Builder {
     return autoImport(
         origin.superTypes +
+            origin.typeParameters.values.flatMap { it.bounds } +
             origin.properties.map { it.type } +
             origin.functions.flatMap { it.parameters }.map { it.type } +
             origin.functions.map { it.returnType }

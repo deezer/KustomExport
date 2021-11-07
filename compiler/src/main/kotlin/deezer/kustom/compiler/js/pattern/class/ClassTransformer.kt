@@ -21,7 +21,7 @@ import deezer.kustom.compiler.js.mapping.INDENTATION
 import deezer.kustom.compiler.js.mapping.TypeMapping
 import deezer.kustom.compiler.js.pattern.autoImport
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
-import deezer.kustom.compiler.js.pattern.toFunSpec
+import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 
 fun ClassDescriptor.transform() = transformClass(this)
 
@@ -47,8 +47,8 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         else -> "deezer.kustom.dynamicNotString"
     }
 
-    if (origin.generics.isNotEmpty()) {
-        Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.generics}")
+    if (origin.typeParameters.isNotEmpty()) {
+        Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.typeParameters}")
     }
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
@@ -143,11 +143,11 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     origin.functions.forEach { func ->
                         Logger.warn("-- ${func.name} overrides? ${func.isOverride}")
                         b.addFunction(
-                            func.toFunSpec(
+                            func.buildWrappingFunction(
                                 body = true,
                                 import = false,
                                 delegateName = "common",
-                                mnd = mnd
+                                mnd = mnd,
                             )
                         )
                     }

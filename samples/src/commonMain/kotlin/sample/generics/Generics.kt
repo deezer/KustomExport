@@ -1,6 +1,7 @@
 package sample.generics
 
-/*
+import deezer.kustom.KustomExport
+
 @KustomExport
 interface GenericsBase {
     val b: String
@@ -16,6 +17,7 @@ interface InterfaceGenerics<T : GenericsBase> {
     fun generateBase(): T
     fun check(input: T): String
 }
+/*
 
 @KustomExport
 class ClassGenerics : InterfaceGenerics<KmpGenericsBase> {
