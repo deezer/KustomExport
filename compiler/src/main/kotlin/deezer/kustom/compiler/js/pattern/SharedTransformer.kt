@@ -59,34 +59,24 @@ fun FunctionDescriptor.buildWrappingFunction(
                 (if (parameters.isNotEmpty()) "\n" else "") +
                 parameters.joinToString(",\n", transform = {
                     it.name + " = " +
-                        if (import) TypeMapping.exportMethod(it.name, it.type)
-                        else TypeMapping.importMethod(it.name, it.type)
+                        (if (import) TypeMapping.exportMethod(it.name, it.type)
+                        else TypeMapping.importMethod(it.name, it.type)) +
+                        (if (it.type is TypeVariableName) {
+                            " as " + if (import) typeParametersMap.first().second.name else typeParametersMap.first().first.name
+                        } else "")
+
                 }) +
                 (if (parameters.isNotEmpty()) "" else ")")
         )
         if (parameters.isNotEmpty())
             fb.addStatement(")")
-        /*
         fb.addStatement(
-            """
-        |
-        val result = $delegateName.$funcName(${
-            (if (parameters.isNotEmpty()) "\n" else "") +
-                parameters.joinToString(",\n", transform = {
-                    "|" + INDENTATION + it.name + " = " +
-                        if (import) TypeMapping.exportMethod(it.name, it.type)
-                        else TypeMapping.importMethod(it.name, it.type)
-                }) +
-                (if (parameters.isNotEmpty()) "\n" else "")
-        })""".trimMargin())
-        */
-        fb.addStatement(
-            """
-        |return ${
-                if (import) TypeMapping.importMethod("result", returnType)
-                else TypeMapping.exportMethod("result", returnType)
-            }
-        """.trimMargin()
+            "return " +
+                (if (import) TypeMapping.importMethod("result", returnType)
+                else TypeMapping.exportMethod("result", returnType)) +
+                (if (returnType is TypeVariableName) {
+                    " as " + if (import) typeParametersMap.first().first.name else typeParametersMap.first().second.name
+                } else "")
         )
     }
     return fb.build()
