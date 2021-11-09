@@ -509,7 +509,7 @@ class ExportedTypesTest {
                     path = "foo/js/Lambdas.kt",
                     content = """
                         package foo.js
-
+                        
                         import kotlin.Double
                         import kotlin.Float
                         import kotlin.Int
@@ -517,14 +517,14 @@ class ExportedTypesTest {
                         import kotlin.js.JsExport
                         import pokemon.js.Pikachu
                         import foo.Lambdas as CommonLambdas
-
+                        
                         @JsExport
                         public class Lambdas() {
                             internal lateinit var common: CommonLambdas
-
+                        
                             init {
                                 common = CommonLambdas()}
-
+                        
                             public var floatToUnit: (Float) -> Unit
                                 get() = { a: kotlin.Float ->
                                     common.floatToUnit(a)
@@ -534,7 +534,7 @@ class ExportedTypesTest {
                                                 floatToUnit(a)
                                             }
                                 }
-
+                        
                             public var complexFun: (
                                 Int,
                                 Pikachu,
@@ -548,11 +548,11 @@ class ExportedTypesTest {
                                                 complexFun(a, b.exportPikachu(), c.toDouble()).importPikachu()
                                             }
                                 }
-
+                        
                             internal constructor(common: CommonLambdas) : this() {
                                 this.common = common
                             }
-
+                        
                             public fun returnParam(block: (
                                 Int,
                                 Pikachu,
@@ -562,19 +562,19 @@ class ExportedTypesTest {
                                 Pikachu,
                                 Double
                             ) -> pokemon.Pikachu {
-                                            val result = common.returnParam(
-                                            block = { a: kotlin.Int, b: pokemon.Pikachu, c: kotlin.Long ->
+                                val result = common.returnParam(
+                                        block = { a: kotlin.Int, b: pokemon.Pikachu, c: kotlin.Long ->
                                             block(a, b.exportPikachu(), c.toDouble()).importPikachu()
                                         }
-                                        );
-                                                    return { a: kotlin.Int, b: pokemon.js.Pikachu, c: kotlin.Double ->
+                                )
+                                return { a: kotlin.Int, b: pokemon.js.Pikachu, c: kotlin.Double ->
                                             result(a, b.importPikachu(), c.toLong()).exportPikachu()
                                         }
                             }
                         }
-
+                        
                         public fun CommonLambdas.exportLambdas(): Lambdas = Lambdas(this)
-
+                        
                         public fun Lambdas.importLambdas(): CommonLambdas = this.common
                     """.trimIndent()
                 )

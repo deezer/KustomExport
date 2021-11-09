@@ -31,8 +31,8 @@ import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.pattern.`class`.transform
-import deezer.kustom.compiler.js.pattern.`interface`.transform
 import deezer.kustom.compiler.js.pattern.enum.transform
+import deezer.kustom.compiler.js.pattern.`interface`.transform
 import deezer.kustom.compiler.js.pattern.parseClass
 import kotlin.random.Random
 

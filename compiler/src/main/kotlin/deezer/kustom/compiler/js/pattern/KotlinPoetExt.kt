@@ -52,13 +52,12 @@ fun TypeName.packageName(): String =
 fun TypeName.simpleName(): String =
     (this as? ClassName)?.simpleName ?: (this as? ParameterizedTypeName)?.rawType?.simpleName ?: TODO("$this")
 
-
 // Issue in KSP: https://kotlinlang.slack.com/archives/C013BA8EQSE/p1633948867255800
 // Instead of crashing during compilation, we try our best to guess the ClassName...
 @KotlinPoetKspPreview
 public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterResolver): TypeName {
     Logger.warn("----------------- TYPE RESOLVE START")
-    //TODO : resolve().toTypeNamePatch()
+    // TODO : resolve().toTypeNamePatch()
     if (this == null) return ANY
     return try {
         toTypeName(typeParamResolver)
@@ -88,7 +87,7 @@ public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, con
             Logger.error("cannot toTypeName = ${e.message} - ${this.isError}")
 
             return guessClassFromImports(containingFile, classSimpleName = this.toString())
-            // TODO handle support for stdlib
+                // TODO handle support for stdlib
             /*?: guessFromStdlib(
                 this.toString(),
                 *declaration.typeParameters.map { ... }.toTypedArray()
@@ -96,8 +95,8 @@ public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, con
                 ?: ClassName(declaration.packageName.asString(), declaration.simpleName.asString())
         }
         ).also {
-            Logger.warn("----------------- SUBTYPE END")
-        }
+        Logger.warn("----------------- SUBTYPE END")
+    }
 }
 
 private fun getPackageFromFile(containingFile: KSFile?): String {

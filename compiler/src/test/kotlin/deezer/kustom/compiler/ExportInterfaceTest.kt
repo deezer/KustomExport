@@ -281,10 +281,10 @@ class ExportInterfaceTest {
                             internal val exported: BasicInterface
                         ) : CommonBasicInterface {
                             public override fun foo(bar: CommonBar): Unit {
-                                            val result = exported.foo(
-                                            bar = bar.exportBar()
-                                        );
-                                                    return result
+                                val result = exported.foo(
+                                        bar = bar.exportBar()
+                                )
+                                return result
                             }
                         }
                         
@@ -292,10 +292,10 @@ class ExportInterfaceTest {
                             internal val common: CommonBasicInterface
                         ) : BasicInterface {
                             public override fun foo(bar: Bar): Unit {
-                                            val result = common.foo(
-                                            bar = bar.importBar()
-                                        );
-                                                    return result
+                                val result = common.foo(
+                                        bar = bar.importBar()
+                                )
+                                return result
                             }
                         }
                         
@@ -363,10 +363,10 @@ class ExportInterfaceTest {
                             internal val exported: BasicInterface
                         ) : CommonBasicInterface {
                             public override fun foo(bar: CommonBar): List<Long> {
-                                            val result = exported.foo(
-                                            bar = bar.exportBar()
-                                        );
-                                                    return result.map { it.toLong() }
+                                val result = exported.foo(
+                                        bar = bar.exportBar()
+                                )
+                                return result.map { it.toLong() }
                             }
                         }
                         
@@ -374,10 +374,10 @@ class ExportInterfaceTest {
                             internal val common: CommonBasicInterface
                         ) : BasicInterface {
                             public override fun foo(bar: Bar): Array<Double> {
-                                            val result = common.foo(
-                                            bar = bar.importBar()
-                                        );
-                                                    return result.map { it.toDouble() }.toTypedArray()
+                                val result = common.foo(
+                                        bar = bar.importBar()
+                                )
+                                return result.map { it.toDouble() }.toTypedArray()
                             }
                         }
                         

@@ -65,7 +65,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         .addAliasedImport(origin.asClassName(), "Common${origin.classSimpleName}")
         .autoImport(origin)
         .addType(
-            TypeSpec.interfaceBuilder(origin.classSimpleName)//ClassName(jsClassPackage, origin.classSimpleName).parameterizedBy(origin.generics.values.first()))
+            TypeSpec.interfaceBuilder(origin.classSimpleName) // ClassName(jsClassPackage, origin.classSimpleName).parameterizedBy(origin.generics.values.first()))
                 .also { b ->
                     origin.typeParameters.map { (_, value) ->
                         b.addTypeVariable(TypeVariableName("__" + value.name, value.bounds.map { exportedType(it) }))

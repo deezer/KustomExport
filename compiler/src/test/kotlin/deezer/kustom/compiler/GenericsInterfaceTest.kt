@@ -18,12 +18,14 @@
 package deezer.kustom.compiler
 
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import org.junit.Ignore
 import org.junit.Test
 
 @KotlinPoetKspPreview
 class GenericsInterfaceTest {
 
     @Test
+    @Ignore
     fun genericsInterface() {
         assertCompilationOutput(
             """

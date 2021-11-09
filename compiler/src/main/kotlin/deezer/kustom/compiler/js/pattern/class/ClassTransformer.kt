@@ -37,8 +37,8 @@ import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.INDENTATION
 import deezer.kustom.compiler.js.mapping.TypeMapping
 import deezer.kustom.compiler.js.pattern.autoImport
-import deezer.kustom.compiler.js.pattern.overrideGetterSetter
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
+import deezer.kustom.compiler.js.pattern.overrideGetterSetter
 
 fun ClassDescriptor.transform() = transformClass(this)
 

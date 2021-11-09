@@ -76,12 +76,15 @@ fun FunctionDescriptor.buildWrappingFunction(
                 (if (parameters.isNotEmpty()) "\n" else "") +
                 parameters.joinToString(",\n", transform = {
                     it.name + " = " +
-                        (if (import) TypeMapping.exportMethod(it.name, it.type)
-                        else TypeMapping.importMethod(it.name, it.type)) +
-                        (if (it.type is TypeVariableName) {
-                            " as " + if (import) typeParametersMap.first().second.name else typeParametersMap.first().first.name
-                        } else "")
-
+                        (
+                            if (import) TypeMapping.exportMethod(it.name, it.type)
+                            else TypeMapping.importMethod(it.name, it.type)
+                            ) +
+                        (
+                            if (it.type is TypeVariableName) {
+                                " as " + if (import) typeParametersMap.first().second.name else typeParametersMap.first().first.name
+                            } else ""
+                            )
                 }) +
                 (if (parameters.isNotEmpty()) "" else ")")
         )
@@ -89,11 +92,15 @@ fun FunctionDescriptor.buildWrappingFunction(
             fb.addStatement(")")
         fb.addStatement(
             "return " +
-                (if (import) TypeMapping.importMethod("result", returnType)
-                else TypeMapping.exportMethod("result", returnType)) +
-                (if (returnType is TypeVariableName) {
-                    " as " + if (import) typeParametersMap.first().first.name else typeParametersMap.first().second.name
-                } else "")
+                (
+                    if (import) TypeMapping.importMethod("result", returnType)
+                    else TypeMapping.exportMethod("result", returnType)
+                    ) +
+                (
+                    if (returnType is TypeVariableName) {
+                        " as " + if (import) typeParametersMap.first().first.name else typeParametersMap.first().second.name
+                    } else ""
+                    )
         )
     }
     return fb.build()
@@ -123,7 +130,6 @@ fun buildWrapperClass(
         ClassName(jsClassPackage, wrapperPrefix + originalClass.simpleName())
     val delegatedClass = if (import) jsExportedClass else originalClass
     val superClass = if (import) originalClass else jsExportedClass
-
 
     return TypeSpec.classBuilder(wrapperClass)
         .addModifiers(KModifier.PRIVATE)
