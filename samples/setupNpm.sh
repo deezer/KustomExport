@@ -7,11 +7,14 @@ export PATH=/usr/local/bin/:$PATH
 ../gradlew clean compileKotlinJs -PenableKsp=true
 ../gradlew jsBrowserProductionLibraryDistribution
 
-#cd build/productionLibrary
-#cd ../build/compileSync/main/productionLibrary/kotlin/@kustom
+echo Installing typescript
+npm install typescript
+
+echo Linking @kustom/Samples
 cd ../build/js/packages/@kustom/Samples
 npm link
 cd -
 npm link @kustom/Samples
 
+echo npm i
 npm i ts-node

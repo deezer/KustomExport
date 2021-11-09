@@ -1,59 +1,41 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
+  # Triggers the workflow on pull request events
   pull_request:
-    branches: [ master ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: macos-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
       - name: Verify PR - unit tests & code style
         run: |
           ./gradlew compileKotlinJs -PenableKsp=true
           ./gradlew check
 
-      # Commented plugin for now as it only supports ubuntu
-      #- name: Publish Unit Test Results
-      #  uses: EnricoMi/publish-unit-test-result-action@v1
-      #  if: always()
-      #  with:
-      #    files: compiler/build/test-results/**/*.xml
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
       - name: Run integration tests
-        run: ./gradlew jsBrowserProductionLibraryDistribution
-      #    ./samples/_run.sh > build/reports/tests/integration.txt
-
-      - id: get-comment-body
+        id: integration-test
         run: |
-          body="$(./samples/_run.sh)"
+          cd samples
+          ./setupNpm.sh
+          body=$(./_run.sh)
+          body="${body//$'\n'/%0A}"
           echo "::set-output name=body::$body"
+          cd -
 
-      - name: Echo env vars
-        run: |
-          echo $GITHUB_EVENT_NAME
-          echo $GITHUB_HEAD_REF
-
-      - name: Post integartion test result
-        uses: peter-evans/create-or-update-comment@v1
+      - uses: marocchino/sticky-pull-request-comment@v2
         with:
-          issue-number: 1
-          body: ${{ steps.get-comment-body.outputs.body }}
+          hide_and_recreate: true
+          hide_classify: "OUTDATED"
+          header: integration tests
+          message: ${{ steps.integration-test.outputs.body }}
