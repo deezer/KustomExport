@@ -9,14 +9,13 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
-import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.pattern.`class`.transform
-import deezer.kustom.compiler.js.pattern.enum.transform
 import deezer.kustom.compiler.js.pattern.`interface`.transform
+import deezer.kustom.compiler.js.pattern.enum.transform
 import deezer.kustom.compiler.js.pattern.parseClass
 import kotlin.random.Random
 
@@ -75,13 +74,19 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         // ------------------------------------------------------------------------------------------------
 
         symbols
-            .filter { it is KSClassDeclaration && it.validate() }
+            .filter { it is KSClassDeclaration /*&& it.validate()*/ }
             .forEach {
                 devLog("----- Symbol $it")
                 it.accept(ExportVisitor(), Unit)
             }
 
-        return symbols.filter { !it.validate() }.toList()
+        /*return symbols.filter { !it.validate() }.toList()
+            .also { list ->
+                list.forEach {
+                    devLog("Cannot handle $it $it.")
+                }
+            }*/
+        return emptyList()
     }
 
     @KotlinPoetKspPreview

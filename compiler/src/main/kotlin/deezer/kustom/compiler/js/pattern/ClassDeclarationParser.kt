@@ -9,7 +9,6 @@ import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
-import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ClassDescriptor
@@ -28,12 +27,12 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
     val packageName = classDeclaration.packageName.asString()
     val classSimpleName = classDeclaration.simpleName.asString()
     val superTypes = classDeclaration.getAllSuperTypes()
-        .map { it.toTypeName(typeParamResolver) }
+        .map { it.toTypeNamePatch(typeParamResolver, classDeclaration.containingFile) }
         .toList()
     val constructorParams = classDeclaration.primaryConstructor?.parameters?.map {
         ParameterDescriptor(
             name = it.name!!.asString(),
-            type = it.type.toTypeName(typeParamResolver)
+            type = it.type.toTypeNamePatch(typeParamResolver)
         )
     } ?: emptyList()
 
@@ -95,11 +94,11 @@ fun KSClassDeclaration.parseFunctions(typeParamResolver: TypeParameterResolver):
             FunctionDescriptor(
                 name = func.simpleName.asString(),
                 isOverride = func.findOverridee() != null || !declaredNames.contains(func.simpleName),
-                returnType = func.returnType!!.toTypeName(typeParamResolver),
+                returnType = func.returnType!!.toTypeNamePatch(typeParamResolver),
                 parameters = func.parameters.map { p ->
                     ParameterDescriptor(
                         name = p.name?.asString() ?: TODO("not sure what we want here"),
-                        type = p.type.toTypeName(typeParamResolver),
+                        type = p.type.toTypeNamePatch(typeParamResolver),
                     )
                 }
             )
@@ -113,7 +112,7 @@ fun KSClassDeclaration.parseProperties(typeParamResolver: TypeParameterResolver)
         if (prop.isPrivate()) {
             null // Cannot be accessed
         } else {
-            val type = prop.type.toTypeName(typeParamResolver)
+            val type = prop.type.toTypeNamePatch(typeParamResolver)
             // Retrieve the names of function arguments, like: (*MyName*: String) -> Unit
             // Problem: we use KotlinPoet TypeName for the mapping, and it doesn't have the value available.
             val namedArgs: List<String> = if (type.isKotlinFunction()) {
