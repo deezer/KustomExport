@@ -33,7 +33,7 @@ import deezer.kustom.compiler.js.mapping.INDENTATION
 fun EnumDescriptor.transform() = transformEnum(this)
 
 fun transformEnum(origin: EnumDescriptor): FileSpec {
-    val jsClassPackage = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage()
+    val jsClassPackage = origin.packageName.jsPackage()
     val originalClass = ClassName(origin.packageName, origin.classSimpleName)
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 

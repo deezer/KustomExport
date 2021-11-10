@@ -72,7 +72,7 @@ object TypeMapping {
                 // If no mapping, assume it's a project class, and it has a generated file
                 if (origin is ClassName) {
                     return ClassName(
-                        packageName = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage(),
+                        packageName = origin.packageName.jsPackage(),
                         simpleNames = listOf(origin.simpleName)
                     ).copy(nullable = origin.isNullable)
                 }

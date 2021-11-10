@@ -45,7 +45,7 @@ fun ClassDescriptor.transform() = transformClass(this)
 fun transformClass(origin: ClassDescriptor): FileSpec {
     val originalClass = ClassName(origin.packageName, origin.classSimpleName)
 
-    val jsClassPackage = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage()
+    val jsClassPackage = origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 
     // Primary constructor should respect the original class signature, and creates a 'common' instance.
@@ -140,7 +140,6 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             }
                             Logger.error("boom")
                         }
-                        if (superType.toString().contains("ERROR")) return@forEach
                         if (superType is ClassName) {
                             val superClassName = ClassName(superType.packageName.jsPackage(), superType.simpleName)
                             b.addSuperinterface(superClassName)

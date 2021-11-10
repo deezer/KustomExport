@@ -25,7 +25,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
-import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
@@ -51,7 +50,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         allTypeParameters.joinToString(prefix = "<", postfix = ">", transform = { it.name })
 
     val delegateName = origin.classSimpleName.replaceFirstChar { it.lowercase(Locale.getDefault()) }
-    val jsClassPackage = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage()
+    val jsClassPackage = origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName).let {
         if (origin.typeParameters.isNotEmpty()) {
             it.parameterizedBy(typeParametersMap.map { (_, exportedTp) -> exportedTp })

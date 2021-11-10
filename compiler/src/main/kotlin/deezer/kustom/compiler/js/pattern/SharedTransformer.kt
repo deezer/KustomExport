@@ -119,7 +119,7 @@ fun buildWrapperClass(
     }
     val allTypeParameters = typeParametersMap.flatMap { (origin, exported) -> listOf(origin, exported) }
 
-    val jsClassPackage = if (CompilerArgs.erasePackage) "" else originalClass.packageName().jsPackage()
+    val jsClassPackage = originalClass.packageName().jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName()).let {
         if (typeParameters.isNotEmpty()) {
             it.parameterizedBy(typeParametersMap.map { (_, exportedTp) -> exportedTp })
