@@ -43,6 +43,7 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
 
     val packageName = classDeclaration.packageName.asString()
     val classSimpleName = classDeclaration.simpleName.asString()
+
     val superTypes = classDeclaration.getAllSuperTypes()
         .map { it.toTypeNamePatch(typeParamResolver, classDeclaration.containingFile) }
         .toList()
