@@ -4,8 +4,9 @@
 export PATH=/usr/local/bin/:$PATH
 
 # 2 gradle steps due to a possible Kotlin JsIr issue
-../gradlew clean compileKotlinJs -PenableKsp=true
-../gradlew jsBrowserProductionLibraryDistribution
+# If run locally, you can use those commands
+#../gradlew clean compileKotlinJs -PenableKsp=true
+#../gradlew jsBrowserProductionLibraryDistribution
 
 echo Installing typescript
 npm install typescript
@@ -16,5 +17,8 @@ npm link
 cd -
 npm link @kustom/Samples
 
-echo npm i
-npm i ts-node
+echo Samples are linked
+ls -al node_modules/@kustom/Samples
+
+echo Install ts-node
+npm install ts-node

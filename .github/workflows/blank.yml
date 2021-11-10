@@ -14,10 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Verify PR - unit tests & code style
-        run: |
-          ./gradlew compileKotlinJs -PenableKsp=true
-          ./gradlew check
+      - uses: gradle/gradle-build-action@v2
+        name: Generate code
+        with:
+          arguments: compileKotlinJs -PenableKsp=true
+
+      - uses: gradle/gradle-build-action@v2
+        name: Check - unit tests & code style
+        with:
+          arguments: check jsBrowserProductionLibraryDistribution
 
       - uses: actions/setup-node@v2
         with:
