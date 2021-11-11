@@ -18,8 +18,6 @@ npm install
 
 echo "Linking @kustom/Samples"
 echo "Before"
-ls -al node_modules/@kustom/Samples
-ls node_modules/@kustom/Samples
 cd ../build/js/packages/@kustom/Samples
 echo "From here"
 pwd
