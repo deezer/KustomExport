@@ -1,9 +1,9 @@
 import { runTest } from "../shared_ts/RunTest"
 import { assert } from "../shared_ts/Assert"
-import Samples from '@kustom/Samples'
+import { sample } from '@kustom/Samples'
 
 runTest("BasicTypeMapping", () : void => {
-    var basicTypes = new Samples.sample._common.js.BasicTypeMapping()
+    var basicTypes = new sample._common.js.BasicTypeMapping()
     assert(basicTypes.bool == true, "mapping for Boolean")
     assert(basicTypes.byte == 0x42, "mapping for Byte")
     assert(basicTypes.char == 'c', "mapping for Char")

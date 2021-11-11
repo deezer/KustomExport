@@ -8,17 +8,6 @@ export PATH=/usr/local/bin/:$PATH
 #../gradlew clean compileKotlinJs -PenableKsp=true
 #../gradlew jsBrowserProductionLibraryDistribution
 
-echo Linking @kustom/Samples
-cd ../build/js/packages/@kustom/Samples
-npm link
-cd -
-npm link @kustom/Samples
-
-echo Samples are linked
-ls node_modules/@kustom
-ls -al node_modules/@kustom/Samples
-ls node_modules/@kustom/Samples
-
 echo Installing typescript
 npm install typescript --save-dev
 
@@ -26,3 +15,21 @@ echo Install ts-node
 npm install @types/node --save-dev
 npm install ts-node --save-dev
 npm install
+
+echo "Linking @kustom/Samples"
+echo "Before"
+ls -al node_modules/@kustom/Samples
+ls node_modules/@kustom/Samples
+cd ../build/js/packages/@kustom/Samples
+echo "From here"
+pwd
+npm link
+cd -
+echo "To here"
+pwd
+npm link @kustom/Samples
+
+echo Samples are linked
+ls node_modules/@kustom
+ls -al node_modules/@kustom/Samples
+ls node_modules/@kustom/Samples
