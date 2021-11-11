@@ -27,9 +27,7 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
-import com.squareup.kotlinpoet.ksp.toKModifier
 import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
-import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.Descriptor
 import deezer.kustom.compiler.js.EnumDescriptor
@@ -39,6 +37,7 @@ import deezer.kustom.compiler.js.ParameterDescriptor
 import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.SealedSubClassDescriptor
+import deezer.kustom.compiler.js.SuperDescriptor
 
 @KotlinPoetKspPreview
 fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
@@ -49,8 +48,30 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
     val classSimpleName = classDeclaration.simpleName.asString()
 
     val superTypes = classDeclaration.getAllSuperTypes()
-        .map { it.toTypeNamePatch(typeParamResolver, classDeclaration.containingFile) }
+        .map {
+            val superType = it.toTypeNamePatch(typeParamResolver, classDeclaration.containingFile)
+
+            val declaration = it.declaration
+
+            val superParams: List<ParameterDescriptor>? =
+                if (declaration is KSClassDeclaration && declaration.primaryConstructor != null) {
+                    // Impossible to get the value from a constructor to another. Ex:
+                    // class Foo(): Bar(33) // Cannot retrieve 33 as it's only available at runtime
+                    // So instead we create an empty constructor and all properties are abstract
+                    /*
+                    Logger.warn("Inheriting of $declaration with ${declaration.primaryConstructor}")
+                    declaration.primaryConstructor!!.parameters.map { p ->
+                        Logger.warn(" - ctor param - " + p.name + " : " + p.type.toTypeNamePatch(typeParamResolver))
+                        ParameterDescriptor(p.name?.asString() ?: "", p.type.toTypeNamePatch(typeParamResolver))
+                    }*/
+                    emptyList()
+                } else {
+                    null
+                }
+            SuperDescriptor(superType, superParams)
+        }
         .toList()
+
     val constructorParams = classDeclaration.primaryConstructor?.parameters?.map {
         ParameterDescriptor(
             name = it.name!!.asString(),
@@ -78,7 +99,7 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
                 packageName = packageName,
                 classSimpleName = classSimpleName,
                 typeParameters = generics,
-                superTypes = superTypes,
+                supers = superTypes,
                 properties = properties,
                 functions = functions,
             )
@@ -95,7 +116,7 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
             packageName = packageName,
             classSimpleName = classSimpleName,
             typeParameters = generics,
-            superTypes = superTypes,
+            supers = superTypes,
             constructorParams = constructorParams,
             properties = properties,
             functions = functions,

@@ -35,7 +35,7 @@ import deezer.kustom.compiler.js.mapping.EXCEPTION_JS
 
 fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
     return autoImport(
-        origin.superTypes +
+        origin.supers.map { it.type } +
             origin.typeParameters.values.flatMap { it.bounds } +
             origin.properties.map { it.type } +
             origin.functions.flatMap { it.parameters }.map { it.type } +
@@ -45,7 +45,7 @@ fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
 
 fun FileSpec.Builder.autoImport(origin: ClassDescriptor): FileSpec.Builder {
     return autoImport(
-        origin.superTypes +
+        origin.supers.map { it.type } +
             origin.typeParameters.values.flatMap { it.bounds } +
             origin.properties.map { it.type } +
             origin.functions.flatMap { it.parameters }.map { it.type } +

@@ -28,11 +28,16 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Setup typescript & tools
+        run: |
+          cd samples
+          ./setupNpm.sh
+          cd -
+
       - name: Run integration tests
         id: integration-test
         run: |
           cd samples
-          ./setupNpm.sh
           body=$(./_run.sh)
           body="${body//$'\n'/%0A}"
           echo "::set-output name=body::$body"

@@ -24,7 +24,6 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
-import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage

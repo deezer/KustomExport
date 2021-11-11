@@ -8,9 +8,6 @@ export PATH=/usr/local/bin/:$PATH
 #../gradlew clean compileKotlinJs -PenableKsp=true
 #../gradlew jsBrowserProductionLibraryDistribution
 
-echo Installing typescript
-npm install typescript
-
 echo Linking @kustom/Samples
 cd ../build/js/packages/@kustom/Samples
 npm link
@@ -18,7 +15,14 @@ cd -
 npm link @kustom/Samples
 
 echo Samples are linked
+ls node_modules/@kustom
 ls -al node_modules/@kustom/Samples
+ls node_modules/@kustom/Samples
+
+echo Installing typescript
+npm install typescript --save-dev
 
 echo Install ts-node
-npm install ts-node
+npm install @types/node --save-dev
+npm install ts-node --save-dev
+npm install

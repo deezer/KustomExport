@@ -25,13 +25,13 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
-import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.TypeMapping
+import deezer.kustom.compiler.js.mapping.TypeMapping.exportMethod
 import deezer.kustom.compiler.js.mapping.TypeMapping.exportedType
+import deezer.kustom.compiler.js.mapping.TypeMapping.importMethod
 
 fun FunctionDescriptor.buildWrappingFunction(
     body: Boolean,
@@ -77,8 +77,8 @@ fun FunctionDescriptor.buildWrappingFunction(
                 parameters.joinToString(",\n", transform = {
                     it.name + " = " +
                         (
-                            if (import) TypeMapping.exportMethod(it.name, it.type)
-                            else TypeMapping.importMethod(it.name, it.type)
+                            if (import) exportMethod(it.name, it.type)
+                            else importMethod(it.name, it.type)
                             ) +
                         (
                             if (it.type is TypeVariableName) {
@@ -93,8 +93,8 @@ fun FunctionDescriptor.buildWrappingFunction(
         fb.addStatement(
             "return " +
                 (
-                    if (import) TypeMapping.importMethod("result", returnType)
-                    else TypeMapping.exportMethod("result", returnType)
+                    if (import) importMethod("result", returnType)
+                    else exportMethod("result", returnType)
                     ) +
                 (
                     if (returnType is TypeVariableName) {
@@ -175,39 +175,40 @@ fun overrideGetterSetter(
     forceOverride: Boolean // true for interface
 ): PropertySpec {
     val fieldName = prop.name
-    val exportedType = TypeMapping.exportedType(prop.type)
+    val exportedType = exportedType(prop.type)
     val fieldClass = if (import) prop.type else exportedType
     val setterValueClass = if (import) exportedType else prop.type
 
     val getterMappingMethod =
-        if (import) TypeMapping.importMethod(
+        if (import) importMethod(
             "$target.$fieldName",
             prop.type
-        ) else TypeMapping.exportMethod("$target.$fieldName", prop.type)
-    val setterMappingMethod =
-        if (import) TypeMapping.exportMethod(fieldName, prop.type) else TypeMapping.importMethod(fieldName, prop.type)
+        ) else exportMethod("$target.$fieldName", prop.type)
 
     val modifiers = if (forceOverride || prop.isOverride) listOf(KModifier.OVERRIDE) else emptyList()
+    val builder = PropertySpec.builder(fieldName, fieldClass, modifiers)
+    // .getter(FunSpec.getterBuilder().addCode("$target.$fieldName").build())
+    // One-line version `get() = ...` is less verbose
+    // .initializer(fieldName)
 
-    return PropertySpec.builder(fieldName, fieldClass, modifiers)
-        // .getter(FunSpec.getterBuilder().addCode("$target.$fieldName").build())
-        // One-line version `get() = ...` is less verbose
-        .getter(
-            FunSpec.getterBuilder()
-                .addStatement("return $getterMappingMethod")
-                .build()
-        )
-        .also { builder ->
-            if (prop.isMutable) {
-                builder
-                    .mutable()
-                    .setter(
-                        FunSpec.setterBuilder()
-                            .addParameter(fieldName, setterValueClass)
-                            .addStatement("$target.$fieldName = $setterMappingMethod")
-                            .build()
-                    )
-            }
-        }
-        .build()
+    builder.getter(
+        FunSpec.getterBuilder()
+            .addStatement("return $getterMappingMethod")
+            .build()
+    )
+    if (prop.isMutable) {
+        val setValName = "setValue" // fieldName
+        val setterMappingMethod =
+            if (import) exportMethod(setValName, prop.type) else importMethod(setValName, prop.type)
+
+        builder
+            .mutable()
+            .setter(
+                FunSpec.setterBuilder()
+                    .addParameter(setValName, setterValueClass)
+                    .addStatement("$target.$fieldName = $setterMappingMethod")
+                    .build()
+            )
+    }
+    return builder.build()
 }

@@ -11,13 +11,14 @@ runTest("SealedClass", () : void => {
     assert(consumer.consume(sealed1) == "child1:child1", "Sealed class 1")
     assert(consumer.consume(sealed2) == "child2:child2", "Sealed class 2")
 
-    assertQuiet(sealed1.field == 33, "SealedChild1:field")
+    assertQuiet(sealed1.prop == 33, "SealedChild1:field")
     assertQuiet(sealed1.ctorParam == 101, "SealedChild1:ctorParam")
-    assertQuiet(sealed1.hardcoded == 42, "SealedChild1:hardcoded")
-    assertQuiet(sealed1.computeFoo() == 12345, "SealedChild1:computeFoo()")
+    assertQuiet(sealed1.hardcoded == 42, "SealedChild1:hardcoded") // Value from Kotlin
+    assertQuiet(sealed1.computeFoo() == 12345, "SealedChild1:computeFoo()") // Value from Kotlin
+    assertQuiet(sealed1.special() == "33-101-child1", "SealedChild1:special()") // Compute value from both sides
 
-    assertQuiet(sealed2.field == 28, "SealedChild2:field")
-    assertQuiet(sealed2.ctorParam == 4242, "SealedChild2:ctorParam")
-    assertQuiet(sealed2.hardcoded == 42, "SealedChild2:hardcoded")
-    assertQuiet(sealed2.computeFoo() == 12345, "SealedChild2:computeFoo()")
+    assertQuiet(sealed2.prop == 28, "SealedChild2:field")
+    assertQuiet(sealed2.ctorParam == 94949, "SealedChild2:ctorParam") // Value from Kotlin
+    assertQuiet(sealed2.hardcoded == 42, "SealedChild2:hardcoded") // Value from Kotlin
+    assertQuiet(sealed2.computeFoo() == 12345, "SealedChild2:computeFoo()") // Value from Kotlin
 })

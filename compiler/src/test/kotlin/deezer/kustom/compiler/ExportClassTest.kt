@@ -147,7 +147,7 @@ class ExportClassTest {
         import foo.bar.BasicClass as CommonBasicClass
         
         @JsExport
-        public class BasicClass() : Any {
+        public class BasicClass() : Any() {
             internal lateinit var common: CommonBasicClass
         
             init {

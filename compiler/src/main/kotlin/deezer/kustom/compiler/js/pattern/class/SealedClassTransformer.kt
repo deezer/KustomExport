@@ -37,20 +37,23 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
     val jsClassPackage = origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 
+    // Impossible to get the value from a constructor to another. Ex:
+    // class Foo(): Bar(33) // Cannot retrieve 33 as it's only available at runtime
+    // So instead we create an empty constructor and all properties are abstract
     val ctorParams = origin.constructorParams.map {
         ParameterSpec(it.name, TypeMapping.exportedType(it.type))
     }
     val ctor = FunSpec.constructorBuilder()
-        .addParameters(ctorParams)
+//        .addParameters(ctorParams)
         .build()
 
     val properties = origin.properties.map { p ->
         val pb = PropertySpec.builder(p.name, TypeMapping.exportedType(p.type))
-        if (ctorParams.any { it.name == p.name }) {
+        /*if (ctorParams.any { it.name == p.name }) {
             pb.initializer(p.name).build()
-        } else {
-            pb.addModifiers(KModifier.ABSTRACT).build()
-        }
+        } else {*/
+        pb.addModifiers(KModifier.ABSTRACT).build()
+        // }
     }
 
     val functions = origin.functions.map {

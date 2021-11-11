@@ -46,13 +46,18 @@ data class FunctionDescriptor(
     val parameters: List<ParameterDescriptor>,
 )
 
+data class SuperDescriptor(
+    val type: TypeName,
+    val parameters: List<ParameterDescriptor>?,
+)
+
 sealed class Descriptor
 
 data class InterfaceDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val typeParameters: Map<String, TypeVariableName>,
-    val superTypes: List<TypeName>,
+    val supers: List<SuperDescriptor>,
     val properties: List<PropertyDescriptor>,
     val functions: List<FunctionDescriptor>,
 ) : Descriptor() {
@@ -87,7 +92,7 @@ data class ClassDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val typeParameters: Map<String, TypeVariableName>,
-    val superTypes: List<TypeName>,
+    val supers: List<SuperDescriptor>,
     val constructorParams: List<ParameterDescriptor>,
     val properties: List<PropertyDescriptor>,
     val functions: List<FunctionDescriptor>,

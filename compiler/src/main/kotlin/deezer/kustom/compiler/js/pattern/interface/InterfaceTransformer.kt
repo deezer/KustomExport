@@ -73,7 +73,8 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                 .addModifiers(KModifier.EXTERNAL)
                 .addAnnotation(jsExport)
                 .also { builder ->
-                    origin.superTypes.forEach { superType ->
+                    origin.supers.forEach { supr ->
+                        val superType = supr.type
                         if (!superType.toString().contains("ERROR") && superType is ClassName) {
                             val superClassName = ClassName(superType.packageName.jsPackage(), superType.simpleName)
                             builder.addSuperinterface(superClassName)

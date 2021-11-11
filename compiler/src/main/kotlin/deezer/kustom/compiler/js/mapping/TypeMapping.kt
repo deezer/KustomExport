@@ -21,8 +21,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
-import deezer.kustom.compiler.CompilerArgs
-import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.pattern.asClassName
 import deezer.kustom.compiler.js.pattern.qdot

@@ -43,7 +43,6 @@ import com.squareup.kotlinpoet.SHORT_ARRAY
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
-import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustom.compiler.js.mapping.TypeMapping.exportMethod

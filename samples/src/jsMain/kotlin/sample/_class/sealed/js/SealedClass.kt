@@ -39,7 +39,7 @@ public fun SealedParent.importSealedParent(): sample._class.sealed.SealedParent 
         is SealedChild2 -> importSealedChild2()
     }
 }*/
-
+/*
 @JsExport
 public class SealedChild1(
     `field`: Int,
@@ -120,3 +120,4 @@ public class SealedChild2(
 public fun sample._class.sealed.SealedChild2.exportSealedChild2(): SealedChild2 = SealedChild2(this)
 
 public fun SealedChild2.importSealedChild2(): sample._class.sealed.SealedChild2 = this.common
+*/

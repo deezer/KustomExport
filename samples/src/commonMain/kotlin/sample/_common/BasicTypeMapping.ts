@@ -14,7 +14,7 @@ runTest("BasicTypeMapping", () : void => {
     assert(basicTypes.string == "magic", "mapping for String")
 
     // Current export for typed array looks a bit off, need to check with typescript dev
-    console.log(basicTypes.booleanArray)
+    console.log("//TODO: Typed arrays")
 
     assert(JSON.stringify(basicTypes.any) == JSON.stringify(new Object()), "mapping for Any")
     assert(JSON.stringify(basicTypes.unit) == "{}", "mapping for Unit")
