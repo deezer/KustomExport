@@ -133,11 +133,12 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         try {
                             superType.toString()
                         } catch (e: Exception) {
+                            /*
                             Logger.warn("Issue with ${origin.classSimpleName} supertypes")
                             Logger.warn("superType of type ${superType::class}")
                             if (superType is ClassName) {
                                 Logger.warn("${superType.packageName} / ${superType.simpleName}")
-                            }
+                            }*/
                             Logger.error("boom")
                         }
                         if (superType is ClassName) {
@@ -148,16 +149,13 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                                 ClassName(superType.rawType.packageName.jsPackage(), superType.rawType.simpleName)
                             superClassName.parameterizedBy(superType.typeArguments)
                             b.addSuperinterface(superClassName)
-                            Logger.warn("ClassTransformer - ${origin.classSimpleName} superTypes - ClassName($jsClassPackage, $superType)")
                         }
                     }
                 }
                 .also { b ->
 
-                    Logger.warn("-- ${origin.classSimpleName} functions :")
                     val mnd = MethodNameDisambiguation()
                     origin.functions.forEach { func ->
-                        Logger.warn("-- ${func.name} overrides? ${func.isOverride}")
                         b.addFunction(
                             func.buildWrappingFunction(
                                 body = true,

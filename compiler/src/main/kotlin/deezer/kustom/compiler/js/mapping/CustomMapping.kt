@@ -153,7 +153,6 @@ fun initCustomMapping() {
     TypeMapping.advancedMappings += mapOf<(TypeName) -> Boolean, MappingOutput>(
         { type: TypeName -> type.isKotlinFunction() } to MappingOutput(
             exportType = {
-                Logger.warn("FunctionX $it")
                 val lambda = it as ParameterizedTypeName
                 val args = lambda.typeArguments.dropLast(1)
                 val returnType = lambda.typeArguments.last()

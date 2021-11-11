@@ -16,11 +16,11 @@
  */
 
 package sample._class.sealed.js
-
+/*
 @JsExport
 // Same class modifiers & constructor
 sealed class SealedParent(val ctorParam: String) {
-    // All fields are
+    // All fields/functions are abstract
     abstract val field: Int
     abstract val hardcoded: Double
     abstract fun computeFoo(): Int
@@ -38,12 +38,12 @@ public fun SealedParent.importSealedParent(): sample._class.sealed.SealedParent 
         is SealedChild1 -> importSealedChild1()
         is SealedChild2 -> importSealedChild2()
     }
-}
+}*/
 
 @JsExport
 public class SealedChild1(
     `field`: Int,
-    ctorParam: String
+    ctorParam: Double
 ) : SealedParent(ctorParam) {
     internal lateinit var common: sample._class.sealed.SealedChild1
 
@@ -51,7 +51,7 @@ public class SealedChild1(
         if (field != deezer.kustom.dynamicNull) {
             common = sample._class.sealed.SealedChild1(
                 field = field,
-                ctorParam = ctorParam
+                ctorParam = ctorParam.toLong()
             )
         }
     }
@@ -84,7 +84,7 @@ public fun SealedChild1.importSealedChild1(): sample._class.sealed.SealedChild1 
 @JsExport
 public class SealedChild2(
     `field`: Int
-) : SealedParent("scanned data or expose a param in ctor") {
+) : SealedParent(4242.0) {
     internal lateinit var common: sample._class.sealed.SealedChild2
 
     init {

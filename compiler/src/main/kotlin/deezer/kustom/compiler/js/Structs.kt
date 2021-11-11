@@ -57,12 +57,30 @@ data class InterfaceDescriptor(
     val functions: List<FunctionDescriptor>,
 ) : Descriptor() {
     // Useful for aliased imports (don't care about type parameters)
-    fun asClassName() = ClassName(packageName, classSimpleName)
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
     fun asTypeName() = ClassName(packageName, classSimpleName).let {
         if (typeParameters.isNotEmpty()) {
             it.parameterizedBy(typeParameters.values.toList())
         } else it
     }
+}
+
+data class SealedClassDescriptor(
+    val packageName: String,
+    val classSimpleName: String,
+    val constructorParams: List<ParameterDescriptor>,
+    val properties: List<PropertyDescriptor>,
+    val functions: List<FunctionDescriptor>,
+    val subClasses: List<SealedSubClassDescriptor>,
+) : Descriptor() {
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
+}
+
+data class SealedSubClassDescriptor(
+    val packageName: String,
+    val classSimpleName: String,
+) {
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
 }
 
 data class ClassDescriptor(
@@ -72,7 +90,7 @@ data class ClassDescriptor(
     val superTypes: List<TypeName>,
     val constructorParams: List<ParameterDescriptor>,
     val properties: List<PropertyDescriptor>,
-    val functions: List<FunctionDescriptor>
+    val functions: List<FunctionDescriptor>,
 ) : Descriptor() {
     // Useful for aliased imports (don't care about type parameters)
     fun asClassName() = ClassName(packageName, classSimpleName)

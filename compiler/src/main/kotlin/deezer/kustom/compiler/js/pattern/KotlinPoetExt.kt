@@ -56,7 +56,6 @@ fun TypeName.simpleName(): String =
 // Instead of crashing during compilation, we try our best to guess the ClassName...
 @KotlinPoetKspPreview
 public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterResolver): TypeName {
-    Logger.warn("----------------- TYPE RESOLVE START")
     // TODO : resolve().toTypeNamePatch()
     if (this == null) return ANY
     return try {
@@ -70,22 +69,17 @@ public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterReso
                 *this.element!!.typeArguments.map { it.type.toTypeNamePatch(typeParamResolver) }.toTypedArray()
             )
             ?: ClassName(getPackageFromFile(this.containingFile), this.toString())
-    }.also {
-        Logger.warn("----------------- RESOLVE END = $it")
     }
 }
 
 @KotlinPoetKspPreview
 public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, containingFile: KSFile?): TypeName {
-    Logger.warn("----------------- SUBTYPE START")
     if (this == null) return ANY
     if (this.isError) return ANY
     return (
         try {
             toTypeName(typeParamResolver)
         } catch (e: Exception) {
-            Logger.error("cannot toTypeName = ${e.message} - ${this.isError}")
-
             return guessClassFromImports(containingFile, classSimpleName = this.toString())
                 // TODO handle support for stdlib
             /*?: guessFromStdlib(
@@ -94,9 +88,7 @@ public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, con
             )*/
                 ?: ClassName(declaration.packageName.asString(), declaration.simpleName.asString())
         }
-        ).also {
-        Logger.warn("----------------- SUBTYPE END")
-    }
+        )
 }
 
 private fun getPackageFromFile(containingFile: KSFile?): String {
@@ -122,14 +114,12 @@ private fun guessClassFromImports(containingFile: KSFile?, classSimpleName: Stri
             resolvedPackage = line.substringAfter("import ").substringBefore(".$classSimpleName")
         }
     }
-    Logger.warn("resolvedPackage = $resolvedPackage")
     if (resolvedPackage != null) return ClassName(resolvedPackage!!, classSimpleName)
     return null
 }
 
 private fun guessFromStdlib(classSimpleName: String, vararg parameterizedTypes: TypeName): TypeName? {
     // if not available in the import, we check if it's a stdlib class, but here we don't have the package name, so relying on hardcoded list
-    Logger.warn("Check `$classSimpleName` against stdlib")
     val knownStdLibClasses = mapOf<String, () -> TypeName>(
         "List" to {
             LIST.parameterizedBy(*parameterizedTypes)

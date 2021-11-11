@@ -30,6 +30,7 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
+import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.pattern.`class`.transform
 import deezer.kustom.compiler.js.pattern.enum.transform
 import deezer.kustom.compiler.js.pattern.`interface`.transform
@@ -87,6 +88,8 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
             devLog("----- visitClassDeclaration $classDeclaration - classKind = ${classDeclaration.classKind}")
             when (val descriptor = parseClass(classDeclaration)) {
                 is ClassDescriptor -> descriptor.transform()
+                    .writeCode(environment, classDeclaration.containingFile!!)
+                is SealedClassDescriptor -> descriptor.transform()
                     .writeCode(environment, classDeclaration.containingFile!!)
                 is EnumDescriptor -> descriptor.transform()
                     .writeCode(environment, classDeclaration.containingFile!!)

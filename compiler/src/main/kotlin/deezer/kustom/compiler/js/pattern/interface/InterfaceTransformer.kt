@@ -61,7 +61,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
     val exportedClass = ClassName(jsClassPackage, "Exported${origin.classSimpleName}")
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
-        .addAliasedImport(origin.asClassName(), "Common${origin.classSimpleName}")
+        .addAliasedImport(origin.asClassName, "Common${origin.classSimpleName}")
         .autoImport(origin)
         .addType(
             TypeSpec.interfaceBuilder(origin.classSimpleName) // ClassName(jsClassPackage, origin.classSimpleName).parameterizedBy(origin.generics.values.first()))

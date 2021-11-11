@@ -44,7 +44,6 @@ object TypeMapping {
     )
 
     private fun getMapping(origin: TypeName): MappingOutput? {
-        Logger.warn("getMapping $origin (${origin::class})")
         return when (origin) {
             // Simple mapping is defined for non-nullable type only,
             // nullable type follow the same transformations pattern than their non-null counterparts.

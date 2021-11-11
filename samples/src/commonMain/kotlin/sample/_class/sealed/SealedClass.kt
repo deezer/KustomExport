@@ -2,8 +2,8 @@ package sample._class.sealed
 
 import deezer.kustom.KustomExport
 
-//@KustomExport
-sealed class SealedParent(val ctorParam: String) {
+@KustomExport
+sealed class SealedParent(val ctorParam: Long) {
     abstract val field: Int
     val hardcoded: Long = 42
     fun computeFoo() = 12345
@@ -11,12 +11,12 @@ sealed class SealedParent(val ctorParam: String) {
 // Should generate a class wrapper with 'protected' constructor (package visibility, broken with package erasure?)
 
 //@KustomExport
-class SealedChild1(override val field: Int, ctorParam: String) : SealedParent(ctorParam) {
+class SealedChild1(override val field: Int, ctorParam: Long) : SealedParent(ctorParam) {
     val child1Field: String = "child1"
 }
 
 //@KustomExport
-class SealedChild2(override var field: Int) : SealedParent("forced child 2 ctor value") {
+class SealedChild2(override var field: Int) : SealedParent(94949) {
     val child2Field: String = "child2"
 }
 
