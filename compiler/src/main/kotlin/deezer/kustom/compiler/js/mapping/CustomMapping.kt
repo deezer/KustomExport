@@ -24,7 +24,6 @@ import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.BYTE_ARRAY
 import com.squareup.kotlinpoet.CHAR
 import com.squareup.kotlinpoet.CHAR_ARRAY
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.DOUBLE_ARRAY
 import com.squareup.kotlinpoet.FLOAT
@@ -44,6 +43,8 @@ import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
 import deezer.kustom.compiler.firstParameterizedType
+import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
+import deezer.kustom.compiler.js.ERROR
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustom.compiler.js.mapping.TypeMapping.exportMethod
 import deezer.kustom.compiler.js.mapping.TypeMapping.exportedType
@@ -53,21 +54,6 @@ import deezer.kustom.compiler.js.pattern.qdot
 import deezer.kustom.compiler.shortNamesForIndex
 
 const val INDENTATION = "    "
-
-val EXCEPTION = ClassName("kotlin", "Exception")
-val RUNTIME_EXCEPTION = ClassName("kotlin", "RuntimeException")
-val ILLEGAL_ARGUMENT_EXCEPTION = ClassName("kotlin", "IllegalArgumentException")
-val ILLEGAL_STATE_EXCEPTION = ClassName("kotlin", "IllegalStateException")
-val ALL_KOTLIN_EXCEPTIONS = listOf(
-    EXCEPTION,
-    RUNTIME_EXCEPTION,
-    ILLEGAL_ARGUMENT_EXCEPTION,
-    ILLEGAL_STATE_EXCEPTION
-)
-const val EXCEPTION_JS_PACKAGE = "deezer.kustom"
-private fun TypeName.toJsException() = ClassName(EXCEPTION_JS_PACKAGE, (this as ClassName).simpleName)
-//val EXCEPTION_JS = ClassName("deezer.kustom", "Exception")
-//val ILLEGAL_STATE_EXCEPTION_JS = ClassName("deezer.kustom", "IllegalStateException")
 
 fun initCustomMapping() {
     // Doc interop: https://kotlinlang.org/docs/js-to-kotlin-interop.html#primitive-arrays
@@ -92,6 +78,14 @@ fun initCustomMapping() {
         )
     }
 
+    TypeMapping.mappings += ALL_KOTLIN_EXCEPTIONS.map { exportableType ->
+        exportableType to MappingOutput(
+            exportType = { ERROR },
+            importMethod = { targetName, _ -> "$targetName.cause as ${exportableType.simpleName}" },
+            exportMethod = { targetName, _ -> "Error($targetName)" },
+        )
+    }
+
     TypeMapping.mappings += mapOf<TypeName, MappingOutput>(
         // https://kotlinlang.org/docs/js-to-kotlin-interop.html#kotlin-types-in-javascript
         // doc: kotlin.Long is not mapped to any JavaScript object, as there is no 64-bit integer number type in JavaScript. It is emulated by a Kotlin class.
@@ -102,31 +96,31 @@ fun initCustomMapping() {
         ),
 
         LONG_ARRAY to MappingOutput(
-            exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(LONG)) },
+            exportType = { ARRAY.parameterizedBy(exportedType(LONG)) },
             // TODO: improve perf by avoiding useless double transformation
             // LongArray(value.size) { index -> value[index].toLong() }
             importMethod = { targetName, typeName ->
                 targetName +
-                    "${typeName.qdot}map { ${TypeMapping.importMethod("it", LONG)} }" +
+                    "${typeName.qdot}map { ${importMethod("it", LONG)} }" +
                     "${typeName.qdot}toLongArray()"
             },
             exportMethod = { targetName, typeName ->
                 targetName +
-                    "${typeName.qdot}map { ${TypeMapping.exportMethod("it", LONG)} }" +
+                    "${typeName.qdot}map { ${exportMethod("it", LONG)} }" +
                     "${typeName.qdot}toTypedArray()"
             },
         ),
 
         ARRAY to MappingOutput(
-            exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(it.firstParameterizedType())) },
+            exportType = { ARRAY.parameterizedBy(exportedType(it.firstParameterizedType())) },
             importMethod = { targetName, typeName ->
-                val importMethod = TypeMapping.importMethod("it", typeName.firstParameterizedType())
+                val importMethod = importMethod("it", typeName.firstParameterizedType())
                 if (importMethod == "it") targetName else {
                     "$targetName${typeName.qdot}map { $importMethod }${typeName.qdot}toTypedArray()"
                 }
             },
             exportMethod = { targetName, typeName ->
-                val exportMethod = TypeMapping.exportMethod("it", typeName.firstParameterizedType())
+                val exportMethod = exportMethod("it", typeName.firstParameterizedType())
                 if (exportMethod == "it") targetName else {
                     "$targetName${typeName.qdot}map { $exportMethod }${typeName.qdot}toTypedArray()"
                 }
@@ -134,39 +128,18 @@ fun initCustomMapping() {
         ),
 
         LIST to MappingOutput(
-            exportType = { ARRAY.parameterizedBy(TypeMapping.exportedType(it.firstParameterizedType())) },
+            exportType = { ARRAY.parameterizedBy(exportedType(it.firstParameterizedType())) },
             importMethod = { targetName, typeName ->
                 targetName +
-                    "${typeName.qdot}map { ${TypeMapping.importMethod("it", typeName.firstParameterizedType())} }"
+                    "${typeName.qdot}map { ${importMethod("it", typeName.firstParameterizedType())} }"
             },
             exportMethod = { targetName, typeName ->
                 targetName +
-                    "${typeName.qdot}map { ${TypeMapping.exportMethod("it", typeName.firstParameterizedType())} }" +
+                    "${typeName.qdot}map { ${exportMethod("it", typeName.firstParameterizedType())} }" +
                     "${typeName.qdot}toTypedArray()"
             },
         ),
         // TODO: Handle other collections
-
-        EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        ),
-        RUNTIME_EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        ),
-        ILLEGAL_ARGUMENT_EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        ),
-        ILLEGAL_STATE_EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        )
     )
 
     TypeMapping.advancedMappings += mapOf<(TypeName) -> Boolean, MappingOutput>(

@@ -8,6 +8,7 @@ class ExceptionBuilder {
     fun buildRuntimeException(msg: String) = RuntimeException(msg)
     fun buildIllegalArgumentException(msg: String) = IllegalArgumentException(msg)
     fun buildIllegalStateException(msg: String) = IllegalStateException(msg)
+    fun buildIndexOutOfBoundsException(msg: String) = IndexOutOfBoundsException(msg)
 }
 
 @KustomExport
@@ -20,5 +21,18 @@ class ExceptionConsumer {
             is Exception -> "Exception:${e.message}"
             else -> "Not an exception!!!"
         }
+    }
+
+    fun consume2(e: Exception): String {
+        if (e is Exception) {
+            println("is Exception")
+        }
+        if (e is IllegalArgumentException) {
+            println("is IllegalArgumentException")
+        }
+        if (e is IndexOutOfBoundsException) {
+            println("is IndexOutOfBoundsException")
+        }
+        return "IndexOutOfBoundsException:${e.message}"
     }
 }

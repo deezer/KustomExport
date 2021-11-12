@@ -28,9 +28,6 @@ import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.ALL_KOTLIN_EXCEPTIONS
-import deezer.kustom.compiler.js.mapping.EXCEPTION
-import deezer.kustom.compiler.js.mapping.EXCEPTION_JS_PACKAGE
 
 // TODO: Imports of properties are not always required by KotlinPoet as it can inline
 
@@ -65,35 +62,20 @@ private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder
         .distinct()
         .filter { it !is TypeVariableName } // Ignore generics
         .map { it.asClassName() }
-        // Ignore classes with package starting with "kotlin." and are not exceptions.
-        .filterNot { it.isFromStdlib() && it !in ALL_KOTLIN_EXCEPTIONS }
+        // Ignore classes with package starting with "kotlin."
+        .filterNot { it.isFromStdlib() }
         .forEach { className ->
-            Logger.warn(" ----- className=$className (is ex = ${className == EXCEPTION})")
-            if (className in ALL_KOTLIN_EXCEPTIONS) { // Special case where we cannot generate these methods
-                addAliasedImport(className, "Common${className.simpleName}")
-                //if (packageName != EXCEPTION_JS.packageName) { // Useless import if same package
-                //addImport(EXCEPTION_JS_PACKAGE, "import")
-                addImport(EXCEPTION_JS_PACKAGE, "export")
-                //}
-            } else {
-                addAliasedImport(className, "Common${className.simpleName}")
-                if (CompilerArgs.erasePackage) return@forEach // No need to import ext func from the same package
-                val jsPackage = className.packageName.jsPackage()
-                // if (packageName != jsPackage) { // Useless import if same package
-                addImport(jsPackage, "import${className.simpleName}")
-                addImport(jsPackage, "export${className.simpleName}")
-                // }
-            }
+            Logger.warn(" ----- className=$className")
+
+            addAliasedImport(className, "Common${className.simpleName}")
+            if (CompilerArgs.erasePackage) return@forEach // No need to import ext func from the same package
+            val jsPackage = className.packageName.jsPackage()
+            // if (packageName != jsPackage) { // Useless import if same package
+            addImport(jsPackage, "import${className.simpleName}")
+            addImport(jsPackage, "export${className.simpleName}")
+            // }
         }
     return this
-}
-
-// Reduce the package name to give a distinct name when there is multiple ext func
-// with the same name in different packages creating ambiguity
-fun importExportPrefix(packageName: String): String {
-    return packageName.split(".")
-        .map { it.first() }
-        .joinToString("")
 }
 
 private fun TypeName.isFromStdlib() =
