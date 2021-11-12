@@ -25,11 +25,10 @@ import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType
+import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.ALL_KOTLIN_EXCEPTIONS
-import deezer.kustom.compiler.js.mapping.EXCEPTION
 import deezer.kustom.compiler.js.mapping.EXCEPTION_JS_PACKAGE
 
 // TODO: Imports of properties are not always required by KotlinPoet as it can inline
@@ -68,7 +67,6 @@ private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder
         // Ignore classes with package starting with "kotlin." and are not exceptions.
         .filterNot { it.isFromStdlib() && it !in ALL_KOTLIN_EXCEPTIONS }
         .forEach { className ->
-            Logger.warn(" ----- className=$className (is ex = ${className == EXCEPTION})")
             if (className in ALL_KOTLIN_EXCEPTIONS) { // Special case where we cannot generate these methods
                 addAliasedImport(className, "Common${className.simpleName}")
                 //if (packageName != EXCEPTION_JS.packageName) { // Useless import if same package

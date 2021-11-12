@@ -44,6 +44,7 @@ import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
 import deezer.kustom.compiler.firstParameterizedType
+import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustom.compiler.js.mapping.TypeMapping.exportMethod
 import deezer.kustom.compiler.js.mapping.TypeMapping.exportedType
@@ -54,20 +55,8 @@ import deezer.kustom.compiler.shortNamesForIndex
 
 const val INDENTATION = "    "
 
-val EXCEPTION = ClassName("kotlin", "Exception")
-val RUNTIME_EXCEPTION = ClassName("kotlin", "RuntimeException")
-val ILLEGAL_ARGUMENT_EXCEPTION = ClassName("kotlin", "IllegalArgumentException")
-val ILLEGAL_STATE_EXCEPTION = ClassName("kotlin", "IllegalStateException")
-val ALL_KOTLIN_EXCEPTIONS = listOf(
-    EXCEPTION,
-    RUNTIME_EXCEPTION,
-    ILLEGAL_ARGUMENT_EXCEPTION,
-    ILLEGAL_STATE_EXCEPTION
-)
 const val EXCEPTION_JS_PACKAGE = "deezer.kustom"
 private fun TypeName.toJsException() = ClassName(EXCEPTION_JS_PACKAGE, (this as ClassName).simpleName)
-//val EXCEPTION_JS = ClassName("deezer.kustom", "Exception")
-//val ILLEGAL_STATE_EXCEPTION_JS = ClassName("deezer.kustom", "IllegalStateException")
 
 fun initCustomMapping() {
     // Doc interop: https://kotlinlang.org/docs/js-to-kotlin-interop.html#primitive-arrays
@@ -89,6 +78,14 @@ fun initCustomMapping() {
             exportType = { exportableType },
             importMethod = { targetName, _ -> targetName },
             exportMethod = { targetName, _ -> targetName },
+        )
+    }
+
+    TypeMapping.mappings += ALL_KOTLIN_EXCEPTIONS.map { exportableType ->
+        exportableType to MappingOutput(
+            exportType = { it.toJsException() },
+            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
+            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
         )
     }
 
@@ -146,27 +143,6 @@ fun initCustomMapping() {
             },
         ),
         // TODO: Handle other collections
-
-        EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        ),
-        RUNTIME_EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        ),
-        ILLEGAL_ARGUMENT_EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        ),
-        ILLEGAL_STATE_EXCEPTION to MappingOutput(
-            exportType = { it.toJsException() },
-            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
-        )
     )
 
     TypeMapping.advancedMappings += mapOf<(TypeName) -> Boolean, MappingOutput>(

@@ -12,3 +12,15 @@ export function assert(condition: boolean, message: string) {
         console.log("❌   " + testScopeName + ": " + message)
     }
 }
+
+export function assertEqualsQuiet<T>(expected: T, actual: T, message: string) {
+    if (expected != actual) assert(false, message)
+}
+
+export function assertEquals<T>(expected: T, actual: T, message: string) {
+    if (expected == actual) {
+        console.log("✅   " + testScopeName + ": " + message)
+    } else {
+        console.log("❌   " + testScopeName + ": " + message + "\n    Expected: "+expected + "\n    Actual  : " + actual + "")
+    }
+}
