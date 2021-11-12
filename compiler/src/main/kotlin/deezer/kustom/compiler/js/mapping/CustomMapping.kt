@@ -55,9 +55,19 @@ import deezer.kustom.compiler.shortNamesForIndex
 const val INDENTATION = "    "
 
 val EXCEPTION = ClassName("kotlin", "Exception")
+val RUNTIME_EXCEPTION = ClassName("kotlin", "RuntimeException")
+val ILLEGAL_ARGUMENT_EXCEPTION = ClassName("kotlin", "IllegalArgumentException")
 val ILLEGAL_STATE_EXCEPTION = ClassName("kotlin", "IllegalStateException")
-val EXCEPTION_JS = ClassName("deezer.kustom", "Exception")
-val ILLEGAL_STATE_EXCEPTION_JS = ClassName("deezer.kustom", "IllegalStateException")
+val ALL_KOTLIN_EXCEPTIONS = listOf(
+    EXCEPTION,
+    RUNTIME_EXCEPTION,
+    ILLEGAL_ARGUMENT_EXCEPTION,
+    ILLEGAL_STATE_EXCEPTION
+)
+const val EXCEPTION_JS_PACKAGE = "deezer.kustom"
+private fun TypeName.toJsException() = ClassName(EXCEPTION_JS_PACKAGE, (this as ClassName).simpleName)
+//val EXCEPTION_JS = ClassName("deezer.kustom", "Exception")
+//val ILLEGAL_STATE_EXCEPTION_JS = ClassName("deezer.kustom", "IllegalStateException")
 
 fun initCustomMapping() {
     // Doc interop: https://kotlinlang.org/docs/js-to-kotlin-interop.html#primitive-arrays
@@ -138,12 +148,22 @@ fun initCustomMapping() {
         // TODO: Handle other collections
 
         EXCEPTION to MappingOutput(
-            exportType = { EXCEPTION_JS },
+            exportType = { it.toJsException() },
+            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
+            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
+        ),
+        RUNTIME_EXCEPTION to MappingOutput(
+            exportType = { it.toJsException() },
+            importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
+            exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
+        ),
+        ILLEGAL_ARGUMENT_EXCEPTION to MappingOutput(
+            exportType = { it.toJsException() },
             importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
             exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
         ),
         ILLEGAL_STATE_EXCEPTION to MappingOutput(
-            exportType = { ILLEGAL_STATE_EXCEPTION_JS },
+            exportType = { it.toJsException() },
             importMethod = { targetName, typeName -> "$targetName${typeName.qdot}import()" },
             exportMethod = { targetName, typeName -> "$targetName${typeName.qdot}export()" },
         )

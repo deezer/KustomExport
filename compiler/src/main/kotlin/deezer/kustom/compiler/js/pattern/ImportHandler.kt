@@ -28,8 +28,9 @@ import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.jsPackage
+import deezer.kustom.compiler.js.mapping.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.mapping.EXCEPTION
-import deezer.kustom.compiler.js.mapping.EXCEPTION_JS
+import deezer.kustom.compiler.js.mapping.EXCEPTION_JS_PACKAGE
 
 // TODO: Imports of properties are not always required by KotlinPoet as it can inline
 
@@ -64,15 +65,16 @@ private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder
         .distinct()
         .filter { it !is TypeVariableName } // Ignore generics
         .map { it.asClassName() }
-        .filterNot { it.isFromStdlib() && it != EXCEPTION }
+        // Ignore classes with package starting with "kotlin." and are not exceptions.
+        .filterNot { it.isFromStdlib() && it !in ALL_KOTLIN_EXCEPTIONS }
         .forEach { className ->
             Logger.warn(" ----- className=$className (is ex = ${className == EXCEPTION})")
-            if (className == EXCEPTION) { // Special case where we cannot generate these methods
-                addAliasedImport(EXCEPTION, "Common${className.simpleName}")
-                if (packageName != EXCEPTION_JS.packageName) { // Useless import if same package
-                    addImport(EXCEPTION_JS.packageName, "import")
-                    addImport(EXCEPTION_JS.packageName, "export")
-                }
+            if (className in ALL_KOTLIN_EXCEPTIONS) { // Special case where we cannot generate these methods
+                addAliasedImport(className, "Common${className.simpleName}")
+                //if (packageName != EXCEPTION_JS.packageName) { // Useless import if same package
+                //addImport(EXCEPTION_JS_PACKAGE, "import")
+                addImport(EXCEPTION_JS_PACKAGE, "export")
+                //}
             } else {
                 addAliasedImport(className, "Common${className.simpleName}")
                 if (CompilerArgs.erasePackage) return@forEach // No need to import ext func from the same package

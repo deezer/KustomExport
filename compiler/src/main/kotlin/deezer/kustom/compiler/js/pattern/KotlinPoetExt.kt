@@ -31,7 +31,6 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
 import com.squareup.kotlinpoet.ksp.toTypeName
 import deezer.kustom.compiler.Logger
-import deezer.kustom.compiler.js.mapping.EXCEPTION
 import java.io.File
 
 val TypeName.qdot: String
@@ -81,7 +80,7 @@ public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, con
             toTypeName(typeParamResolver)
         } catch (e: Exception) {
             return guessClassFromImports(containingFile, classSimpleName = this.toString())
-                // TODO handle support for stdlib
+            // TODO handle support for stdlib
             /*?: guessFromStdlib(
                 this.toString(),
                 *declaration.typeParameters.map { ... }.toTypedArray()
@@ -127,6 +126,5 @@ private fun guessFromStdlib(classSimpleName: String, vararg parameterizedTypes: 
     )
     knownStdLibClasses[classSimpleName]?.let { return it.invoke() }
 
-    if (classSimpleName == "Exception") return EXCEPTION
     return null
 }
