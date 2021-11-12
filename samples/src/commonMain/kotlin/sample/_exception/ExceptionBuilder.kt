@@ -14,11 +14,9 @@ class ExceptionBuilder {
     fun buildIllegalStateException(msg: String) = IllegalStateException(msg)
     fun buildIndexOutOfBoundsException(msg: String) = IndexOutOfBoundsException(msg)
     fun buildNoSuchElementException(msg: String) = NoSuchElementException(msg)
-    fun buildNoWhenBranchMatchedException(msg: String) = NoWhenBranchMatchedException(msg)
     fun buildNullPointerException(msg: String) = NullPointerException(msg)
     fun buildNumberFormatException(msg: String) = NumberFormatException(msg)
     fun buildRuntimeException(msg: String) = RuntimeException(msg)
-    fun buildUninitializedPropertyAccessException(msg: String) = UninitializedPropertyAccessException(msg)
     fun buildUnsupportedOperationException(msg: String) = UnsupportedOperationException(msg)
 }
 
@@ -34,9 +32,7 @@ class ExceptionConsumer {
             is IllegalStateException -> "IllegalStateException=${e.message}"
             is IndexOutOfBoundsException -> "IndexOutOfBoundsException=${e.message}"
             is NoSuchElementException -> "NoSuchElementException=${e.message}"
-            is NoWhenBranchMatchedException -> "NoWhenBranchMatchedException=${e.message}"
             is NullPointerException -> "NullPointerException=${e.message}"
-            is UninitializedPropertyAccessException -> "UninitializedPropertyAccessException=${e.message}"
             is UnsupportedOperationException -> "UnsupportedOperationException=${e.message}"
 
             is IllegalArgumentException -> "IllegalArgumentException=${e.message}"

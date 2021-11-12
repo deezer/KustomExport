@@ -17,7 +17,7 @@
 
 // See documentation in Exception.import
 @file:Suppress("NON_EXPORTABLE_TYPE")
-
+@file:OptIn(ExperimentalJsExport::class)
 // package kotlin cannot be used, so we can't enforce code consistency and need to make it explicit in processor too.
 package deezer.kustom
 
@@ -31,17 +31,14 @@ import kotlin.IllegalArgumentException as CommonIllegalArgumentException
 import kotlin.IllegalStateException as CommonIllegalStateException
 import kotlin.IndexOutOfBoundsException as CommonIndexOutOfBoundsException
 import kotlin.NoSuchElementException as CommonNoSuchElementException
-import kotlin.NoWhenBranchMatchedException as CommonNoWhenBranchMatchedException
 import kotlin.NullPointerException as CommonNullPointerException
 import kotlin.NumberFormatException as CommonNumberFormatException
 import kotlin.RuntimeException as CommonRuntimeException
-import kotlin.UninitializedPropertyAccessException as CommonUninitializedPropertyAccessException
 import kotlin.UnsupportedOperationException as CommonUnsupportedOperationException
 
 /**
  * Cannot define this file in jsMain, Kotlin Js-IR limitation?
  */
-@OptIn(ExperimentalJsExport::class)
 @JsExport
 open class Exception(val message: String, val stackTrace: String) {
     // "import": Cannot export common type BUT here we use a Typescript keyword 'import' to avoid
@@ -154,19 +151,3 @@ class ArithmeticException(message: String, stackTrace: String) : RuntimeExceptio
 }
 
 fun CommonArithmeticException.export() = ArithmeticException(message ?: "", stackTraceToString())
-
-@JsExport
-class NoWhenBranchMatchedException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
-    override fun import() = CommonNoWhenBranchMatchedException(message, Throwable(stackTrace))
-}
-
-fun CommonNoWhenBranchMatchedException.export() = NoWhenBranchMatchedException(message ?: "", stackTraceToString())
-
-@JsExport
-class UninitializedPropertyAccessException(message: String, stackTrace: String) :
-    RuntimeException(message, stackTrace) {
-    override fun import() = CommonUninitializedPropertyAccessException(message, Throwable(stackTrace))
-}
-
-fun CommonUninitializedPropertyAccessException.export() =
-    UninitializedPropertyAccessException(message ?: "", stackTraceToString())

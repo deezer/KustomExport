@@ -36,8 +36,6 @@ val CLASS_CAST_EXCEPTION = ClassName("kotlin", "ClassCastException")
 val ASSERTION_ERROR = ClassName("kotlin", "AssertionError")
 val NO_SUCH_ELEMENT_EXCEPTION = ClassName("kotlin", "NoSuchElementException")
 val ARITHMETIC_EXCEPTION = ClassName("kotlin", "ArithmeticException")
-val NO_WHEN_BRANCH_MATCHED_EXCEPTION = ClassName("kotlin", "NoWhenBranchMatchedException")
-val UNINITIALIZED_PROPERTY_ACCESS_EXCEPTION = ClassName("kotlin", "UninitializedPropertyAccessException")
 
 val ALL_KOTLIN_EXCEPTIONS = listOf(
     THROWABLE,
@@ -55,6 +53,4 @@ val ALL_KOTLIN_EXCEPTIONS = listOf(
     ASSERTION_ERROR,
     NO_SUCH_ELEMENT_EXCEPTION,
     ARITHMETIC_EXCEPTION,
-    NO_WHEN_BRANCH_MATCHED_EXCEPTION,
-    UNINITIALIZED_PROPERTY_ACCESS_EXCEPTION,
 )

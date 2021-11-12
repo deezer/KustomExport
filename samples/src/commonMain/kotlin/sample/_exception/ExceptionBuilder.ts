@@ -46,8 +46,4 @@ runTest("Exceptions", () : void => {
         deezer.kustom.NoSuchElementException, deezer.kustom.RuntimeException, deezer.kustom.Exception)
     assertException(builder.buildArithmeticException("ae"), "ae",
         deezer.kustom.ArithmeticException, deezer.kustom.RuntimeException, deezer.kustom.Exception)
-    assertException(builder.buildNoWhenBranchMatchedException("nwbme"), "nwbme",
-        deezer.kustom.NoWhenBranchMatchedException, deezer.kustom.RuntimeException, deezer.kustom.Exception)
-    assertException(builder.buildUninitializedPropertyAccessException("upae"), "upae",
-        deezer.kustom.UninitializedPropertyAccessException, deezer.kustom.RuntimeException, deezer.kustom.Exception)
 })

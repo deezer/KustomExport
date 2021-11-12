@@ -23,7 +23,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.CompilerArgs
-import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.ClassDescriptor
