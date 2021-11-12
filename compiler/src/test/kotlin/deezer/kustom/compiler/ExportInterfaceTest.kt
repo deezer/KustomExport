@@ -146,8 +146,8 @@ class ExportInterfaceTest {
             ) : CommonBasicInterface {
                 public override var canChange: String
                     get() = exported.canChange
-                    set(canChange) {
-                        exported.canChange = canChange
+                    set(setValue) {
+                        exported.canChange = setValue
                     }
             }
             
@@ -156,8 +156,8 @@ class ExportInterfaceTest {
             ) : BasicInterface {
                 public override var canChange: String
                     get() = common.canChange
-                    set(canChange) {
-                        common.canChange = canChange
+                    set(setValue) {
+                        common.canChange = setValue
                     }
             }
             
@@ -206,8 +206,8 @@ class ExportInterfaceTest {
             ) : CommonBasicInterface {
                 public override var numbers: List<Long>
                     get() = exported.numbers.map { it.toLong() }
-                    set(numbers) {
-                        exported.numbers = numbers.map { it.toDouble() }.toTypedArray()
+                    set(setValue) {
+                        exported.numbers = setValue.map { it.toDouble() }.toTypedArray()
                     }
             }
             
@@ -216,8 +216,8 @@ class ExportInterfaceTest {
             ) : BasicInterface {
                 public override var numbers: Array<Double>
                     get() = common.numbers.map { it.toDouble() }.toTypedArray()
-                    set(numbers) {
-                        common.numbers = numbers.map { it.toLong() }
+                    set(setValue) {
+                        common.numbers = setValue.map { it.toLong() }
                     }
             }
             

@@ -43,7 +43,6 @@ import com.squareup.kotlinpoet.SHORT_ARRAY
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
-import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustom.compiler.js.mapping.TypeMapping.exportMethod
@@ -153,7 +152,6 @@ fun initCustomMapping() {
     TypeMapping.advancedMappings += mapOf<(TypeName) -> Boolean, MappingOutput>(
         { type: TypeName -> type.isKotlinFunction() } to MappingOutput(
             exportType = {
-                Logger.warn("FunctionX $it")
                 val lambda = it as ParameterizedTypeName
                 val args = lambda.typeArguments.dropLast(1)
                 val returnType = lambda.typeArguments.last()

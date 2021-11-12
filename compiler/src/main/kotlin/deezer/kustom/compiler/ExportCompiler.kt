@@ -30,6 +30,7 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
+import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.pattern.`class`.transform
 import deezer.kustom.compiler.js.pattern.enum.transform
 import deezer.kustom.compiler.js.pattern.`interface`.transform
@@ -65,31 +66,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         val passId = Random.nextLong()
         devLog("passId: $passId - symbols: ${symbols.count()} - first: ${symbols.firstOrNull()?.location}")
 
-        // ------------------------------------------------------------------------------------------------
-        // Hack to avoid compilation on Android/iOS : create a dummy file, then check generated file path
-        // https://github.com/google/ksp/issues/641
-        /*
-        symbols.firstOrNull()?.accept(
-            object : KSVisitorVoid() {
-                // For some reasons on KSP 1.5.31-1.0 not using the Visitor pattern lead to gradle freeze
-                override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-                    devLog("Creating the placeholder...")
-                    FileSpec.builder("", "placeholder")
-                        .build().writeCode(environment)
-                }
-            },
-            Unit
-        )
-        val generatedPath = environment.codeGenerator.generatedFile.firstOrNull().toString()
-        val isJsBuild = generatedPath.contains("/jsMain/")
-        // Please don't ask why there is multiple possible values here, I've no clue, but it's working
-        val isUnitTest =
-            generatedPath.contains("/T/junit") || generatedPath.contains("/T/Kotlin-Compilation") || generatedPath == "null"
-        devLog("isJsBuild=$isJsBuild isUnitTest=$isUnitTest generatedPath=$generatedPath")
-        if (!isUnitTest && !isJsBuild) return emptyList() // Disable compilation
-        */
-        // ------------------------------------------------------------------------------------------------
-
         symbols
             .filter { it is KSClassDeclaration /*&& it.validate()*/ }
             .forEach {
@@ -112,6 +88,8 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
             devLog("----- visitClassDeclaration $classDeclaration - classKind = ${classDeclaration.classKind}")
             when (val descriptor = parseClass(classDeclaration)) {
                 is ClassDescriptor -> descriptor.transform()
+                    .writeCode(environment, classDeclaration.containingFile!!)
+                is SealedClassDescriptor -> descriptor.transform()
                     .writeCode(environment, classDeclaration.containingFile!!)
                 is EnumDescriptor -> descriptor.transform()
                     .writeCode(environment, classDeclaration.containingFile!!)

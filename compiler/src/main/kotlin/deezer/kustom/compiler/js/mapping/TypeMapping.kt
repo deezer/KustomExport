@@ -21,8 +21,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
-import deezer.kustom.compiler.CompilerArgs
-import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.pattern.asClassName
 import deezer.kustom.compiler.js.pattern.qdot
@@ -44,7 +42,6 @@ object TypeMapping {
     )
 
     private fun getMapping(origin: TypeName): MappingOutput? {
-        Logger.warn("getMapping $origin (${origin::class})")
         return when (origin) {
             // Simple mapping is defined for non-nullable type only,
             // nullable type follow the same transformations pattern than their non-null counterparts.
@@ -72,7 +69,7 @@ object TypeMapping {
                 // If no mapping, assume it's a project class, and it has a generated file
                 if (origin is ClassName) {
                     return ClassName(
-                        packageName = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage(),
+                        packageName = origin.packageName.jsPackage(),
                         simpleNames = listOf(origin.simpleName)
                     ).copy(nullable = origin.isNullable)
                 }

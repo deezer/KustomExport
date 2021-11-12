@@ -18,7 +18,8 @@
 package deezer.kustom.compiler.js
 
 import com.squareup.kotlinpoet.ClassName
+import deezer.kustom.compiler.CompilerArgs
 
-fun String.jsPackage() = "$this.js"
+fun String.jsPackage() = if (CompilerArgs.erasePackage) "" else "$this.js"
 val jsExport = ClassName("kotlin.js", "JsExport")
 val jsName = ClassName("kotlin.js", "JsName")

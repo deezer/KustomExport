@@ -4,14 +4,30 @@
 export PATH=/usr/local/bin/:$PATH
 
 # 2 gradle steps due to a possible Kotlin JsIr issue
-../gradlew clean compileKotlinJs -PenableKsp=true
-../gradlew jsBrowserProductionLibraryDistribution
+# If run locally, you can use those commands
+#../gradlew clean compileKotlinJs -PenableKsp=true
+#../gradlew jsBrowserProductionLibraryDistribution
 
-#cd build/productionLibrary
-#cd ../build/compileSync/main/productionLibrary/kotlin/@kustom
+echo Installing typescript
+npm install typescript --save-dev
+
+echo Install ts-node
+npm install @types/node --save-dev
+npm install ts-node --save-dev
+npm install
+
+echo "Linking @kustom/Samples"
+echo "Before"
 cd ../build/js/packages/@kustom/Samples
+echo "From here"
+pwd
 npm link
 cd -
+echo "To here"
+pwd
 npm link @kustom/Samples
 
-npm i ts-node
+echo Samples are linked
+ls node_modules/@kustom
+ls -al node_modules/@kustom/Samples
+ls node_modules/@kustom/Samples

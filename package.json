@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@types/node": "^16.11.7"
+  }
+}

@@ -46,18 +46,23 @@ data class FunctionDescriptor(
     val parameters: List<ParameterDescriptor>,
 )
 
+data class SuperDescriptor(
+    val type: TypeName,
+    val parameters: List<ParameterDescriptor>?,
+)
+
 sealed class Descriptor
 
 data class InterfaceDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val typeParameters: Map<String, TypeVariableName>,
-    val superTypes: List<TypeName>,
+    val supers: List<SuperDescriptor>,
     val properties: List<PropertyDescriptor>,
     val functions: List<FunctionDescriptor>,
 ) : Descriptor() {
     // Useful for aliased imports (don't care about type parameters)
-    fun asClassName() = ClassName(packageName, classSimpleName)
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
     fun asTypeName() = ClassName(packageName, classSimpleName).let {
         if (typeParameters.isNotEmpty()) {
             it.parameterizedBy(typeParameters.values.toList())
@@ -65,14 +70,32 @@ data class InterfaceDescriptor(
     }
 }
 
+data class SealedClassDescriptor(
+    val packageName: String,
+    val classSimpleName: String,
+    val constructorParams: List<ParameterDescriptor>,
+    val properties: List<PropertyDescriptor>,
+    val functions: List<FunctionDescriptor>,
+    val subClasses: List<SealedSubClassDescriptor>,
+) : Descriptor() {
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
+}
+
+data class SealedSubClassDescriptor(
+    val packageName: String,
+    val classSimpleName: String,
+) {
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
+}
+
 data class ClassDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val typeParameters: Map<String, TypeVariableName>,
-    val superTypes: List<TypeName>,
+    val supers: List<SuperDescriptor>,
     val constructorParams: List<ParameterDescriptor>,
     val properties: List<PropertyDescriptor>,
-    val functions: List<FunctionDescriptor>
+    val functions: List<FunctionDescriptor>,
 ) : Descriptor() {
     // Useful for aliased imports (don't care about type parameters)
     fun asClassName() = ClassName(packageName, classSimpleName)

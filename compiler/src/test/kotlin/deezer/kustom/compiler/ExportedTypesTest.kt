@@ -81,92 +81,92 @@ class ExportedTypesTest {
                     
                         public var myBoolean: Boolean
                             get() = common.myBoolean
-                            set(myBoolean) {
-                                common.myBoolean = myBoolean
+                            set(setValue) {
+                                common.myBoolean = setValue
                             }
                     
                         public var myByte: Byte
                             get() = common.myByte
-                            set(myByte) {
-                                common.myByte = myByte
+                            set(setValue) {
+                                common.myByte = setValue
                             }
                     
                         public var myChar: Char
                             get() = common.myChar
-                            set(myChar) {
-                                common.myChar = myChar
+                            set(setValue) {
+                                common.myChar = setValue
                             }
                     
                         public var myShort: Short
                             get() = common.myShort
-                            set(myShort) {
-                                common.myShort = myShort
+                            set(setValue) {
+                                common.myShort = setValue
                             }
                     
                         public var myInt: Int
                             get() = common.myInt
-                            set(myInt) {
-                                common.myInt = myInt
+                            set(setValue) {
+                                common.myInt = setValue
                             }
                     
                         public var myFloat: Float
                             get() = common.myFloat
-                            set(myFloat) {
-                                common.myFloat = myFloat
+                            set(setValue) {
+                                common.myFloat = setValue
                             }
                     
                         public var myDouble: Double
                             get() = common.myDouble
-                            set(myDouble) {
-                                common.myDouble = myDouble
+                            set(setValue) {
+                                common.myDouble = setValue
                             }
                     
                         public var myString: String
                             get() = common.myString
-                            set(myString) {
-                                common.myString = myString
+                            set(setValue) {
+                                common.myString = setValue
                             }
                     
                         public var myBooleanArray: BooleanArray
                             get() = common.myBooleanArray
-                            set(myBooleanArray) {
-                                common.myBooleanArray = myBooleanArray
+                            set(setValue) {
+                                common.myBooleanArray = setValue
                             }
                     
                         public var myByteArray: ByteArray
                             get() = common.myByteArray
-                            set(myByteArray) {
-                                common.myByteArray = myByteArray
+                            set(setValue) {
+                                common.myByteArray = setValue
                             }
                     
                         public var myCharArray: CharArray
                             get() = common.myCharArray
-                            set(myCharArray) {
-                                common.myCharArray = myCharArray
+                            set(setValue) {
+                                common.myCharArray = setValue
                             }
                     
                         public var myShortArray: ShortArray
                             get() = common.myShortArray
-                            set(myShortArray) {
-                                common.myShortArray = myShortArray
+                            set(setValue) {
+                                common.myShortArray = setValue
                             }
                     
                         public var myIntArray: IntArray
                             get() = common.myIntArray
-                            set(myIntArray) {
-                                common.myIntArray = myIntArray
+                            set(setValue) {
+                                common.myIntArray = setValue
                             }
                     
                         public var myFloatArray: FloatArray
                             get() = common.myFloatArray
-                            set(myFloatArray) {
-                                common.myFloatArray = myFloatArray
+                            set(setValue) {
+                                common.myFloatArray = setValue
                             }
                     
                         public var myDoubleArray: DoubleArray
                             get() = common.myDoubleArray
-                            set(myDoubleArray) {
-                                common.myDoubleArray = myDoubleArray
+                            set(setValue) {
+                                common.myDoubleArray = setValue
                             }
                     
                         internal constructor(common: CommonAllTypesHandledByKotlinJs) : this() {
@@ -216,14 +216,14 @@ class ExportedTypesTest {
 
                         public var myLong: Double
                             get() = common.myLong.toDouble()
-                            set(myLong) {
-                                common.myLong = myLong.toLong()
+                            set(setValue) {
+                                common.myLong = setValue.toLong()
                             }
 
                         public var myLongArray: Array<Double>
                             get() = common.myLongArray.map { it.toDouble() }.toTypedArray()
-                            set(myLongArray) {
-                                common.myLongArray = myLongArray.map { it.toLong() }.toLongArray()
+                            set(setValue) {
+                                common.myLongArray = setValue.map { it.toLong() }.toLongArray()
                             }
 
                         internal constructor(common: CommonMyLongClass) : this() {
@@ -273,26 +273,26 @@ class ExportedTypesTest {
 
                     public var myNullableString: String?
                         get() = common.myNullableString
-                        set(myNullableString) {
-                            common.myNullableString = myNullableString
+                        set(setValue) {
+                            common.myNullableString = setValue
                         }
 
                     public var myNullableArray: Array<String>?
                         get() = common.myNullableArray
-                        set(myNullableArray) {
-                            common.myNullableArray = myNullableArray
+                        set(setValue) {
+                            common.myNullableArray = setValue
                         }
 
                     public var myArrayOfNullables: Array<String?>
                         get() = common.myArrayOfNullables
-                        set(myArrayOfNullables) {
-                            common.myArrayOfNullables = myArrayOfNullables
+                        set(setValue) {
+                            common.myArrayOfNullables = setValue
                         }
 
                     public var myNullableArrayOfNullables: Array<String?>?
                         get() = common.myNullableArrayOfNullables
-                        set(myNullableArrayOfNullables) {
-                            common.myNullableArrayOfNullables = myNullableArrayOfNullables
+                        set(setValue) {
+                            common.myNullableArrayOfNullables = setValue
                         }
 
                     internal constructor(common: CommonNullables) : this() {
@@ -362,26 +362,26 @@ class ExportedTypesTest {
 
                         public var myBasicArray: Array<String>
                             get() = common.myBasicArray
-                            set(myBasicArray) {
-                                common.myBasicArray = myBasicArray
+                            set(setValue) {
+                                common.myBasicArray = setValue
                             }
 
                         public var myCustomArray: Array<Pikachu>
                             get() = common.myCustomArray.map { it.exportPikachu() }.toTypedArray()
-                            set(myCustomArray) {
-                                common.myCustomArray = myCustomArray.map { it.importPikachu() }.toTypedArray()
+                            set(setValue) {
+                                common.myCustomArray = setValue.map { it.importPikachu() }.toTypedArray()
                             }
 
                         public var myArrayOfNullables: Array<Unit?>
                             get() = common.myArrayOfNullables
-                            set(myArrayOfNullables) {
-                                common.myArrayOfNullables = myArrayOfNullables
+                            set(setValue) {
+                                common.myArrayOfNullables = setValue
                             }
 
                         public var myNullableArrayOfNullables: Array<String?>?
                             get() = common.myNullableArrayOfNullables
-                            set(myNullableArrayOfNullables) {
-                                common.myNullableArrayOfNullables = myNullableArrayOfNullables
+                            set(setValue) {
+                                common.myNullableArrayOfNullables = setValue
                             }
 
                         internal constructor(common: CommonArrays) : this() {
@@ -449,8 +449,8 @@ class ExportedTypesTest {
                 ) : CommonSachaInterface {
                     public override var pika: CommonPikachu
                         get() = exported.pika.importPikachu()
-                        set(pika) {
-                            exported.pika = pika.exportPikachu()
+                        set(setValue) {
+                            exported.pika = setValue.exportPikachu()
                         }
                 }
                 
@@ -459,8 +459,8 @@ class ExportedTypesTest {
                 ) : SachaInterface {
                     public override var pika: Pikachu
                         get() = common.pika.exportPikachu()
-                        set(pika) {
-                            common.pika = pika.importPikachu()
+                        set(setValue) {
+                            common.pika = setValue.importPikachu()
                         }
                 }
                 
@@ -529,9 +529,9 @@ class ExportedTypesTest {
                                 get() = { a: kotlin.Float ->
                                     common.floatToUnit(a)
                                 }
-                                set(floatToUnit) {
+                                set(setValue) {
                                     common.floatToUnit = { a: kotlin.Float ->
-                                                floatToUnit(a)
+                                                setValue(a)
                                             }
                                 }
                         
@@ -543,9 +543,9 @@ class ExportedTypesTest {
                                 get() = { a: kotlin.Int, b: pokemon.js.Pikachu, c: kotlin.Double ->
                                     common.complexFun(a, b.importPikachu(), c.toLong()).exportPikachu()
                                 }
-                                set(complexFun) {
+                                set(setValue) {
                                     common.complexFun = { a: kotlin.Int, b: pokemon.Pikachu, c: kotlin.Long ->
-                                                complexFun(a, b.exportPikachu(), c.toDouble()).importPikachu()
+                                                setValue(a, b.exportPikachu(), c.toDouble()).importPikachu()
                                             }
                                 }
                         

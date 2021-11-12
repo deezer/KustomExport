@@ -27,8 +27,8 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import deezer.kustom.compiler.CompilerArgs
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
@@ -45,7 +45,7 @@ fun ClassDescriptor.transform() = transformClass(this)
 fun transformClass(origin: ClassDescriptor): FileSpec {
     val originalClass = ClassName(origin.packageName, origin.classSimpleName)
 
-    val jsClassPackage = if (CompilerArgs.erasePackage) "" else origin.packageName.jsPackage()
+    val jsClassPackage = origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 
     // Primary constructor should respect the original class signature, and creates a 'common' instance.
@@ -124,41 +124,39 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     )
                 )
                 .also { b ->
-                    origin.properties.forEach {
-                        b.addProperty(overrideGetterSetter(it, "common", import = false, forceOverride = false))
-                    }
-                }
-                .also { b ->
-                    origin.superTypes.forEach { superType ->
-                        try {
-                            superType.toString()
-                        } catch (e: Exception) {
-                            Logger.warn("Issue with ${origin.classSimpleName} supertypes")
-                            Logger.warn("superType of type ${superType::class}")
-                            if (superType is ClassName) {
-                                Logger.warn("${superType.packageName} / ${superType.simpleName}")
-                            }
-                            Logger.error("boom")
-                        }
-                        if (superType.toString().contains("ERROR")) return@forEach
-                        if (superType is ClassName) {
-                            val superClassName = ClassName(superType.packageName.jsPackage(), superType.simpleName)
-                            b.addSuperinterface(superClassName)
+                    origin.supers.forEach { supr ->
+                        val superType = supr.type
+                        val superTypeName: TypeName = if (superType is ClassName) {
+                            ClassName(superType.packageName.jsPackage(), superType.simpleName)
                         } else if (superType is ParameterizedTypeName) {
                             val superClassName =
                                 ClassName(superType.rawType.packageName.jsPackage(), superType.rawType.simpleName)
                             superClassName.parameterizedBy(superType.typeArguments)
-                            b.addSuperinterface(superClassName)
-                            Logger.warn("ClassTransformer - ${origin.classSimpleName} superTypes - ClassName($jsClassPackage, $superType)")
+                        } else {
+                            TODO()
+                        }
+                        if (supr.parameters == null) {
+                            b.addSuperinterface(superTypeName)
+                        } else {
+                            b.superclass(superTypeName)
+                            b.addSuperclassConstructorParameter(
+                                CodeBlock.of(supr.parameters.joinToString { it.name + " = " + it.name })
+                            )
                         }
                     }
                 }
                 .also { b ->
+                    origin.properties
+                        // Don't export fields only present in super implementation
+                        // .filterNot { p -> origin.supers.any { s -> s.parameters?.any { it.name == p.name } ?: false } }
+                        .forEach {
+                            b.addProperty(overrideGetterSetter(it, "common", import = false, forceOverride = false))
+                        }
+                }
+                .also { b ->
 
-                    Logger.warn("-- ${origin.classSimpleName} functions :")
                     val mnd = MethodNameDisambiguation()
                     origin.functions.forEach { func ->
-                        Logger.warn("-- ${func.name} overrides? ${func.isOverride}")
                         b.addFunction(
                             func.buildWrappingFunction(
                                 body = true,
