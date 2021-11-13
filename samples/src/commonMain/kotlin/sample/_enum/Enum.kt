@@ -19,13 +19,13 @@ package sample._enum
 
 import deezer.kustom.KustomExport
 
-@KustomExport
+//@KustomExport
 enum class Direction {
     NORTH, SOUTH, WEST, EAST
 }
 
-@KustomExport
-class Engine {
+//@KustomExport
+class DirectionEngine {
     fun goTo(direction: Direction): String {
         return when (direction) {
             Direction.NORTH -> "⬆️"
