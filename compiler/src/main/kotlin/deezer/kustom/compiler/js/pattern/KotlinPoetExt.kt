@@ -56,7 +56,7 @@ fun TypeName.simpleName(): String =
 @KotlinPoetKspPreview
 public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterResolver): TypeName {
     // TODO : resolve().toTypeNamePatch()
-    if (this == null) return ANY
+    if (this == null) return TODO()
     return try {
         toTypeName(typeParamResolver)
     } catch (e: Exception) {
@@ -73,8 +73,9 @@ public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterReso
 
 @KotlinPoetKspPreview
 public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, containingFile: KSFile?): TypeName {
-    if (this == null) return ANY
-    if (this.isError) return ANY
+    if (this == null) return TODO("cannot resolve:null")
+    //if (this.isError)
+        //return TODO("cannot resolve:${this.isError} / $this / ${this.isFunctionType} / ${this.declaration}")
     return (
         try {
             toTypeName(typeParamResolver)

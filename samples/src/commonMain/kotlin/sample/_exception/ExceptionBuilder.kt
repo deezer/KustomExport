@@ -1,8 +1,8 @@
 package sample._exception
 
-import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportSamples
 
-@KustomExport
+@KustomExportSamples
 class ExceptionBuilder {
     fun buildArithmeticException(msg: String) = ArithmeticException(msg)
     fun buildAssertionError(msg: String) = AssertionError(msg)
@@ -20,7 +20,7 @@ class ExceptionBuilder {
     fun buildUnsupportedOperationException(msg: String) = UnsupportedOperationException(msg)
 }
 
-@KustomExport
+@KustomExportSamples
 class ExceptionConsumer {
     fun consume(e: Exception): String {
         return when (e) {

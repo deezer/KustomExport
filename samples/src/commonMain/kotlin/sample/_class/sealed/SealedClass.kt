@@ -1,8 +1,8 @@
 package sample._class.sealed
 
-import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportSamples
 
-@KustomExport
+@KustomExportSamples
 sealed class SealedParent(val ctorParam: Long) {
     abstract val prop: Int
     val hardcoded: Long = 42
@@ -10,18 +10,18 @@ sealed class SealedParent(val ctorParam: Long) {
 }
 // Should generate a class wrapper with 'protected' constructor (package visibility, broken with package erasure?)
 
-@KustomExport
+@KustomExportSamples
 class SealedChild1(override val prop: Int, ctorParam: Long) : SealedParent(ctorParam) {
     val child1Field: String = "child1"
     fun special() = "$prop-$ctorParam-$child1Field"
 }
 
-@KustomExport
+@KustomExportSamples
 class SealedChild2(override var prop: Int) : SealedParent(94949) {
     val child2Field: String = "child2"
 }
 
-@KustomExport
+@KustomExportSamples
 class SealedClassConsumer {
     fun consume(sealed: SealedParent): String {
         return when (sealed) {

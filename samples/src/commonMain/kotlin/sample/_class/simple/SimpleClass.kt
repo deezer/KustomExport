@@ -1,8 +1,8 @@
 package sample._class.simple
 
-import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportSamples
 
-@KustomExport
+@KustomExportSamples
 class SimpleClass {
     val simpleValue: Int = 42
 }

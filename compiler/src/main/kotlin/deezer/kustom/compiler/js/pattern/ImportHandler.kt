@@ -45,6 +45,7 @@ fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
 fun FileSpec.Builder.autoImport(origin: ClassDescriptor): FileSpec.Builder {
     return autoImport(
         origin.supers.map { it.type } +
+            origin.constructorParams.map { it.type } +
             origin.typeParameters.values.flatMap { it.bounds } +
             origin.properties.map { it.type } +
             origin.functions.flatMap { it.parameters }.map { it.type } +

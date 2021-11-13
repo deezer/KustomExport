@@ -1,8 +1,8 @@
 package sample._common
 
-import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportSamples
 
-@KustomExport
+@KustomExportSamples
 class BasicTypeMapping {
     val bool: Boolean = true
     val byte: Byte = 0x42

@@ -5,20 +5,16 @@ plugins {
 
 kotlin {
     js(IR) {
-        moduleName = "@kustom/Samples"
-        compilations["main"].packageJson {
-            customField("main", "kotlin/Samples.js")
-            customField("types", "kotlin/Samples.d.ts")
-        }
         browser()
-        binaries.library()
     }
+    jvm()
+    ios()
+    iosSimulatorArm64()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(project(":lib"))
-                implementation(project(":samples-deps"))
             }
         }
         val jsMain by getting {
@@ -41,5 +37,4 @@ dependencies {
 
 ksp {
     arg("erasePackage", "false")
-    arg("annotation","deezer.kustom.KustomExportSamples")
 }

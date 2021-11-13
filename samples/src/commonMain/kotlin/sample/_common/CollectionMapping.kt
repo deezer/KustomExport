@@ -1,8 +1,8 @@
 package sample._common
 
-import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportSamples
 
-@KustomExport
+@KustomExportSamples
 class CollectionMapping {
     val listLong: List<Long> = listOf(1L, 2L, 3L)
 }

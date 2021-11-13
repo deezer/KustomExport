@@ -17,7 +17,6 @@
 
 package deezer.kustom.compiler.js.pattern
 
-import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.isPrivate
@@ -47,11 +46,17 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
     val packageName = classDeclaration.packageName.asString()
     val classSimpleName = classDeclaration.simpleName.asString()
 
-    val superTypes = classDeclaration.getAllSuperTypes()
+    // Sometimes super types are not resolvable (implem by delegation)
+    // And getAllSuperTypes is calling resolve(), so for now we need to resolve in the toTypeNamePatch
+    //val superTypes = classDeclaration.getAllSuperTypes()
+    val superTypes = classDeclaration.superTypes
         .map {
-            val superType = it.toTypeNamePatch(typeParamResolver, classDeclaration.containingFile)
+            val superType = it.toTypeNamePatch(typeParamResolver)//, classDeclaration.containingFile)
 
-            val declaration = it.declaration
+            // TODO: when an implementation by delegation is used, resolve() returns an Error object,
+            // that is then interpretated as an interface (as we have no idea what is it).
+            // It may be related to the KSP/KotlinJsIr multi-module issue...
+            val declaration = it.resolve().declaration
 
             val superParams: List<ParameterDescriptor>? =
                 if (declaration is KSClassDeclaration && declaration.primaryConstructor != null) {

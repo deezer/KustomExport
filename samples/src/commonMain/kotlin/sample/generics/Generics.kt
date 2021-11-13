@@ -1,25 +1,25 @@
 package sample.generics
 
-import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportSamples
 
-@KustomExport
+@KustomExportSamples
 interface GenericsBase {
     val b: String
 }
 
-@KustomExport
+@KustomExportSamples
 class KmpGenericsBase : GenericsBase {
     override val b: String = "KmpGenericsBase"
 }
 
-@KustomExport
+@KustomExportSamples
 interface InterfaceGenerics<T : GenericsBase> {
     fun generateBase(): T
     fun check(input: T): String
 }
 /*
 
-@KustomExport
+@KustomExportSamples
 class ClassGenerics : InterfaceGenerics<KmpGenericsBase> {
     override fun generateBase(): KmpGenericsBase = KmpGenericsBase()
 

@@ -1,18 +1,18 @@
 package sample._class.cascade
 
-import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportSamples
 
-@KustomExport
+@KustomExportSamples
 class Wheel {
     val diameter: Long = 22
 }
 
-@KustomExport
+@KustomExportSamples
 class Car {
     val wheels = listOf<Wheel>(Wheel(), Wheel(), Wheel(), Wheel())
 }
 
-@KustomExport
+@KustomExportSamples
 class Parking {
     val currentCars = listOf(Car(), Car())
 }
