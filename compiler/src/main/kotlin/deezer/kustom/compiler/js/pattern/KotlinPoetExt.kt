@@ -74,7 +74,7 @@ public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterReso
 @KotlinPoetKspPreview
 public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, containingFile: KSFile?): TypeName {
     if (this == null) return ANY
-    if (this.isError) return ANY
+    //if (this.isError) return ANY
     return (
         try {
             toTypeName(typeParamResolver)

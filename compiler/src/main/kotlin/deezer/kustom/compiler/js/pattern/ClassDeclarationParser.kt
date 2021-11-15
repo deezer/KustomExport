@@ -17,7 +17,6 @@
 
 package deezer.kustom.compiler.js.pattern
 
-import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.isPrivate
@@ -47,11 +46,12 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
     val packageName = classDeclaration.packageName.asString()
     val classSimpleName = classDeclaration.simpleName.asString()
 
-    val superTypes = classDeclaration.getAllSuperTypes()
+    //val superTypes = classDeclaration.getAllSuperTypes()
+    val superTypes = classDeclaration.superTypes
         .map {
-            val superType = it.toTypeNamePatch(typeParamResolver, classDeclaration.containingFile)
+            val superType = it.toTypeNamePatch(typeParamResolver)
 
-            val declaration = it.declaration
+            val declaration = it.resolve().declaration
 
             val superParams: List<ParameterDescriptor>? =
                 if (declaration is KSClassDeclaration && declaration.primaryConstructor != null) {
