@@ -29,7 +29,7 @@ enum class ExportMode {
 }
 
 // @Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.CLASS)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS)
 public annotation class KustomExport(
     public val mode: ExportMode = ExportMode.IMPORT_EXPORT
 )

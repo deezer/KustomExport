@@ -1,13 +1,10 @@
-
-
 buildscript {
+    val kotlinVersion: String by project
     repositories {
         mavenCentral()
     }
     dependencies {
-        // For now we cannot upgrade the version of BuildKonfig because we'll need to build with Java 11
-        classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.10.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0-RC")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
 

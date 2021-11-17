@@ -20,18 +20,13 @@ package deezer.kustom.compiler.js.pattern
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.TypeMapping.exportMethod
-import deezer.kustom.compiler.js.mapping.TypeMapping.exportedType
-import deezer.kustom.compiler.js.mapping.TypeMapping.importMethod
 
 fun FunctionDescriptor.buildWrappingFunction(
     body: Boolean,
@@ -39,33 +34,25 @@ fun FunctionDescriptor.buildWrappingFunction(
     delegateName: String,
     mnd: MethodNameDisambiguation,
     forceOverride: Boolean = false, // TODO: rework that shortcut for testing...
-    typeParametersMap: List<Pair<TypeVariableName, TypeVariableName>> = emptyList()
 ): FunSpec {
     val funExportedName = mnd.getMethodName(this)
 
     val fb = FunSpec.builder(if (!import) funExportedName else name)
-    if (returnType is TypeVariableName) {
-        if (import) {
-            fb.returns(returnType)
-        } else {
-            fb.returns(typeParametersMap.first { (origin, exported) -> returnType == origin }.second)
-        }
-    } else
-        fb.returns(if (import) returnType else exportedType(returnType))
+    if (import) {
+        fb.returns(returnType.concreteTypeName)
+    } else {
+        fb.returns(returnType.exportedTypeName)
+    }
 
     if (forceOverride || isOverride) {
         fb.addModifiers(KModifier.OVERRIDE)
     }
 
     parameters.forEach { param ->
-        if (param.type is TypeVariableName) {
-            if (import) {
-                fb.addParameter(param.name, param.type)
-            } else {
-                fb.addParameter(param.name, typeParametersMap.first { (origin, _) -> param.type == origin }.second)
-            }
+        if (import) {
+            fb.addParameter(param.name, param.type.concreteTypeName)
         } else {
-            fb.addParameter(param.name, if (import) param.type else exportedType(param.type))
+            fb.addParameter(param.name, param.type.exportedTypeName.asClassName())
         }
     }
 
@@ -75,32 +62,14 @@ fun FunctionDescriptor.buildWrappingFunction(
             "val result = $delegateName.$funcName(" +
                 (if (parameters.isNotEmpty()) "\n" else "") +
                 parameters.joinToString(",\n", transform = {
-                    it.name + " = " +
-                        (
-                            if (import) exportMethod(it.name, it.type)
-                            else importMethod(it.name, it.type)
-                            ) +
-                        (
-                            if (it.type is TypeVariableName) {
-                                " as " + if (import) typeParametersMap.first().second.name else typeParametersMap.first().first.name
-                            } else ""
-                            )
+                    it.name + " = " + it.portMethod(!import)
                 }) +
                 (if (parameters.isNotEmpty()) "" else ")")
         )
         if (parameters.isNotEmpty())
             fb.addStatement(")")
         fb.addStatement(
-            "return " +
-                (
-                    if (import) importMethod("result", returnType)
-                    else exportMethod("result", returnType)
-                    ) +
-                (
-                    if (returnType is TypeVariableName) {
-                        " as " + if (import) typeParametersMap.first().first.name else typeParametersMap.first().second.name
-                    } else ""
-                    )
+            "return " + returnType.portMethod(import, "result")
         )
     }
     return fb.build()
@@ -109,22 +78,16 @@ fun FunctionDescriptor.buildWrappingFunction(
 fun buildWrapperClass(
     delegateName: String,
     originalClass: TypeName,
-    typeParameters: Map<String, TypeVariableName>,
     import: Boolean,
     properties: List<PropertyDescriptor>,
     functions: List<FunctionDescriptor>,
 ): TypeSpec {
-    val typeParametersMap = typeParameters.map { (_, value) ->
-        value to TypeVariableName("__" + value.name, value.bounds.map { exportedType(it) })
-    }
-    val allTypeParameters = typeParametersMap.flatMap { (origin, exported) -> listOf(origin, exported) }
-
     val jsClassPackage = originalClass.packageName().jsPackage()
-    val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName()).let {
-        if (typeParameters.isNotEmpty()) {
+    val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName())/*.let {
+        if (typeParametersMap.isNotEmpty()) {
             it.parameterizedBy(typeParametersMap.map { (_, exportedTp) -> exportedTp })
         } else it
-    }
+    }*/
     val wrapperPrefix = if (import) "Imported" else "Exported"
     val wrapperClass =
         ClassName(jsClassPackage, wrapperPrefix + originalClass.simpleName())
@@ -133,11 +96,11 @@ fun buildWrapperClass(
 
     return TypeSpec.classBuilder(wrapperClass)
         .addModifiers(KModifier.PRIVATE)
-        .also { b ->
+        /*.also { b ->
             allTypeParameters.forEach {
                 b.addTypeVariable(it)
             }
-        }
+        }*/
         .primaryConstructor(
             FunSpec.constructorBuilder()
                 .addParameter(delegateName, delegatedClass, KModifier.INTERNAL)
@@ -148,7 +111,14 @@ fun buildWrapperClass(
         .also { builder ->
             properties.forEach { prop ->
                 // forceOverride = true because only used by interface right now
-                builder.addProperty(overrideGetterSetter(prop, delegateName, import, forceOverride = true))
+                builder.addProperty(
+                    overrideGetterSetter(
+                        prop,
+                        delegateName,
+                        import,
+                        forceOverride = true
+                    )
+                )
             }
 
             val mnd = MethodNameDisambiguation()
@@ -160,7 +130,6 @@ fun buildWrapperClass(
                         delegateName = delegateName,
                         mnd = mnd,
                         forceOverride = true,
-                        typeParametersMap = typeParametersMap,
                     )
                 )
             }
@@ -175,15 +144,12 @@ fun overrideGetterSetter(
     forceOverride: Boolean // true for interface
 ): PropertySpec {
     val fieldName = prop.name
-    val exportedType = exportedType(prop.type)
-    val fieldClass = if (import) prop.type else exportedType
-    val setterValueClass = if (import) exportedType else prop.type
+    //val exportedType = exportedType(prop.type)
+    //val fieldClass = if (import) prop.type else exportedType
+    val fieldClass = if (import) prop.type.concreteTypeName else prop.type.exportedTypeName
+    val setterValueClass = if (import) prop.type.exportedTypeName else prop.type.concreteTypeName
 
-    val getterMappingMethod =
-        if (import) importMethod(
-            "$target.$fieldName",
-            prop.type
-        ) else exportMethod("$target.$fieldName", prop.type)
+    val getterMappingMethod = prop.type.portMethod(import, "$target.$fieldName")
 
     val modifiers = if (forceOverride || prop.isOverride) listOf(KModifier.OVERRIDE) else emptyList()
     val builder = PropertySpec.builder(fieldName, fieldClass, modifiers)
@@ -198,8 +164,7 @@ fun overrideGetterSetter(
     )
     if (prop.isMutable) {
         val setValName = "setValue" // fieldName
-        val setterMappingMethod =
-            if (import) exportMethod(setValName, prop.type) else importMethod(setValName, prop.type)
+        val setterMappingMethod = prop.type.portMethod(!import, setValName)
 
         builder
             .mutable()

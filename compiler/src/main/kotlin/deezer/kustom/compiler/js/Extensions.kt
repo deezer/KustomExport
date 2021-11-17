@@ -18,8 +18,23 @@
 package deezer.kustom.compiler.js
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeName
 import deezer.kustom.compiler.CompilerArgs
 
-fun String.jsPackage() = if (CompilerArgs.erasePackage) "" else "$this.js"
 val jsExport = ClassName("kotlin.js", "JsExport")
 val jsName = ClassName("kotlin.js", "JsName")
+
+fun String.jsPackage() = if (CompilerArgs.erasePackage) "" else "$this.js"
+
+fun TypeName.withJsPackage(): TypeName {
+    return when (this) {
+        is ClassName -> ClassName(packageName.jsPackage(), simpleName)
+        is ParameterizedTypeName -> {
+            ClassName(rawType.packageName.jsPackage(), rawType.simpleName)
+                .parameterizedBy(typeArguments)
+        }
+        else -> TODO()
+    }
+}

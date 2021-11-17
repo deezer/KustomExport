@@ -19,6 +19,7 @@ package deezer.kustom.compiler.js.mapping
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.js.jsPackage
@@ -72,6 +73,14 @@ object TypeMapping {
                         packageName = origin.packageName.jsPackage(),
                         simpleNames = listOf(origin.simpleName)
                     ).copy(nullable = origin.isNullable)
+                }
+                if (origin is ParameterizedTypeName) {
+                    return ClassName(
+                        packageName = origin.rawType.packageName.jsPackage(),
+                        simpleNames = listOf(origin.rawType.simpleName)
+                    )
+                        .parameterizedBy(origin.typeArguments.map { exportedType(it) })
+                        .copy(nullable = origin.isNullable)
                 }
 
                 error("$origin (${origin::class.java}) is not supported yet. Please open an issue on our github.")

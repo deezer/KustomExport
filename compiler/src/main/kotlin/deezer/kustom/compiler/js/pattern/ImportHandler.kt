@@ -30,25 +30,26 @@ import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.EXCEPTION_JS_PACKAGE
 
-// TODO: Imports of properties are not always required by KotlinPoet as it can inline
+// TODO: Use proper KotlinPoet %M and avoid this ugly trick
+// https://square.github.io/kotlinpoet/#m-for-members
 
 fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
     return autoImport(
-        origin.supers.map { it.type } +
-            origin.typeParameters.values.flatMap { it.bounds } +
-            origin.properties.map { it.type } +
-            origin.functions.flatMap { it.parameters }.map { it.type } +
-            origin.functions.map { it.returnType }
+        origin.supers.map { it.origin.concreteTypeName } +
+            origin.concreteTypeParameters.flatMap { listOf(it.origin.concreteTypeName) } +
+            origin.properties.map { it.type.concreteTypeName } +
+            origin.functions.flatMap { it.parameters }.map { it.type.concreteTypeName } +
+            origin.functions.map { it.returnType.concreteTypeName }
     )
 }
 
 fun FileSpec.Builder.autoImport(origin: ClassDescriptor): FileSpec.Builder {
     return autoImport(
-        origin.supers.map { it.type } +
-            origin.typeParameters.values.flatMap { it.bounds } +
-            origin.properties.map { it.type } +
-            origin.functions.flatMap { it.parameters }.map { it.type } +
-            origin.functions.map { it.returnType }
+        origin.supers.map { it.origin.concreteTypeName } +
+            origin.concreteTypeParameters.flatMap { listOf(it.origin.concreteTypeName) } +
+            origin.properties.map { it.type.concreteTypeName } +
+            origin.functions.flatMap { it.parameters }.map { it.type.concreteTypeName } +
+            origin.functions.map { it.returnType.concreteTypeName }
     )
 }
 
