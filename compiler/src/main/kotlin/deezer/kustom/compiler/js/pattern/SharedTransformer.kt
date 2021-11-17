@@ -52,7 +52,7 @@ fun FunctionDescriptor.buildWrappingFunction(
         if (import) {
             fb.addParameter(param.name, param.type.concreteTypeName)
         } else {
-            fb.addParameter(param.name, param.type.exportedTypeName.asClassName())
+            fb.addParameter(param.name, param.type.exportedTypeName)
         }
     }
 

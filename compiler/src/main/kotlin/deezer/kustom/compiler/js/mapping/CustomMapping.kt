@@ -193,3 +193,12 @@ fun initCustomMapping() {
         )
     )
 }
+
+/**
+ * Allow some Typenames to use generics notation.
+ * For other types, it's forbidden and a `typelias` should be used instead.
+ */
+fun ParameterizedTypeName.isParameterizedAllowed(): Boolean {
+    return (rawType.copy(false) in listOf(LIST, ARRAY, LONG_ARRAY)) ||
+        rawType.isKotlinFunction()
+}

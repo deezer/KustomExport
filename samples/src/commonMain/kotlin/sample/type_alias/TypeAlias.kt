@@ -19,15 +19,20 @@ package sample.type_alias
 
 import deezer.kustom.KustomExport
 
+
 // Not exportable due to generics unresolvable
 interface TypeAliasInterface<Template> {
     fun fooBar(input: Template) = "fooBar $input"
 }
 
+class TypeAliasInterfaceDefault<T> : TypeAliasInterface<T>
+
 @KustomExport
 class TypeAliasConsumer {
     fun consume(typeAlias: TypeAliasInterface<Long>) =
         "consumed " + typeAlias.fooBar(123L)
+
+    fun create(): TypeAliasInterface<Long> = TypeAliasInterfaceDefault()
 }
 
 

@@ -22,6 +22,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.js.mapping.TypeMapping
+import deezer.kustom.compiler.js.pattern.removeTypeParameter
 
 // TODO: possible optimisation : re-use resolution based on a static/shared map
 // val sharedMap: Map<TypeName, OriginTypeName>
@@ -36,7 +37,7 @@ class OriginTypeName(
 
     fun importedMethod(name: String) = TypeMapping.importMethod(name, concreteTypeName)
 
-    val exportedTypeName by lazy { TypeMapping.exportedType(concreteTypeName) }
+    val exportedTypeName by lazy { TypeMapping.exportedType(concreteTypeName).removeTypeParameter() }
     fun exportedMethod(name: String) = TypeMapping.exportMethod(name, concreteTypeName)
 
     fun portMethod(import: Boolean, name: String) =

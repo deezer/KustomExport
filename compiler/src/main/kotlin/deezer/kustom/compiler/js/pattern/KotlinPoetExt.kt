@@ -31,6 +31,7 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
 import com.squareup.kotlinpoet.ksp.toTypeName
 import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.mapping.isParameterizedAllowed
 import java.io.File
 
 val TypeName.qdot: String
@@ -40,6 +41,11 @@ fun TypeName.asClassName(): ClassName =
     (this as? ClassName)
         ?: (this as? ParameterizedTypeName)?.rawType
         ?: TODO("$this")
+
+fun TypeName.removeTypeParameter(): TypeName =
+    if (this is ParameterizedTypeName && !isParameterizedAllowed()) {
+        rawType
+    } else this
 
 private val regexFunctionX = Regex("kotlin\\.Function[0-9]+")
 fun TypeName.isKotlinFunction() =
