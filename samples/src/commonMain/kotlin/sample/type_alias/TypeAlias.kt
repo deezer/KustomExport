@@ -18,12 +18,16 @@
 package sample.type_alias
 
 import deezer.kustom.KustomExport
+import sample._class.data.DataClass
 
 // Not exportable due to generics unresolvable
 interface TypeAliasInterface<Template> {
     fun fooBar(input: Template) = "fooBar $input"
     fun fooBars(inputs: List<Template>) =
         inputs.joinToString(prefix = "[[", postfix = "]]", separator = " | ") { it.toString() }
+
+    // Class from different package (not really type alias related?)
+    fun baz() = DataClass("baz data")
 }
 
 class TypeAliasInterfaceDefault<T> : TypeAliasInterface<T>
@@ -31,7 +35,7 @@ class TypeAliasInterfaceDefault<T> : TypeAliasInterface<T>
 @KustomExport
 class TypeAliasConsumer {
     fun consume(typeAlias: TypeAliasInterface<Long>) =
-        "consumed " + typeAlias.fooBar(123L)
+        "consumed " + typeAlias.fooBar(123L) + " / " + typeAlias.fooBars(listOf(1, 2, 3))
 
     fun create(): TypeAliasInterface<Long> = TypeAliasInterfaceDefault()
 }

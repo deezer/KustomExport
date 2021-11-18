@@ -10,9 +10,11 @@ runTest("TypeAlias", () : void => {
         fooBars(inputs: Array<number>): string {
             return "customs " + inputs.join()
         }
+        baz() : sample._class.data.js.DataClass {
+            return new sample._class.data.js.DataClass("4", 4)
+        }
     }
     var impl = new CustomImpl()
     var consumer = new sample.type_alias.js.TypeAliasConsumer()
-    assertEquals("consumed custom 125", consumer.consume(impl), "generics interface re-typed via TypeAlias")
-    assertEquals("custom 1,2", impl.fooBars([1,2]), "templated collection")
+    assertEquals("consumed custom 125 / customs 1,2,3", consumer.consume(impl), "generics interface re-typed via TypeAlias")
 })

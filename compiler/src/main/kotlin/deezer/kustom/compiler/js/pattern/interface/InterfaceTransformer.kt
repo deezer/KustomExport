@@ -21,7 +21,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.Logger
@@ -49,7 +48,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(origin.asClassName, "Common${origin.classSimpleName}")
-        .autoImport(origin)
+        .autoImport(origin, origin.concreteTypeParameters)
         .addType(
             TypeSpec.interfaceBuilder(origin.classSimpleName) // ClassName(jsClassPackage, origin.classSimpleName).parameterizedBy(origin.generics.values.first()))
                 /*.also { b ->
