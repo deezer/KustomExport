@@ -17,6 +17,11 @@
 
 package deezer.kustom
 
-actual val dynamicNull: dynamic = null
-actual val dynamicString: dynamic = "marker"
-actual val dynamicNotString: dynamic = 123456
+actual val dynamicNull: Any
+    get() = TODO("Not yet implemented")
+
+actual val dynamicString: Any
+    get() = TODO("Not yet implemented")
+
+actual val dynamicNotString: Any
+    get() = TODO("Not yet implemented")

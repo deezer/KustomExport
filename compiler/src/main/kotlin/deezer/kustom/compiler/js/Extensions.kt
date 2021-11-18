@@ -25,6 +25,7 @@ import deezer.kustom.compiler.CompilerArgs
 
 val jsExport = ClassName("kotlin.js", "JsExport")
 val jsName = ClassName("kotlin.js", "JsName")
+val dynamicCastTo = ClassName("deezer.kustom", "dynamicCastTo")
 
 fun String.jsPackage() = if (CompilerArgs.erasePackage) "" else "$this.js"
 

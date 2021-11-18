@@ -21,6 +21,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.Import
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
@@ -35,6 +36,7 @@ import deezer.kustom.compiler.js.mapping.INDENTATION
 import deezer.kustom.compiler.js.pattern.autoImport
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
+import deezer.kustom.compiler.js.dynamicCastTo
 import deezer.kustom.compiler.js.withJsPackage
 
 fun ClassDescriptor.transform() = transformClass(this)
@@ -68,6 +70,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(originalClass, "Common${origin.classSimpleName}")
         .autoImport(origin)
+        .addImport(ClassName("deezer", "kustom"), "dynamicCastTo")
         .addType(
             TypeSpec.classBuilder(origin.classSimpleName)
                 .addAnnotation(jsExport)
@@ -88,7 +91,10 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     FunSpec.constructorBuilder()
                         .addModifiers(KModifier.INTERNAL)
                         .callThisConstructor(
-                            CodeBlock.of(origin.constructorParams.joinToString { "${it.name}·=·$ctorDyn" })
+                            CodeBlock.of(
+                                origin.constructorParams.joinToString { "${it.name}·=·$ctorDyn?.dynamicCastTo<%T>()" },
+                                *origin.constructorParams.map { it.type.exportedTypeName }.toTypedArray()
+                            )
                         )
                         .addParameter(ParameterSpec("common", originalClass))
                         .addStatement("this.common = common")

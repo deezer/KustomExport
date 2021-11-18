@@ -15,12 +15,19 @@
  * under the License.
  */
 
+// KSP issue is limiting JS generation at the moment
+// https://github.com/google/ksp/issues/728
+// As a hack, we generate JS facade for KotlinMetadata instead, so we define this expect/actual pattern
+// Eventually we should move these classes in jsMain.
+
 // See documentation in Exception.import
 @file:Suppress("NON_EXPORTABLE_TYPE")
 @file:OptIn(ExperimentalJsExport::class)
 // package kotlin cannot be used, so we can't enforce code consistency and need to make it explicit in processor too.
 package deezer.kustom
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.ArithmeticException as CommonArithmeticException
 import kotlin.AssertionError as CommonAssertionError
 import kotlin.ClassCastException as CommonClassCastException
@@ -97,7 +104,7 @@ fun CommonIndexOutOfBoundsException.export() = IndexOutOfBoundsException(message
 
 @JsExport
 class ConcurrentModificationException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
-    override fun import() = CommonConcurrentModificationException(message, Throwable(stackTrace))
+    override fun import() = CommonConcurrentModificationException(message + "\n" + stackTrace)
 }
 
 fun CommonConcurrentModificationException.export() =
@@ -133,7 +140,7 @@ fun CommonClassCastException.export() = ClassCastException(message ?: "", stackT
 
 @JsExport
 class AssertionError(message: String, stackTrace: String) : Error(message, stackTrace) {
-    override fun import() = CommonAssertionError(message, Throwable(stackTrace))
+    override fun import() = CommonAssertionError(message + "\n" + stackTrace)
 }
 
 fun CommonAssertionError.export() = AssertionError(message ?: "", stackTraceToString())

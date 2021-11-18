@@ -109,11 +109,13 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         }
 
         override fun visitTypeAlias(typeAlias: KSTypeAlias, data: Unit) {
+            Logger.warn("visitTypeAlias !!!")
             val target = (typeAlias.type.element?.parent as? KSTypeReference)?.resolve() ?: return
+            Logger.warn("visitTypeAlias resolved")
             // targetClassDeclaration is templated
             val targetClassDeclaration = target.declaration as? KSClassDeclaration ?: return
 
-            Logger.warn("visitTypeAlias !!!")
+
             Logger.warn(typeAlias.toString() + " = " + typeAlias.name.asString()) // TypeAliasLong (probably name.asString() too)
 
             //val resolver2 =

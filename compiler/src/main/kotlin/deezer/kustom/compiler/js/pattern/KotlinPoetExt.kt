@@ -58,6 +58,7 @@ fun TypeName.simpleName(): String =
     (this as? ClassName)?.simpleName ?: (this as? ParameterizedTypeName)?.rawType?.simpleName ?: TODO("$this")
 
 // Issue in KSP: https://kotlinlang.slack.com/archives/C013BA8EQSE/p1633948867255800
+// https://github.com/google/ksp/issues/728
 // Instead of crashing during compilation, we try our best to guess the ClassName...
 @KotlinPoetKspPreview
 public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterResolver): TypeName {
@@ -77,6 +78,7 @@ public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterReso
     }
 }
 
+// https://github.com/google/ksp/issues/728
 @KotlinPoetKspPreview
 public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, containingFile: KSFile?): TypeName {
     if (this == null) return ANY

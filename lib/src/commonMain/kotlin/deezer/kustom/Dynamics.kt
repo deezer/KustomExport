@@ -17,6 +17,13 @@
 
 package deezer.kustom
 
-actual val dynamicNull: dynamic = null
-actual val dynamicString: dynamic = "marker"
-actual val dynamicNotString: dynamic = 123456
+// KSP issue is limiting JS generation at the moment
+// https://github.com/google/ksp/issues/728
+// As a hack, we generate JS facade for KotlinMetadata instead, so we define this expect/actual pattern
+// Eventually we should only have dynamics in jsMain.
+
+
+expect val dynamicNull: Any
+expect val dynamicString: Any
+expect val dynamicNotString: Any
+
