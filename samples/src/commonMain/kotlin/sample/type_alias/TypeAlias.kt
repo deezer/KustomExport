@@ -19,10 +19,11 @@ package sample.type_alias
 
 import deezer.kustom.KustomExport
 
-
 // Not exportable due to generics unresolvable
 interface TypeAliasInterface<Template> {
     fun fooBar(input: Template) = "fooBar $input"
+    fun fooBars(inputs: List<Template>) =
+        inputs.joinToString(prefix = "[[", postfix = "]]", separator = " | ") { it.toString() }
 }
 
 class TypeAliasInterfaceDefault<T> : TypeAliasInterface<T>

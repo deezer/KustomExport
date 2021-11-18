@@ -143,15 +143,16 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                 override operator fun get(index: String): TypeVariableName = map[index] ?: error("nah")
             }*/
             val descriptor = parseClass(targetClassDeclaration, targetTypeNames)
+            Logger.warn("TypeAlias parsed to $descriptor")
             when (descriptor) {
                 is ClassDescriptor -> descriptor.transform()
-                    .writeCode(environment, targetClassDeclaration.containingFile!!)
+                    .writeCode(environment, typeAlias.containingFile!!)
                 is SealedClassDescriptor -> descriptor.transform()
-                    .writeCode(environment, targetClassDeclaration.containingFile!!)
+                    .writeCode(environment, typeAlias.containingFile!!)
                 is EnumDescriptor -> descriptor.transform()
-                    .writeCode(environment, targetClassDeclaration.containingFile!!)
+                    .writeCode(environment, typeAlias.containingFile!!)
                 is InterfaceDescriptor -> descriptor.transform()
-                    .writeCode(environment, targetClassDeclaration.containingFile!!)
+                    .writeCode(environment, typeAlias.containingFile!!)
             }
 
             /*

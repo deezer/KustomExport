@@ -34,13 +34,13 @@ import deezer.kustom.compiler.js.Descriptor
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
-import deezer.kustom.compiler.js.OriginTypeName
 import deezer.kustom.compiler.js.ParameterDescriptor
 import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.SealedSubClassDescriptor
 import deezer.kustom.compiler.js.SuperDescriptor
 import deezer.kustom.compiler.js.TypeParameterDescriptor
+import deezer.kustom.compiler.js.mapping.OriginTypeName
 
 @KotlinPoetKspPreview
 fun parseClass(
@@ -221,4 +221,5 @@ fun KSClassDeclaration.parseProperties(
     }.toList()
 }
 
-fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>) = OriginTypeName(this, concreteTypeParameters)
+fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>) =
+    OriginTypeName(this, concreteTypeParameters)

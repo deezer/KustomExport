@@ -22,9 +22,33 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
+import deezer.kustom.compiler.js.TypeParameterDescriptor
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.pattern.asClassName
+import deezer.kustom.compiler.js.pattern.cached
 import deezer.kustom.compiler.js.pattern.qdot
+import deezer.kustom.compiler.js.pattern.removeTypeParameter
+import deezer.kustom.compiler.js.resolvedType
+
+// TODO: possible optimisation : re-use resolution based on a static/shared map
+// val sharedMap: Map<TypeName, OriginTypeName>
+// directly in a fake constructor
+class OriginTypeName(
+    private val originTypeName: TypeName,
+    private val typeParameters: List<TypeParameterDescriptor>
+) {
+    val concreteTypeName: TypeName by lazy {
+        originTypeName.resolvedType(typeParameters)
+    }
+
+    fun importedMethod(name: String) = TypeMapping.importMethod(name, concreteTypeName, typeParameters)
+
+    val exportedTypeName by lazy { TypeMapping.exportedType(concreteTypeName, typeParameters).removeTypeParameter() }
+    fun exportedMethod(name: String) = TypeMapping.exportMethod(name, concreteTypeName, typeParameters)
+
+    fun portMethod(import: Boolean, name: String) =
+        if (import) importedMethod(name) else exportedMethod(name)
+}
 
 object TypeMapping {
     val mappings = mutableMapOf<TypeName, MappingOutput>()
@@ -37,9 +61,9 @@ object TypeMapping {
 
     // Mapped with the domain/origin type as key
     data class MappingOutput(
-        val exportType: (TypeName) -> TypeName,
-        val importMethod: (targetName: String, TypeName) -> String, // Translates a domainType to an exportType
-        val exportMethod: (targetName: String, TypeName) -> String, // Translates an exportType to a domainType
+        val exportType: (typeName: TypeName, concreteTypeParameters: List<TypeParameterDescriptor>) -> TypeName,
+        val importMethod: (targetName: String, TypeName, concreteTypeParameters: List<TypeParameterDescriptor>) -> String, // Translates a domainType to an exportType
+        val exportMethod: (targetName: String, TypeName, concreteTypeParameters: List<TypeParameterDescriptor>) -> String, // Translates an exportType to a domainType
     )
 
     private fun getMapping(origin: TypeName): MappingOutput? {
@@ -57,11 +81,12 @@ object TypeMapping {
         }
     }
 
-    fun exportedType(origin: TypeName): TypeName {
-        return getMapping(origin)?.exportType?.invoke(origin)?.copy(nullable = origin.isNullable)
+    fun exportedType(origin: TypeName, concreteTypeParameters: List<TypeParameterDescriptor>): TypeName {
+        return getMapping(origin)?.exportType?.invoke(origin, concreteTypeParameters)
+            ?.copy(nullable = origin.isNullable)
             ?: run {
                 if (origin is TypeVariableName) {
-                    val exportedBounds = origin.bounds.map { exportedType(it) }
+                    val exportedBounds = origin.bounds.map { it.cached(concreteTypeParameters).exportedTypeName }
                     return TypeVariableName(
                         origin.name,
                         exportedBounds
@@ -79,7 +104,7 @@ object TypeMapping {
                         packageName = origin.rawType.packageName.jsPackage(),
                         simpleNames = listOf(origin.rawType.simpleName)
                     )
-                        .parameterizedBy(origin.typeArguments.map { exportedType(it) })
+                        .parameterizedBy(origin.typeArguments.map { it.cached(concreteTypeParameters).exportedTypeName })
                         .copy(nullable = origin.isNullable)
                 }
 
@@ -87,8 +112,12 @@ object TypeMapping {
             }
     }
 
-    fun exportMethod(targetName: String, origin: TypeName): String {
-        return getMapping(origin)?.exportMethod?.invoke(targetName, origin) ?: run {
+    fun exportMethod(
+        targetName: String,
+        origin: TypeName,
+        concreteTypeParameters: List<TypeParameterDescriptor>
+    ): String {
+        return getMapping(origin)?.exportMethod?.invoke(targetName, origin, concreteTypeParameters) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
             if (origin is TypeVariableName) {
                 "$targetName${origin.qdot}export${origin.bounds.first().asClassName().simpleName}()"
@@ -98,8 +127,12 @@ object TypeMapping {
         }
     }
 
-    fun importMethod(targetName: String, origin: TypeName): String {
-        return getMapping(origin)?.importMethod?.invoke(targetName, origin) ?: run {
+    fun importMethod(
+        targetName: String,
+        origin: TypeName,
+        concreteTypeParameters: List<TypeParameterDescriptor>
+    ): String {
+        return getMapping(origin)?.importMethod?.invoke(targetName, origin, concreteTypeParameters) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
             if (origin is TypeVariableName) {
                 "$targetName${origin.qdot}import${origin.bounds.first().asClassName().simpleName}()"

@@ -18,31 +18,11 @@
 package deezer.kustom.compiler.js
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
-import deezer.kustom.compiler.js.mapping.TypeMapping
-import deezer.kustom.compiler.js.pattern.removeTypeParameter
-
-// TODO: possible optimisation : re-use resolution based on a static/shared map
-// val sharedMap: Map<TypeName, OriginTypeName>
-// directly in a fake constructor
-class OriginTypeName(
-    private val originTypeName: TypeName,
-    private val typeParameters: List<TypeParameterDescriptor>
-) {
-    val concreteTypeName: TypeName by lazy {
-        originTypeName.resolvedType(typeParameters)
-    }
-
-    fun importedMethod(name: String) = TypeMapping.importMethod(name, concreteTypeName)
-
-    val exportedTypeName by lazy { TypeMapping.exportedType(concreteTypeName).removeTypeParameter() }
-    fun exportedMethod(name: String) = TypeMapping.exportMethod(name, concreteTypeName)
-
-    fun portMethod(import: Boolean, name: String) =
-        if (import) importedMethod(name) else exportedMethod(name)
-}
+import deezer.kustom.compiler.js.mapping.OriginTypeName
 
 data class PropertyDescriptor(
     val name: String,
@@ -144,6 +124,12 @@ data class EnumDescriptor(
 fun TypeName.resolvedType(typeParameters: List<TypeParameterDescriptor>?): TypeName {
     return if (this is TypeVariableName) {
         typeParameters?.firstOrNull { name == it.name }?.origin?.concreteTypeName ?: this
+    } else if (this is ParameterizedTypeName) {
+        if (typeArguments.any { it is TypeVariableName }) {
+            this.rawType.parameterizedBy(
+                typeArguments.map { it.resolvedType(typeParameters) }
+            )
+        } else this
     } else {
         this
     }

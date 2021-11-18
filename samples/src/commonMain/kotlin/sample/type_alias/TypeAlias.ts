@@ -7,8 +7,12 @@ runTest("TypeAlias", () : void => {
         fooBar(input: number): string {
             return "custom " + (input + 2)
         }
+        fooBars(inputs: Array<number>): string {
+            return "customs " + inputs.join()
+        }
     }
     var impl = new CustomImpl()
     var consumer = new sample.type_alias.js.TypeAliasConsumer()
     assertEquals("consumed custom 125", consumer.consume(impl), "generics interface re-typed via TypeAlias")
+    assertEquals("custom 1,2", impl.fooBars([1,2]), "templated collection")
 })
