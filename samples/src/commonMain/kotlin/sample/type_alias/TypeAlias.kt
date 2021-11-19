@@ -15,9 +15,17 @@
  * under the License.
  */
 
+@file:KustomExportGenerics(
+    exportGenerics = [
+        KustomGenerics("Foo", TypeAliasInterface::class, arrayOf(Long::class))
+    ]
+)
+
 package sample.type_alias
 
 import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportGenerics
+import deezer.kustom.KustomGenerics
 import sample._class.data.DataClass
 
 // Not exportable due to generics unresolvable
@@ -40,9 +48,9 @@ class TypeAliasConsumer {
     fun create(): TypeAliasInterface<Long> = TypeAliasInterfaceDefault()
 }
 
-
 // Trick to export interface with generics type: specific typealias!
 // Here we can generate the interface wrapper because type is defined
 // (You should not use generics on TypeAlias.)
-@KustomExport
-typealias TypeAliasLong = TypeAliasInterface<Long>
+//@KustomExport
+//typealias TypeAliasLong = TypeAliasInterface<Long>
+// Unfortunately, typealias are not properly handled by KotlinJs rn

@@ -24,12 +24,19 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSTypeAlias
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSVisitorVoid
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
+import deezer.kustom.KustomExport
+import deezer.kustom.KustomExportGenerics
+import deezer.kustom.KustomGenerics
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.EnumDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
@@ -38,7 +45,6 @@ import deezer.kustom.compiler.js.pattern.`class`.transform
 import deezer.kustom.compiler.js.pattern.`interface`.transform
 import deezer.kustom.compiler.js.pattern.enum.transform
 import deezer.kustom.compiler.js.pattern.parseClass
-import kotlin.random.Random
 
 // Trick to share the Logger everywhere without injecting the dependency everywhere
 internal lateinit var sharedLogger: KSPLogger
@@ -59,24 +65,22 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
     @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
         CompilerArgs.erasePackage = environment.options["erasePackage"] == "true"
-        val symbols = try {
+
+        val annotations = listOf(
+            KustomExport::class,
+            KustomExportGenerics::class
+        )
+
+        annotations.flatMap {
             resolver.getSymbolsWithAnnotation(
-                annotationName = environment.options["annotation"] ?: "deezer.kustom.KustomExport",
+                annotationName = it.qualifiedName!!,
                 inDepth = true
             )
-        } catch (e: Exception) {
-            devLog("WTF? ${e.message} // ${e.stackTraceToString()}")
-            return emptyList()
         }
-
-        val passId = Random.nextLong()
-        devLog("passId: $passId - symbols: ${symbols.count()} - first: ${symbols.firstOrNull()?.location}")
-
-        symbols
             //.filter { it is KSClassDeclaration || it is KSTypeAlias /*&& it.validate()*/ }
             .forEach {
                 devLog("----- Symbol $it")
-                it.accept(ExportVisitor(), Unit)
+                it.accept(ExportVisitor(resolver), Unit)
                 //it.accept(LoggerVisitor(environment), Unit)
             }
 
@@ -90,10 +94,87 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
     }
 
     @KotlinPoetKspPreview
-    inner class ExportVisitor : KSVisitorVoid() {
+    inner class ExportVisitor(val resolver: Resolver) : KSVisitorVoid() {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             //devLog("----- visitClassDeclaration $classDeclaration - classKind = ${classDeclaration.classKind}")
-            when (val descriptor = parseClass(classDeclaration)) {
+            parseAndWrite(classDeclaration, emptyList())
+        }
+
+        override fun visitFile(file: KSFile, data: Unit) {
+            Logger.warn("visitFile ${file.fileName}")
+            Logger.warn("annotations ${file.annotations.toList().joinToString { it.shortName.asString() }}")
+            file.annotations// All file annotations
+                // Get only the KustomExportGenerics one
+                .filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == KustomExportGenerics::class.qualifiedName }
+                // Pick the first arguments matching 'exportGenerics' and flatmap all entries
+                .flatMap { it.arguments.first { it.name?.asString() == KustomExportGenerics::exportGenerics.name }.value as List<KSAnnotation> }
+                .forEach { generics ->
+//file.annotations.toList()[0].arguments[0].value
+                    Logger.warn("generics $generics")
+                    val name =
+                        generics.arguments.first { it.name?.asString() == KustomGenerics::name.name }.value as String
+                    val kClass =
+                        generics.arguments.first { it.name?.asString() == KustomGenerics::kClass.name }.value as KSType
+                    val typeParameters = generics.arguments
+                        .first { it.name?.asString() == KustomGenerics::typeParameters.name }
+                        .value as List<KSType>
+
+                    Logger.warn("name $name")
+                    Logger.warn("kClass $kClass")
+                    Logger.warn("typeParameters $typeParameters")
+
+                    val targetClassDeclaration = kClass.declaration as KSClassDeclaration
+                    val targetTypeParameters = targetClassDeclaration.typeParameters
+                    val targetTypeNames = typeParameters
+                        .map { it.toClassName() }
+                        .mapIndexed { index, className -> targetTypeParameters[index].name.asString() to className }
+
+                    parseAndWrite(targetClassDeclaration, targetTypeNames)
+
+                    /*
+                    val qualifiedName = gen.kClass.qualifiedName
+                    Logger.warn("qualifiedName $qualifiedName")
+                    requireNotNull(qualifiedName)
+                    val classDecl = resolver.getClassDeclarationByName(KSNameImpl.getCached(qualifiedName))
+                    requireNotNull(classDecl)
+                    Logger.warn("classDecl ${classDecl.qualifiedName?.asString() ?: classDecl.simpleName.asString()}")
+
+                    val targetTypeNames: List<Pair<String, TypeName>> =
+                        gen.typeParameters.mapIndexed { index, kClass ->
+                            classDecl.typeParameters[index].name.asString() to
+                                resolver.getClassDeclarationByName(KSNameImpl.getCached(kClass.qualifiedName!!))!!
+                                    .toClassName()
+                        }
+                    Logger.warn("targetTypeNames $targetTypeNames")
+                    parseClass(classDecl, targetTypeNames)
+*/
+                }
+        }
+
+        override fun visitTypeAlias(typeAlias: KSTypeAlias, data: Unit) {
+            Logger.warn("visitTypeAlias - ${typeAlias.name}")
+            val target = (typeAlias.type.element?.parent as? KSTypeReference)?.resolve() ?: return
+            Logger.warn("visitTypeAlias resolved")
+            // targetClassDeclaration is templated
+            val targetClassDeclaration = target.declaration as? KSClassDeclaration ?: return
+
+            Logger.warn(typeAlias.toString() + " = " + typeAlias.name.asString()) // TypeAliasLong (probably name.asString() too)
+
+            // Contains "Template" list
+            val targetTypeParameters = targetClassDeclaration.typeParameters
+            val targetTypeNames = typeAlias.type.element?.typeArguments
+                ?.map { it.type!!.resolve().toClassName() }
+                ?.mapIndexed { index, className -> targetTypeParameters[index].name.asString() to className }
+                ?: return
+
+            parseAndWrite(targetClassDeclaration, targetTypeNames)
+        }
+
+        private fun parseAndWrite(
+            classDeclaration: KSClassDeclaration,
+            targetTypeNames: List<Pair<String, ClassName>>
+        ) {
+            when (val descriptor = parseClass(classDeclaration, targetTypeNames)) {
                 is ClassDescriptor -> descriptor.transform()
                     .writeCode(environment, classDeclaration.containingFile!!)
                 is SealedClassDescriptor -> descriptor.transform()
@@ -106,63 +187,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                     // Cannot parse this class, parsing error already reported on the parser
                 }
             }
-        }
-
-        override fun visitTypeAlias(typeAlias: KSTypeAlias, data: Unit) {
-            Logger.warn("visitTypeAlias !!!")
-            val target = (typeAlias.type.element?.parent as? KSTypeReference)?.resolve() ?: return
-            Logger.warn("visitTypeAlias resolved")
-            // targetClassDeclaration is templated
-            val targetClassDeclaration = target.declaration as? KSClassDeclaration ?: return
-
-
-            Logger.warn(typeAlias.toString() + " = " + typeAlias.name.asString()) // TypeAliasLong (probably name.asString() too)
-
-            //val resolver2 =
-            //(typeAlias.type.resolve().declaration as KSClassDeclaration).typeParameters.toTypeParameterResolver()
-
-            // Contains "Template" list
-            val targetTypeParameters = targetClassDeclaration.typeParameters
-            val targetTypeNames = typeAlias.type.element?.typeArguments
-                ?.map { it.type!!.resolve().toClassName() }
-                ?.mapIndexed { index, className -> targetTypeParameters[index].name.asString() to className }
-                ?: return
-            if (targetTypeParameters.size != targetTypeNames.size) return
-            /*
-            val map: Map<String, TypeVariableName> = targetTypeParameters.mapIndexed { index, ksTypeParameter ->
-                ksTypeParameter.name.asString() to TypeVariableName(
-                    ksTypeParameter.name.asString(),
-                    targetTypeNames[index]
-                )
-            }.toMap()
-
-            // Creating custom parent type resolver
-            val parentTypeParameters = object : TypeParameterResolver {
-                override val parametersMap: Map<String, TypeVariableName> = map
-
-                override operator fun get(index: String): TypeVariableName = map[index] ?: error("nah")
-            }*/
-            val descriptor = parseClass(targetClassDeclaration, targetTypeNames)
-            Logger.warn("TypeAlias parsed to $descriptor")
-            when (descriptor) {
-                is ClassDescriptor -> descriptor.transform()
-                    .writeCode(environment, typeAlias.containingFile!!)
-                is SealedClassDescriptor -> descriptor.transform()
-                    .writeCode(environment, typeAlias.containingFile!!)
-                is EnumDescriptor -> descriptor.transform()
-                    .writeCode(environment, typeAlias.containingFile!!)
-                is InterfaceDescriptor -> descriptor.transform()
-                    .writeCode(environment, typeAlias.containingFile!!)
-            }
-
-            /*
-            val decl = typeAlias.type.resolve().declaration
-            Logger.warn(decl.packageName.asString()) //
-            Logger.warn(decl.simpleName.asString()) // TypeAliasInterface
-            Logger.warn("decl.typeParameters=" + decl.typeParameters.joinToString { it.packageName.asString() + " - " + it.simpleName.asString() + "(${it.qualifiedName?.asString()})" })
-            Logger.warn("typeAlias.typeParameters=" + typeAlias.typeParameters.joinToString { it.packageName.asString() + " - " + it.simpleName.asString() + "(${it.qualifiedName?.asString()})" })
-            //Logger.error("DONE")
-            */
         }
     }
 
