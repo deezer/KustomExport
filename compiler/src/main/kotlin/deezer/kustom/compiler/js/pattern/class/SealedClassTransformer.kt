@@ -23,10 +23,12 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
+import deezer.kustom.compiler.js.pattern.simpleName
 
 fun SealedClassDescriptor.transform() = transformSealedClass(this)
 
@@ -46,13 +48,17 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
 //        .addParameters(ctorParams)
         .build()
 
-    val properties = origin.properties.map { p ->
-        val pb = PropertySpec.builder(p.name, p.type.exportedTypeName)
-        /*if (ctorParams.any { it.name == p.name }) {
-            pb.initializer(p.name).build()
-        } else {*/
-        pb.addModifiers(KModifier.ABSTRACT).build()
-        // }
+    val properties = origin.properties.toList().map { p ->
+        if (p.name == "cause" && p.type.concreteTypeName.simpleName().endsWith("Exception")) {
+            // TODO: support sealed class super first...
+            PropertySpec.builder("stackTrace", STRING)
+                .addModifiers(KModifier.ABSTRACT)
+                .build()
+        } else {
+            PropertySpec.builder(p.name, p.type.exportedTypeName)
+                .addModifiers(KModifier.ABSTRACT)
+                .build()
+        }
     }
 
     val functions = origin.functions.map {
@@ -75,6 +81,9 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
             origin.subClasses.forEach { subClass ->
                 it.addStatement("is %T -> export${subClass.classSimpleName}()", subClass.asClassName)
             }
+            if (origin.subClasses.isEmpty()) {
+                it.addComment("TODO: no subclasses found, bad configuration?")
+            }
         }
         .endControlFlow()
         .build()
@@ -87,6 +96,9 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
             origin.subClasses.forEach { subClass ->
                 val exportedSubClass = ClassName(subClass.packageName.jsPackage(), subClass.classSimpleName)
                 it.addStatement("is %T -> import${subClass.classSimpleName}()", exportedSubClass)
+            }
+            if (origin.subClasses.isEmpty()) {
+                it.addComment("TODO: no subclasses found, bad configuration?")
             }
         }
         .endControlFlow()

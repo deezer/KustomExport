@@ -143,12 +143,13 @@ fun overrideGetterSetter(
     forceOverride: Boolean // true for interface
 ): PropertySpec {
     val fieldName = prop.name
-    //val exportedType = exportedType(prop.type)
-    //val fieldClass = if (import) prop.type else exportedType
     val fieldClass = if (import) prop.type.concreteTypeName else prop.type.exportedTypeName
     val setterValueClass = if (import) prop.type.exportedTypeName else prop.type.concreteTypeName
 
-    val getterMappingMethod = prop.type.portMethod(import, "$target.$fieldName")
+    val isStackTraceException = prop.name == "stackTrace" // Forbidden word! :/
+    val getterMappingMethod =
+        if (isStackTraceException) "$target.stackTraceToString()"
+        else prop.type.portMethod(import, "$target.$fieldName")
 
     val modifiers = if (forceOverride || prop.isOverride) listOf(KModifier.OVERRIDE) else emptyList()
     val builder = PropertySpec.builder(fieldName, fieldClass, modifiers)

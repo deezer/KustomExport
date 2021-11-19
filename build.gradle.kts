@@ -30,6 +30,8 @@ allprojects {
 
 subprojects {
     apply(plugin = "maven-publish")
+    /*
+    // TODO: Issue when running test directly
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     ktlint {
@@ -38,6 +40,7 @@ subprojects {
             exclude { element -> element.file.path.contains("build/") }
         }
     }
+     */
 
     group = "com.deezer.kustom"
 

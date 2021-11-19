@@ -22,7 +22,7 @@ import org.junit.Test
 @KotlinPoetKspPreview
 class ExportSealedClassTest {
     @Test
-    fun foo() {
+    fun basicSealedClass() {
         assertCompilationOutput(
             inputFiles = listOf(
                 InputFile(
@@ -55,6 +55,7 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
 
+                    import deezer.kustom.dynamicCastTo
                     import kotlin.Double
                     import kotlin.js.JsExport
                     import foo.bar.SealedChild1 as CommonSealedChild1

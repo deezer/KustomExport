@@ -43,7 +43,6 @@ import com.squareup.kotlinpoet.SHORT_ARRAY
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
-import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
@@ -103,7 +102,7 @@ fun initCustomMapping() {
             // LongArray(value.size) { index -> value[index].toLong() }
             importMethod = { targetName, typeName, concreteTypeParameters ->
                 targetName +
-                    "${typeName.qdot}map { ${LONG.cached(concreteTypeParameters).importedMethod("it")}" +
+                    "${typeName.qdot}map { ${LONG.cached(concreteTypeParameters).importedMethod("it")} }" +
                     "${typeName.qdot}toLongArray()"
             },
             exportMethod = { targetName, typeName, concreteTypeParameters ->

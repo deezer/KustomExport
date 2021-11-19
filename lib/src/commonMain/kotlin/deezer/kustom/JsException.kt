@@ -47,13 +47,13 @@ import kotlin.UnsupportedOperationException as CommonUnsupportedOperationExcepti
  * Cannot define this file in jsMain, Kotlin Js-IR limitation?
  */
 @JsExport
-open class Exception(val message: String, val stackTrace: String) {
+open class Exception(open val message: String? = null, open val stackTrace: String? = null) {
     // "import": Cannot export common type BUT here we use a Typescript keyword 'import' to avoid
     // typescript method generation, see https://youtrack.jetbrains.com/issue/KT-38262
     // The resulting typescript (with 1.6.0-RC):
     /*
         class Exception {
-            constructor(message: string, stackTrace: string);
+            constructor(message: String? = null, stackTrace: String? = null);
             readonly message: string;
             readonly stackTrace: string;
             /* ErrorDeclaration: Name is a reserved word */
@@ -65,96 +65,106 @@ open class Exception(val message: String, val stackTrace: String) {
     open fun import() = CommonException(message, Throwable(stackTrace))
 }
 
-fun CommonException.export() = Exception(message ?: "", stackTraceToString())
+fun CommonException.export() = Exception(message, stackTraceToString())
 
 @JsExport
-open class Error(val message: String, val stackTrace: String) {
+open class Error(val message: String? = null, val stackTrace: String? = null) {
     open fun import() = CommonError(message, Throwable(stackTrace))
 }
 
-fun CommonError.export() = Error(message ?: "", stackTraceToString())
+fun CommonError.export() = Error(message, stackTraceToString())
 
 @JsExport
-open class RuntimeException(message: String, stackTrace: String) : Exception(message, stackTrace) {
+open class RuntimeException(message: String? = null, stackTrace: String? = null) : Exception(message, stackTrace) {
     override fun import() = CommonRuntimeException(message, Throwable(stackTrace))
 }
 
-fun CommonRuntimeException.export() = RuntimeException(message ?: "", stackTraceToString())
+fun CommonRuntimeException.export() = RuntimeException(message, stackTraceToString())
 
 @JsExport
-open class IllegalArgumentException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class IllegalArgumentException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonIllegalArgumentException(message, Throwable(stackTrace))
 }
 
-fun CommonIllegalArgumentException.export() = IllegalArgumentException(message ?: "", stackTraceToString())
+fun CommonIllegalArgumentException.export() = IllegalArgumentException(message, stackTraceToString())
 
 @JsExport
-class IllegalStateException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class IllegalStateException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonIllegalStateException(message, Throwable(stackTrace))
 }
 
-fun CommonIllegalStateException.export() = IllegalStateException(message ?: "", stackTraceToString())
+fun CommonIllegalStateException.export() = IllegalStateException(message, stackTraceToString())
 
 @JsExport
-class IndexOutOfBoundsException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class IndexOutOfBoundsException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonIndexOutOfBoundsException(message + "\n" + stackTrace)
 }
 
-fun CommonIndexOutOfBoundsException.export() = IndexOutOfBoundsException(message ?: "", stackTraceToString())
+fun CommonIndexOutOfBoundsException.export() = IndexOutOfBoundsException(message, stackTraceToString())
 
 @JsExport
-class ConcurrentModificationException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class ConcurrentModificationException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonConcurrentModificationException(message + "\n" + stackTrace)
 }
 
 fun CommonConcurrentModificationException.export() =
-    ConcurrentModificationException(message ?: "", stackTraceToString())
+    ConcurrentModificationException(message, stackTraceToString())
 
 @JsExport
-class UnsupportedOperationException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class UnsupportedOperationException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonUnsupportedOperationException(message, Throwable(stackTrace))
 }
 
-fun CommonUnsupportedOperationException.export() = UnsupportedOperationException(message ?: "", stackTraceToString())
+fun CommonUnsupportedOperationException.export() = UnsupportedOperationException(message, stackTraceToString())
 
 @JsExport
-class NumberFormatException(message: String, stackTrace: String) : IllegalArgumentException(message, stackTrace) {
+open class NumberFormatException(message: String? = null, stackTrace: String? = null) :
+    IllegalArgumentException(message, stackTrace) {
     override fun import() = CommonNumberFormatException(message + "\n" + stackTrace)
 }
 
-fun CommonNumberFormatException.export() = NumberFormatException(message ?: "", stackTraceToString())
+fun CommonNumberFormatException.export() = NumberFormatException(message, stackTraceToString())
 
 @JsExport
-class NullPointerException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class NullPointerException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonNullPointerException(message + "\n" + stackTrace)
 }
 
-fun CommonNullPointerException.export() = NullPointerException(message ?: "", stackTraceToString())
+fun CommonNullPointerException.export() = NullPointerException(message, stackTraceToString())
 
 @JsExport
-class ClassCastException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class ClassCastException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonClassCastException(message + "\n" + stackTrace)
 }
 
-fun CommonClassCastException.export() = ClassCastException(message ?: "", stackTraceToString())
+fun CommonClassCastException.export() = ClassCastException(message, stackTraceToString())
 
 @JsExport
-class AssertionError(message: String, stackTrace: String) : Error(message, stackTrace) {
+open class AssertionError(message: String? = null, stackTrace: String? = null) : Error(message, stackTrace) {
     override fun import() = CommonAssertionError(message + "\n" + stackTrace)
 }
 
-fun CommonAssertionError.export() = AssertionError(message ?: "", stackTraceToString())
+fun CommonAssertionError.export() = AssertionError(message, stackTraceToString())
 
 @JsExport
-class NoSuchElementException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class NoSuchElementException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonNoSuchElementException(message + "\n" + stackTrace)
 }
 
-fun CommonNoSuchElementException.export() = NoSuchElementException(message ?: "", stackTraceToString())
+fun CommonNoSuchElementException.export() = NoSuchElementException(message, stackTraceToString())
 
 @JsExport
-class ArithmeticException(message: String, stackTrace: String) : RuntimeException(message, stackTrace) {
+open class ArithmeticException(message: String? = null, stackTrace: String? = null) :
+    RuntimeException(message, stackTrace) {
     override fun import() = CommonArithmeticException(message + "\n" + stackTrace)
 }
 
-fun CommonArithmeticException.export() = ArithmeticException(message ?: "", stackTraceToString())
+fun CommonArithmeticException.export() = ArithmeticException(message, stackTraceToString())

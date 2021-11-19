@@ -17,6 +17,7 @@
 
 package deezer.kustom.compiler.js.pattern
 
+import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.isPrivate
@@ -24,6 +25,7 @@ import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.Modifier
+import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
@@ -78,9 +80,11 @@ fun parseClass(
             val superType = it.toTypeNamePatch(typeParamResolver)
 
             val declaration = it.resolve().declaration
+            //val qualifiedName = (declaration as? KSClassDeclaration)?.qualifiedName
+            //val isKotlinException = ALL_KOTLIN_EXCEPTIONS.any { it.canonicalName == qualifiedName }
 
             val superParams: List<ParameterDescriptor>? =
-                if (declaration is KSClassDeclaration && declaration.primaryConstructor != null) {
+                if (declaration is KSClassDeclaration && declaration.getConstructors().count() > 0) {
                     // Impossible to get the value from a constructor to another. Ex:
                     // class Foo(): Bar(33) // Cannot retrieve 33 as it's only available at runtime
                     // So instead we create an empty constructor and all properties are abstract
@@ -198,17 +202,27 @@ fun KSClassDeclaration.parseProperties(
 ): List<PropertyDescriptor> {
     val declaredNames = getDeclaredProperties().mapNotNull { it.simpleName }
     return getAllProperties().mapNotNull { prop ->
+        // TODO: rework configuration by naming
+        val classExtendsException = this.simpleName.asString().endsWith("Exception")
         if (prop.isPrivate()) {
             null // Cannot be accessed
+        } else if (classExtendsException && prop.simpleName.asString() == "cause") {
+            PropertyDescriptor(
+                name = "stackTrace",
+                type = OriginTypeName(STRING, emptyList()),
+                isMutable = false,
+                isOverride = true
+            )
         } else {
             val type = prop.type.toTypeNamePatch(typeParamResolver)
             // Retrieve the names of function arguments, like: (*MyName*: String) -> Unit
             // Problem: we use KotlinPoet TypeName for the mapping, and it doesn't have the value available.
-            val namedArgs: List<String> = if (type.isKotlinFunction()) {
+            /*val namedArgs: List<String> = if (type.isKotlinFunction()) {
                 prop.type.resolve().arguments.map { arg ->
                     arg.annotations.firstOrNull { it.shortName.asString() == "ParameterName" }?.arguments?.get(0)?.value.toString()
                 }
             } else emptyList()
+            */
 
             PropertyDescriptor(
                 name = prop.simpleName.asString(),

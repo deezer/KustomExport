@@ -126,11 +126,10 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                 )
                 .also { b ->
                     origin.supers.forEach { supr ->
-                        val superType = supr.origin
                         if (supr.parameters == null) {
-                            b.addSuperinterface(supr.origin.concreteTypeName.withJsPackage())
+                            b.addSuperinterface(supr.origin.exportedTypeName)
                         } else {
-                            b.superclass(supr.origin.concreteTypeName.withJsPackage())
+                            b.superclass(supr.origin.exportedTypeName)
                             b.addSuperclassConstructorParameter(
                                 CodeBlock.of(supr.parameters.joinToString { it.name + " = " + it.name })
                             )

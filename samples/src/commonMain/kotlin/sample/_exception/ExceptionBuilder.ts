@@ -17,7 +17,6 @@ function assertException(e: deezer.kustom.Exception, msg: string, ...klass: any[
 
 }
 
-//TODO : WIP
 runTest("Exceptions", () : void => {
     var builder = new sample._exception.js.ExceptionBuilder()
     assertException(builder.buildError("error"), "error", deezer.kustom.Error)

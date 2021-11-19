@@ -510,13 +510,17 @@ class ExportedTypesTest {
                     content = """
                         package foo.js
                         
+                        import deezer.kustom.dynamicCastTo
                         import kotlin.Double
                         import kotlin.Float
                         import kotlin.Int
                         import kotlin.Unit
                         import kotlin.js.JsExport
                         import pokemon.js.Pikachu
+                        import pokemon.js.exportPikachu
+                        import pokemon.js.importPikachu
                         import foo.Lambdas as CommonLambdas
+                        import pokemon.Pikachu as CommonPikachu
                         
                         @JsExport
                         public class Lambdas() {
@@ -539,7 +543,7 @@ class ExportedTypesTest {
                                 Int,
                                 Pikachu,
                                 Double
-                            ) -> pokemon.Pikachu
+                            ) -> CommonPikachu
                                 get() = { a: kotlin.Int, b: pokemon.js.Pikachu, c: kotlin.Double ->
                                     common.complexFun(a, b.importPikachu(), c.toLong()).exportPikachu()
                                 }
@@ -557,11 +561,11 @@ class ExportedTypesTest {
                                 Int,
                                 Pikachu,
                                 Double
-                            ) -> pokemon.Pikachu): (
+                            ) -> CommonPikachu): (
                                 Int,
                                 Pikachu,
                                 Double
-                            ) -> pokemon.Pikachu {
+                            ) -> CommonPikachu {
                                 val result = common.returnParam(
                                         block = { a: kotlin.Int, b: pokemon.Pikachu, c: kotlin.Long ->
                                             block(a, b.exportPikachu(), c.toDouble()).importPikachu()

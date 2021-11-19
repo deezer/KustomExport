@@ -46,3 +46,17 @@ class ExceptionConsumer {
         }
     }
 }
+
+// Can Exception subclasses
+@KustomExport
+class FooException(msg: String, e: Exception) : Exception(msg)
+
+// Can other exception type subclasses
+@KustomExport
+class MyISException(msg: String) : IllegalStateException(msg)
+
+@KustomExport
+sealed class SealedException(msg: String) : Exception(msg)
+
+@KustomExport
+class FirstSealedException : SealedException("first")
