@@ -23,11 +23,8 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ClassDescriptor
@@ -35,15 +32,15 @@ import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.INDENTATION
-import deezer.kustom.compiler.js.mapping.TypeMapping
 import deezer.kustom.compiler.js.pattern.autoImport
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
+import deezer.kustom.compiler.js.withJsPackage
 
 fun ClassDescriptor.transform() = transformClass(this)
 
 fun transformClass(origin: ClassDescriptor): FileSpec {
-    val originalClass = ClassName(origin.packageName, origin.classSimpleName)
+    val originalClass = origin.asTypeName()
 
     val jsClassPackage = origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
@@ -59,18 +56,19 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
     val firstCtorParam = origin.constructorParams.firstOrNull()
     val ctorDyn = when {
         firstCtorParam == null -> null
-        !firstCtorParam.type.isNullable -> "deezer.kustom.dynamicNull"
-        firstCtorParam.type != STRING -> "deezer.kustom.dynamicString"
+        !firstCtorParam.type.concreteTypeName.isNullable -> "deezer.kustom.dynamicNull"
+        firstCtorParam.type.concreteTypeName != STRING -> "deezer.kustom.dynamicString"
         else -> "deezer.kustom.dynamicNotString"
     }
 
-    if (origin.typeParameters.isNotEmpty()) {
-        Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.typeParameters}")
+    if (origin.concreteTypeParameters.isNotEmpty()) {
+        Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.concreteTypeParameters}")
     }
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
-        .addAliasedImport(originalClass, "Common${origin.classSimpleName}")
-        .autoImport(origin)
+        .addAliasedImport(origin.asClassName(), "Common${origin.classSimpleName}")
+        .autoImport(origin, origin.concreteTypeParameters)
+        .addImport(ClassName("deezer", "kustom"), "dynamicCastTo")
         .addType(
             TypeSpec.classBuilder(origin.classSimpleName)
                 .addAnnotation(jsExport)
@@ -82,7 +80,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     FunSpec.constructorBuilder()
                         .also { b ->
                             origin.constructorParams.forEach {
-                                b.addParameter(ParameterSpec(it.name, TypeMapping.exportedType(it.type)))
+                                b.addParameter(ParameterSpec(it.name, it.type.exportedTypeName))
                             }
                         }
                         .build()
@@ -91,7 +89,10 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     FunSpec.constructorBuilder()
                         .addModifiers(KModifier.INTERNAL)
                         .callThisConstructor(
-                            CodeBlock.of(origin.constructorParams.joinToString { "${it.name}·=·$ctorDyn" })
+                            CodeBlock.of(
+                                origin.constructorParams.joinToString { "${it.name}·=·$ctorDyn?.dynamicCastTo<%T>()" },
+                                *origin.constructorParams.map { it.type.exportedTypeName }.toTypedArray()
+                            )
                         )
                         .addParameter(ParameterSpec("common", originalClass))
                         .addStatement("this.common = common")
@@ -110,13 +111,13 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             """
                             |if (${firstCtorParam.name} != $ctorDyn) {
                             |${INDENTATION}common = Common${origin.classSimpleName}(${
-                            (
-                                origin.constructorParams.joinToString(
-                                    ",\n$INDENTATION$INDENTATION",
-                                    prefix = "\n$INDENTATION$INDENTATION",
-                                    postfix = "\n"
-                                ) { it.name + "·=·" + TypeMapping.importMethod(it.name, it.type) }
-                                )
+                                (
+                                    origin.constructorParams.joinToString(
+                                        ",\n$INDENTATION$INDENTATION",
+                                        prefix = "\n$INDENTATION$INDENTATION",
+                                        postfix = "\n"
+                                    ) { it.name + "·=·" + it.importedMethod }
+                                    )
                             }$INDENTATION)
                             |}
                             """.trimMargin()
@@ -125,20 +126,11 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                 )
                 .also { b ->
                     origin.supers.forEach { supr ->
-                        val superType = supr.type
-                        val superTypeName: TypeName = if (superType is ClassName) {
-                            ClassName(superType.packageName.jsPackage(), superType.simpleName)
-                        } else if (superType is ParameterizedTypeName) {
-                            val superClassName =
-                                ClassName(superType.rawType.packageName.jsPackage(), superType.rawType.simpleName)
-                            superClassName.parameterizedBy(superType.typeArguments)
-                        } else {
-                            TODO()
-                        }
+                        val superType = supr.origin
                         if (supr.parameters == null) {
-                            b.addSuperinterface(superTypeName)
+                            b.addSuperinterface(supr.origin.concreteTypeName.withJsPackage())
                         } else {
-                            b.superclass(superTypeName)
+                            b.superclass(supr.origin.concreteTypeName.withJsPackage())
                             b.addSuperclassConstructorParameter(
                                 CodeBlock.of(supr.parameters.joinToString { it.name + " = " + it.name })
                             )

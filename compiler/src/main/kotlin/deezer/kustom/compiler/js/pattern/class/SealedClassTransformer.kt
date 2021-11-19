@@ -27,7 +27,6 @@ import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.mapping.TypeMapping
 
 fun SealedClassDescriptor.transform() = transformSealedClass(this)
 
@@ -41,14 +40,14 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
     // class Foo(): Bar(33) // Cannot retrieve 33 as it's only available at runtime
     // So instead we create an empty constructor and all properties are abstract
     val ctorParams = origin.constructorParams.map {
-        ParameterSpec(it.name, TypeMapping.exportedType(it.type))
+        ParameterSpec(it.name, it.type.exportedTypeName)
     }
     val ctor = FunSpec.constructorBuilder()
 //        .addParameters(ctorParams)
         .build()
 
     val properties = origin.properties.map { p ->
-        val pb = PropertySpec.builder(p.name, TypeMapping.exportedType(p.type))
+        val pb = PropertySpec.builder(p.name, p.type.exportedTypeName)
         /*if (ctorParams.any { it.name == p.name }) {
             pb.initializer(p.name).build()
         } else {*/
@@ -58,13 +57,13 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
 
     val functions = origin.functions.map {
         val params = it.parameters.map { p ->
-            ParameterSpec.builder(p.name, TypeMapping.exportedType(p.type))
+            ParameterSpec.builder(p.name, p.type.exportedTypeName)
                 .build()
         }
         FunSpec.builder(it.name)
             .addModifiers(KModifier.ABSTRACT)
             .addParameters(params)
-            .returns(TypeMapping.exportedType(it.returnType))
+            .returns(it.returnType.exportedTypeName)
             .build()
     }
 

@@ -27,32 +27,45 @@ import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
+import deezer.kustom.compiler.js.TypeParameterDescriptor
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.EXCEPTION_JS_PACKAGE
 
-// TODO: Imports of properties are not always required by KotlinPoet as it can inline
+// TODO: Use proper KotlinPoet %M and avoid this ugly trick
+// https://square.github.io/kotlinpoet/#m-for-members
 
-fun FileSpec.Builder.autoImport(origin: InterfaceDescriptor): FileSpec.Builder {
+fun FileSpec.Builder.autoImport(
+    origin: InterfaceDescriptor,
+    concreteTypeParameters: List<TypeParameterDescriptor>
+): FileSpec.Builder {
     return autoImport(
-        origin.supers.map { it.type } +
-            origin.typeParameters.values.flatMap { it.bounds } +
-            origin.properties.map { it.type } +
-            origin.functions.flatMap { it.parameters }.map { it.type } +
-            origin.functions.map { it.returnType }
+        origin.supers.map { it.origin.concreteTypeName } +
+            origin.concreteTypeParameters.flatMap { listOf(it.origin.concreteTypeName) } +
+            origin.properties.map { it.type.concreteTypeName } +
+            origin.functions.flatMap { it.parameters }.map { it.type.concreteTypeName } +
+            origin.functions.map { it.returnType.concreteTypeName },
+        concreteTypeParameters
     )
 }
 
-fun FileSpec.Builder.autoImport(origin: ClassDescriptor): FileSpec.Builder {
+fun FileSpec.Builder.autoImport(
+    origin: ClassDescriptor,
+    concreteTypeParameters: List<TypeParameterDescriptor>
+): FileSpec.Builder {
     return autoImport(
-        origin.supers.map { it.type } +
-            origin.typeParameters.values.flatMap { it.bounds } +
-            origin.properties.map { it.type } +
-            origin.functions.flatMap { it.parameters }.map { it.type } +
-            origin.functions.map { it.returnType }
+        origin.supers.map { it.origin.concreteTypeName } +
+            origin.concreteTypeParameters.flatMap { listOf(it.origin.concreteTypeName) } +
+            origin.properties.map { it.type.concreteTypeName } +
+            origin.functions.flatMap { it.parameters }.map { it.type.concreteTypeName } +
+            origin.functions.map { it.returnType.concreteTypeName },
+        concreteTypeParameters
     )
 }
 
-private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder {
+private fun FileSpec.Builder.autoImport(
+    types: List<TypeName>,
+    concreteTypeParameters: List<TypeParameterDescriptor>
+): FileSpec.Builder {
     types.flatMap { type ->
         if (type is ParameterizedTypeName) {
             listOf(type, type.firstParameterizedType()) // TODO: limiting every classes to 1 generics
@@ -62,6 +75,15 @@ private fun FileSpec.Builder.autoImport(types: List<TypeName>): FileSpec.Builder
     }
         .distinct()
         .filter { it !is TypeVariableName } // Ignore generics
+        .flatMap {
+            when (it) {
+                is ClassName -> listOf(it)
+                is ParameterizedTypeName -> it.typeArguments.map {
+                    it.cached(concreteTypeParameters).concreteTypeName
+                } + it
+                else -> emptyList()
+            }
+        }
         .map { it.asClassName() }
         // Ignore classes with package starting with "kotlin." and are not exceptions.
         .filterNot { it.isFromStdlib() && it !in ALL_KOTLIN_EXCEPTIONS }

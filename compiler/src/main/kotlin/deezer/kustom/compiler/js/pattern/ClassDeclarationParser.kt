@@ -24,9 +24,11 @@ import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.Modifier
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
 import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
+import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.Descriptor
 import deezer.kustom.compiler.js.EnumDescriptor
@@ -37,11 +39,35 @@ import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.SealedSubClassDescriptor
 import deezer.kustom.compiler.js.SuperDescriptor
+import deezer.kustom.compiler.js.TypeParameterDescriptor
+import deezer.kustom.compiler.js.mapping.OriginTypeName
 
 @KotlinPoetKspPreview
-fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
+fun parseClass(
+    classDeclaration: KSClassDeclaration,
+    forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null
+): Descriptor? {
     val typeParamResolver = classDeclaration.typeParameters.toTypeParameterResolver()
-    val generics = typeParamResolver.parametersMap
+
+    val concreteTypeParameters: MutableList<TypeParameterDescriptor> = mutableListOf()
+    (forcedConcreteTypeParameters ?: emptyList())/* ?: typeParamResolver.parametersMap.values*/
+        .forEach { (name, type) ->
+            val className = try {
+                type.asClassName()
+            } catch (t: Throwable) {
+                Logger.error(
+                    "Cannot use @KustomException on a not concrete generics class.",
+                    classDeclaration.typeParameters[0]
+                )
+                return null
+            }
+            concreteTypeParameters.add(
+                TypeParameterDescriptor(
+                    name = name,
+                    origin = className.cached(concreteTypeParameters),
+                )
+            )
+        }
 
     val packageName = classDeclaration.packageName.asString()
     val classSimpleName = classDeclaration.simpleName.asString()
@@ -68,29 +94,21 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
                 } else {
                     null
                 }
-            SuperDescriptor(superType, superParams)
+            SuperDescriptor(superType.cached(concreteTypeParameters), superParams)
         }
         .toList()
 
     val constructorParams = classDeclaration.primaryConstructor?.parameters?.map {
         ParameterDescriptor(
             name = it.name!!.asString(),
-            type = it.type.toTypeNamePatch(typeParamResolver)
+            type = it.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters)
         )
     } ?: emptyList()
 
-    val properties = classDeclaration.parseProperties(typeParamResolver)
-    val functions = classDeclaration.parseFunctions(typeParamResolver)
+    val properties = classDeclaration.parseProperties(typeParamResolver, concreteTypeParameters)
+    val functions = classDeclaration.parseFunctions(typeParamResolver, concreteTypeParameters)
 
     val isSealedClass = classDeclaration.modifiers.contains(Modifier.SEALED)
-    val sealedSubClasses = if (isSealedClass) {
-        classDeclaration.getSealedSubclasses().map { sub ->
-            SealedSubClassDescriptor(
-                packageName = sub.packageName.asString(),
-                classSimpleName = sub.simpleName.asString(),
-            )
-        }.toList()
-    } else emptyList()
 
     val classKind = classDeclaration.classKind
     return when {
@@ -98,24 +116,32 @@ fun parseClass(classDeclaration: KSClassDeclaration): Descriptor {
             InterfaceDescriptor(
                 packageName = packageName,
                 classSimpleName = classSimpleName,
-                typeParameters = generics,
+                concreteTypeParameters = concreteTypeParameters,
                 supers = superTypes,
                 properties = properties,
                 functions = functions,
             )
         }
-        classKind == ClassKind.CLASS && isSealedClass -> SealedClassDescriptor(
-            packageName = packageName,
-            classSimpleName = classSimpleName,
-            constructorParams = constructorParams,
-            properties = properties,
-            functions = functions,
-            subClasses = sealedSubClasses,
-        )
+        classKind == ClassKind.CLASS && isSealedClass -> {
+            val sealedSubClasses = classDeclaration.getSealedSubclasses().map { sub ->
+                SealedSubClassDescriptor(
+                    packageName = sub.packageName.asString(),
+                    classSimpleName = sub.simpleName.asString(),
+                )
+            }.toList()
+            return SealedClassDescriptor(
+                packageName = packageName,
+                classSimpleName = classSimpleName,
+                constructorParams = constructorParams,
+                properties = properties,
+                functions = functions,
+                subClasses = sealedSubClasses,
+            )
+        }
         classKind == ClassKind.CLASS -> ClassDescriptor(
             packageName = packageName,
             classSimpleName = classSimpleName,
-            typeParameters = generics,
+            concreteTypeParameters = concreteTypeParameters,
             supers = superTypes,
             constructorParams = constructorParams,
             properties = properties,
@@ -142,7 +168,10 @@ private val nonExportableFunctions = listOf(
 ) + (1..30).map { "component$it" }
 
 @OptIn(KotlinPoetKspPreview::class)
-fun KSClassDeclaration.parseFunctions(typeParamResolver: TypeParameterResolver): List<FunctionDescriptor> {
+fun KSClassDeclaration.parseFunctions(
+    typeParamResolver: TypeParameterResolver,
+    concreteTypeParameters: MutableList<TypeParameterDescriptor>
+): List<FunctionDescriptor> {
     val declaredNames = getDeclaredFunctions().mapNotNull { it.simpleName }
     return getAllFunctions()
         .filter { it.simpleName.asString() !in nonExportableFunctions }
@@ -151,11 +180,11 @@ fun KSClassDeclaration.parseFunctions(typeParamResolver: TypeParameterResolver):
             FunctionDescriptor(
                 name = func.simpleName.asString(),
                 isOverride = func.findOverridee() != null || !declaredNames.contains(func.simpleName),
-                returnType = func.returnType!!.toTypeNamePatch(typeParamResolver),
+                returnType = func.returnType!!.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
                 parameters = func.parameters.map { p ->
                     ParameterDescriptor(
                         name = p.name?.asString() ?: TODO("not sure what we want here"),
-                        type = p.type.toTypeNamePatch(typeParamResolver),
+                        type = p.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
                     )
                 }
             )
@@ -163,7 +192,10 @@ fun KSClassDeclaration.parseFunctions(typeParamResolver: TypeParameterResolver):
 }
 
 @OptIn(KotlinPoetKspPreview::class)
-fun KSClassDeclaration.parseProperties(typeParamResolver: TypeParameterResolver): List<PropertyDescriptor> {
+fun KSClassDeclaration.parseProperties(
+    typeParamResolver: TypeParameterResolver,
+    concreteTypeParameters: MutableList<TypeParameterDescriptor>
+): List<PropertyDescriptor> {
     val declaredNames = getDeclaredProperties().mapNotNull { it.simpleName }
     return getAllProperties().mapNotNull { prop ->
         if (prop.isPrivate()) {
@@ -180,7 +212,7 @@ fun KSClassDeclaration.parseProperties(typeParamResolver: TypeParameterResolver)
 
             PropertyDescriptor(
                 name = prop.simpleName.asString(),
-                type = type,
+                type = type.cached(concreteTypeParameters),
                 isMutable = prop.isMutable,
                 isOverride = prop.findOverridee() != null || !declaredNames.contains(prop.simpleName),
                 // namedArgs = namedArgs
@@ -188,3 +220,6 @@ fun KSClassDeclaration.parseProperties(typeParamResolver: TypeParameterResolver)
         }
     }.toList()
 }
+
+fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>) =
+    OriginTypeName(this, concreteTypeParameters)

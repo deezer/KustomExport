@@ -17,6 +17,8 @@
 
 package deezer.kustom
 
+import kotlin.reflect.KClass
+
 /**
  * As of today (2021/20/18) the KSP + KotlinJsIr compiler has some issues with JS sourceSets.
  * https://docs.google.com/spreadsheets/d/13lXyEHu1GzwgicWvTqnJf_qCcxOY2vwM04gSfx_f1fk/edit#gid=0
@@ -28,8 +30,21 @@ enum class ExportMode {
     ONLY_IMPORT, ONLY_EXPORT, IMPORT_EXPORT
 }
 
-// @Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS)
 public annotation class KustomExport(
-    public val mode: ExportMode = ExportMode.IMPORT_EXPORT
+    public val mode: ExportMode = ExportMode.IMPORT_EXPORT,
+)
+
+// Because typealias doesn't work well rn
+@Target(AnnotationTarget.FILE)
+public annotation class KustomExportGenerics(
+    public val exportGenerics: Array<KustomGenerics> = []
+)
+
+@Target() // No target, only there for data container
+public annotation class KustomGenerics(
+    public val name: String,
+    public val kClass: KClass<*>,
+    public val typeParameters: Array<KClass<*>>,
 )

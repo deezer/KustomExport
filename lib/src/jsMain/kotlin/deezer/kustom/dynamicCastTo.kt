@@ -17,6 +17,9 @@
 
 package deezer.kustom
 
-actual val dynamicNull: dynamic = null
-actual val dynamicString: dynamic = "marker"
-actual val dynamicNotString: dynamic = 123456
+@JsExport
+actual fun <T> Any.dynamicCastTo(): T {
+    val dyn: dynamic = this
+    return dyn as T
+}
+//TODO : crash on other platforms, shouldn't be used

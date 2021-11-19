@@ -17,6 +17,6 @@
 
 package deezer.kustom
 
-actual val dynamicNull: dynamic = null
-actual val dynamicString: dynamic = "marker"
-actual val dynamicNotString: dynamic = 123456
+actual fun <T> Any.dynamicCastTo(): T {
+    error("Not available on this platform")
+}

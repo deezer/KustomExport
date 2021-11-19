@@ -18,17 +18,15 @@
 package deezer.kustom.compiler.js
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
-
-// Describes format used between the parser and the writer
-// Should avoid references to KSP or KotlinPoet so that we can easily swap to other tools if required, but
-// describing a TypeName is complex enough that take some shortcuts.
+import deezer.kustom.compiler.js.mapping.OriginTypeName
 
 data class PropertyDescriptor(
     val name: String,
-    val type: TypeName,
+    val type: OriginTypeName,
     val isMutable: Boolean,
     val isOverride: Boolean,
     // val namedArgs: List<String>, // Names of property arguments, for lambda (not sure if we want that here)
@@ -36,19 +34,28 @@ data class PropertyDescriptor(
 
 data class ParameterDescriptor(
     val name: String,
-    val type: TypeName,
-)
+    val type: OriginTypeName,
+) {
+    val exportedMethod by lazy { type.exportedMethod(name) }
+    val importedMethod by lazy { type.importedMethod(name) }
+    inline fun portMethod(import: Boolean) = if (import) importedMethod else exportedMethod
+}
 
 data class FunctionDescriptor(
     val name: String,
     val isOverride: Boolean,
-    val returnType: TypeName,
+    val returnType: OriginTypeName,
     val parameters: List<ParameterDescriptor>,
 )
 
 data class SuperDescriptor(
-    val type: TypeName,
+    val origin: OriginTypeName,
     val parameters: List<ParameterDescriptor>?,
+)
+
+data class TypeParameterDescriptor(
+    val name: String,
+    val origin: OriginTypeName,
 )
 
 sealed class Descriptor
@@ -56,17 +63,17 @@ sealed class Descriptor
 data class InterfaceDescriptor(
     val packageName: String,
     val classSimpleName: String,
-    val typeParameters: Map<String, TypeVariableName>,
+    val concreteTypeParameters: List<TypeParameterDescriptor>,
     val supers: List<SuperDescriptor>,
     val properties: List<PropertyDescriptor>,
     val functions: List<FunctionDescriptor>,
 ) : Descriptor() {
     // Useful for aliased imports (don't care about type parameters)
     val asClassName by lazy { ClassName(packageName, classSimpleName) }
-    fun asTypeName() = ClassName(packageName, classSimpleName).let {
-        if (typeParameters.isNotEmpty()) {
-            it.parameterizedBy(typeParameters.values.toList())
-        } else it
+    fun asTypeName() = ClassName(packageName, classSimpleName).let { className ->
+        if (concreteTypeParameters.isNotEmpty()) {
+            className.parameterizedBy(concreteTypeParameters.map { it.origin.concreteTypeName })
+        } else className
     }
 }
 
@@ -91,7 +98,7 @@ data class SealedSubClassDescriptor(
 data class ClassDescriptor(
     val packageName: String,
     val classSimpleName: String,
-    val typeParameters: Map<String, TypeVariableName>,
+    val concreteTypeParameters: List<TypeParameterDescriptor>,
     val supers: List<SuperDescriptor>,
     val constructorParams: List<ParameterDescriptor>,
     val properties: List<PropertyDescriptor>,
@@ -99,10 +106,10 @@ data class ClassDescriptor(
 ) : Descriptor() {
     // Useful for aliased imports (don't care about type parameters)
     fun asClassName() = ClassName(packageName, classSimpleName)
-    fun asTypeName() = ClassName(packageName, classSimpleName).let {
-        if (typeParameters.isNotEmpty()) {
-            it.parameterizedBy(typeParameters.values.toList())
-        } else it
+    fun asTypeName() = ClassName(packageName, classSimpleName).let { className ->
+        if (concreteTypeParameters.isNotEmpty()) {
+            className.parameterizedBy(concreteTypeParameters.map { it.origin.concreteTypeName })
+        } else className
     }
 }
 
@@ -112,4 +119,18 @@ data class EnumDescriptor(
     val entries: List<Entry>
 ) : Descriptor() {
     data class Entry(val name: String)
+}
+
+fun TypeName.resolvedType(typeParameters: List<TypeParameterDescriptor>?): TypeName {
+    return if (this is TypeVariableName) {
+        typeParameters?.firstOrNull { name == it.name }?.origin?.concreteTypeName ?: this
+    } else if (this is ParameterizedTypeName) {
+        if (typeArguments.any { it is TypeVariableName }) {
+            this.rawType.parameterizedBy(
+                typeArguments.map { it.resolvedType(typeParameters) }
+            )
+        } else this
+    } else {
+        this
+    }
 }
