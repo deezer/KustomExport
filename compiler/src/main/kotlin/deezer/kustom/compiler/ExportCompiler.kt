@@ -129,7 +129,13 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                         .map { it.toClassName() }
                         .mapIndexed { index, className -> targetTypeParameters[index].name.asString() to className }
 
-                    parseAndWrite(targetClassDeclaration, targetTypeNames)
+                    // TODO: what if containingFile is null?
+                    val sources = if (targetClassDeclaration.containingFile == null) {
+                        arrayOf(file)
+                    } else {
+                        arrayOf(file, targetClassDeclaration.containingFile!!)
+                    }
+                    parseAndWrite(targetClassDeclaration, targetTypeNames, *sources)
 
                     /*
                     val qualifiedName = gen.kClass.qualifiedName
@@ -172,17 +178,19 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
 
         private fun parseAndWrite(
             classDeclaration: KSClassDeclaration,
-            targetTypeNames: List<Pair<String, ClassName>>
+            targetTypeNames: List<Pair<String, ClassName>>,
+            vararg sources: KSFile
         ) {
+            val allSources = if (sources.isNotEmpty()) sources else arrayOf(classDeclaration.containingFile!!)
             when (val descriptor = parseClass(classDeclaration, targetTypeNames)) {
                 is ClassDescriptor -> descriptor.transform()
-                    .writeCode(environment, classDeclaration.containingFile!!)
+                    .writeCode(environment, *allSources)
                 is SealedClassDescriptor -> descriptor.transform()
-                    .writeCode(environment, classDeclaration.containingFile!!)
+                    .writeCode(environment, *allSources)
                 is EnumDescriptor -> descriptor.transform()
-                    .writeCode(environment, classDeclaration.containingFile!!)
+                    .writeCode(environment, *allSources)
                 is InterfaceDescriptor -> descriptor.transform()
-                    .writeCode(environment, classDeclaration.containingFile!!)
+                    .writeCode(environment, *allSources)
                 null -> {
                     // Cannot parse this class, parsing error already reported on the parser
                 }

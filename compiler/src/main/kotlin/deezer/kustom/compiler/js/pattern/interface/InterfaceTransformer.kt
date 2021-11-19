@@ -114,35 +114,21 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         )
         .addFunction(
             FunSpec.builder("export${origin.classSimpleName}")
-                /*.also { b ->
-                    if (typeParametersMap.isNotEmpty()) {
-                        typeParametersMap.forEach {
-                            b.addTypeVariable(it.first)
-                            b.addTypeVariable(it.second)
-                        }
-                    }
-                }*/
                 .receiver(originalClass)
                 .returns(jsExportedClass)
                 .addStatement(
-                    "return (this as? ${importedClass.simpleName})?.exported ?: ${exportedClass.simpleName}(this)"
+                    "return (this as? %T)?.exported ?: %T(this)",
+                    importedClass, exportedClass
                 )
                 .build()
         )
         .addFunction(
             FunSpec.builder("import${origin.classSimpleName}")
-                /*.also { b ->
-                    if (typeParametersMap.isNotEmpty()) {
-                        typeParametersMap.forEach {
-                            b.addTypeVariable(it.first)
-                            b.addTypeVariable(it.second)
-                        }
-                    }
-                }*/
                 .receiver(jsExportedClass)
                 .returns(originalClass)
                 .addStatement(
-                    "return (this as? ${exportedClass.simpleName})?.common ?: ${importedClass.simpleName}(this)"
+                    "return (this as? %T)?.common ?: %T(this)",
+                    exportedClass, importedClass
                 )
                 .build()
         )

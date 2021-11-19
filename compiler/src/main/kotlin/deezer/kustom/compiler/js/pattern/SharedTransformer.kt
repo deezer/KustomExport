@@ -68,9 +68,8 @@ fun FunctionDescriptor.buildWrappingFunction(
         )
         if (parameters.isNotEmpty())
             fb.addStatement(")")
-        fb.addStatement(
-            "return " + returnType.portMethod(import, "result")
-        )
+
+        fb.addStatement("return " + returnType.portMethod(import, "result"))
     }
     return fb.build()
 }

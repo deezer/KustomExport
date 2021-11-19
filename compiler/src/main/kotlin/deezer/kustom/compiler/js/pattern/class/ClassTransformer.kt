@@ -40,7 +40,7 @@ import deezer.kustom.compiler.js.withJsPackage
 fun ClassDescriptor.transform() = transformClass(this)
 
 fun transformClass(origin: ClassDescriptor): FileSpec {
-    val originalClass = ClassName(origin.packageName, origin.classSimpleName)
+    val originalClass = origin.asTypeName()
 
     val jsClassPackage = origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
@@ -66,7 +66,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
     }
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
-        .addAliasedImport(originalClass, "Common${origin.classSimpleName}")
+        .addAliasedImport(origin.asClassName(), "Common${origin.classSimpleName}")
         .autoImport(origin, origin.concreteTypeParameters)
         .addImport(ClassName("deezer", "kustom"), "dynamicCastTo")
         .addType(
