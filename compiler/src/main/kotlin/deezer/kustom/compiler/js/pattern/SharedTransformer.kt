@@ -38,6 +38,7 @@ fun FunctionDescriptor.buildWrappingFunction(
     val funExportedName = mnd.getMethodName(this)
 
     val fb = FunSpec.builder(if (!import) funExportedName else name)
+        .addModifiers(KModifier.OPEN) // Allow inheritance of wrapped classes
     if (import) {
         fb.returns(returnType.concreteTypeName)
     } else {
@@ -153,6 +154,7 @@ fun overrideGetterSetter(
 
     val modifiers = if (forceOverride || prop.isOverride) listOf(KModifier.OVERRIDE) else emptyList()
     val builder = PropertySpec.builder(fieldName, fieldClass, modifiers)
+        .addModifiers(KModifier.OPEN) // Allow inheritance for wrapper classes
     // .getter(FunSpec.getterBuilder().addCode("$target.$fieldName").build())
     // One-line version `get() = ...` is less verbose
     // .initializer(fieldName)

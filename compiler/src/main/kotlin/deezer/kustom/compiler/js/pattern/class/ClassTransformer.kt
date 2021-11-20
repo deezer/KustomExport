@@ -22,20 +22,23 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.INDENTATION
+import deezer.kustom.compiler.js.pattern.asClassName
 import deezer.kustom.compiler.js.pattern.autoImport
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
-import deezer.kustom.compiler.js.withJsPackage
+import deezer.kustom.compiler.randomAlphaNum
 
 fun ClassDescriptor.transform() = transformClass(this)
 
@@ -65,6 +68,8 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.concreteTypeParameters}")
     }
 
+    val commonFieldName = "common_" + randomAlphaNum(8)
+
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(origin.asClassName(), "Common${origin.classSimpleName}")
         .autoImport(origin, origin.concreteTypeParameters)
@@ -72,6 +77,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         .addType(
             TypeSpec.classBuilder(origin.classSimpleName)
                 .addAnnotation(jsExport)
+                .addModifiers(KModifier.OPEN)
                 .primaryConstructor(
                     /**
                      * Primary constructor have to contain the commonMain instance,
@@ -95,22 +101,22 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             )
                         )
                         .addParameter(ParameterSpec("common", originalClass))
-                        .addStatement("this.common = common")
+                        .addStatement("this.$commonFieldName = common")
                         .build()
                 )
                 .addProperty(
-                    PropertySpec.builder("common", originalClass, KModifier.INTERNAL, KModifier.LATEINIT)
+                    PropertySpec.builder(commonFieldName, originalClass, KModifier.INTERNAL, KModifier.LATEINIT)
                         .mutable(true) // because lateinit
                         .build()
                 )
                 .addInitializerBlock(
                     CodeBlock.of(
                         if (firstCtorParam == null) {
-                            "common = Common${origin.classSimpleName}()"
+                            "$commonFieldName = Common${origin.classSimpleName}()"
                         } else {
                             """
                             |if (${firstCtorParam.name} != $ctorDyn) {
-                            |${INDENTATION}common = Common${origin.classSimpleName}(${
+                            |${INDENTATION}$commonFieldName = Common${origin.classSimpleName}(${
                                 (
                                     origin.constructorParams.joinToString(
                                         ",\n$INDENTATION$INDENTATION",
@@ -129,10 +135,23 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         if (supr.parameters == null) {
                             b.addSuperinterface(supr.origin.exportedTypeName)
                         } else {
-                            b.superclass(supr.origin.exportedTypeName)
-                            b.addSuperclassConstructorParameter(
-                                CodeBlock.of(supr.parameters.joinToString { it.name + " = " + it.name })
-                            )
+                            // sealed and exceptions are not wrapped as the other classes
+                            if (supr.isSealed || supr.origin.concreteTypeName in ALL_KOTLIN_EXCEPTIONS) {
+                                b.superclass(supr.origin.exportedTypeName)
+                                b.addSuperclassConstructorParameter(
+                                    CodeBlock.of(supr.parameters.joinToString { it.name + " = " + it.name })
+                                )
+                            } else {
+                                // other wrappers have an additional constructor by us, we can trick to avoid RAM usage
+                                b.superclass(supr.origin.exportedTypeName)
+                                b.addSuperclassConstructorParameter(
+                                    CodeBlock.of(
+                                        "common = %M.%M<${supr.origin.concreteTypeName.asClassName().canonicalName}>()",
+                                        MemberName("deezer.kustom", "dynamicNull"),
+                                        MemberName("deezer.kustom", "dynamicCastTo"),
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -141,7 +160,14 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         // Don't export fields only present in super implementation
                         // .filterNot { p -> origin.supers.any { s -> s.parameters?.any { it.name == p.name } ?: false } }
                         .forEach {
-                            b.addProperty(overrideGetterSetter(it, "common", import = false, forceOverride = false))
+                            b.addProperty(
+                                overrideGetterSetter(
+                                    it,
+                                    commonFieldName,
+                                    import = false,
+                                    forceOverride = false
+                                )
+                            )
                         }
                 }
                 .also { b ->
@@ -152,7 +178,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             func.buildWrappingFunction(
                                 body = true,
                                 import = false,
-                                delegateName = "common",
+                                delegateName = commonFieldName,
                                 mnd = mnd,
                             )
                         )
@@ -171,7 +197,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
             FunSpec.builder("import${origin.classSimpleName}")
                 .receiver(jsExportedClass)
                 .returns(originalClass)
-                .addStatement("return this.common")
+                .addStatement("return this.$commonFieldName")
                 .build()
         )
         .indent(INDENTATION)

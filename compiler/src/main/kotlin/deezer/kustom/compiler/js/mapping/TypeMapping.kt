@@ -37,17 +37,11 @@ class OriginTypeName(
     private val originTypeName: TypeName,
     private val typeParameters: List<TypeParameterDescriptor>
 ) {
-    val concreteTypeName: TypeName by lazy {
-        originTypeName.resolvedType(typeParameters)
-    }
-
+    val concreteTypeName: TypeName by lazy { originTypeName.resolvedType(typeParameters) }
     fun importedMethod(name: String) = TypeMapping.importMethod(name, concreteTypeName, typeParameters)
-
     val exportedTypeName by lazy { TypeMapping.exportedType(concreteTypeName, typeParameters).removeTypeParameter() }
     fun exportedMethod(name: String) = TypeMapping.exportMethod(name, concreteTypeName, typeParameters)
-
-    fun portMethod(import: Boolean, name: String) =
-        if (import) importedMethod(name) else exportedMethod(name)
+    fun portMethod(import: Boolean, name: String) = if (import) importedMethod(name) else exportedMethod(name)
 }
 
 object TypeMapping {

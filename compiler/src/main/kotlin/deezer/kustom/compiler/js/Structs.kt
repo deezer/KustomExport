@@ -51,6 +51,7 @@ data class FunctionDescriptor(
 data class SuperDescriptor(
     val origin: OriginTypeName,
     val parameters: List<ParameterDescriptor>?,
+    val isSealed: Boolean,
 )
 
 data class TypeParameterDescriptor(

@@ -76,29 +76,21 @@ fun parseClass(
 
     //val superTypes = classDeclaration.getAllSuperTypes()
     val superTypes = classDeclaration.superTypes
-        .map {
-            val superType = it.toTypeNamePatch(typeParamResolver)
+        .map { superType ->
+            val superTypeName = superType.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters)
 
-            val declaration = it.resolve().declaration
+            val declaration = superType.resolve().declaration
             //val qualifiedName = (declaration as? KSClassDeclaration)?.qualifiedName
             //val isKotlinException = ALL_KOTLIN_EXCEPTIONS.any { it.canonicalName == qualifiedName }
 
-            val superParams: List<ParameterDescriptor>? =
-                if (declaration is KSClassDeclaration && declaration.getConstructors().count() > 0) {
-                    // Impossible to get the value from a constructor to another. Ex:
-                    // class Foo(): Bar(33) // Cannot retrieve 33 as it's only available at runtime
-                    // So instead we create an empty constructor and all properties are abstract
-                    /*
-                    Logger.warn("Inheriting of $declaration with ${declaration.primaryConstructor}")
-                    declaration.primaryConstructor!!.parameters.map { p ->
-                        Logger.warn(" - ctor param - " + p.name + " : " + p.type.toTypeNamePatch(typeParamResolver))
-                        ParameterDescriptor(p.name?.asString() ?: "", p.type.toTypeNamePatch(typeParamResolver))
-                    }*/
-                    emptyList()
-                } else {
-                    null
-                }
-            SuperDescriptor(superType.cached(concreteTypeParameters), superParams)
+            if (declaration is KSClassDeclaration) {
+                val ctors = declaration.getConstructors().toList()
+                val superParams = if (ctors.isNotEmpty()) emptyList<ParameterDescriptor>() else null
+                val isSealed = declaration.modifiers.contains(Modifier.SEALED)
+                SuperDescriptor(superTypeName, superParams, isSealed)
+            } else {
+                SuperDescriptor(superTypeName, null, false)
+            }
         }
         .toList()
 
