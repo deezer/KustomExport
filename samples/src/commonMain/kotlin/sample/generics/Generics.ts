@@ -2,8 +2,11 @@ import { runTest } from "../shared_ts/RunTest"
 import { assert, assertEquals, assertQuiet } from "../shared_ts/Assert"
 import { sample } from '@kustom/Samples'
 
-runTest("TypeAlias", () : void => {
-    class CustomImpl implements sample.type_alias.js.TypeAliasInterface {
+runTest("Generics", () : void => {
+    class CustomImpl implements sample.generics.js.GenericsInterface {
+        addListener(listener: (p0: number, p1: number) => void, _default: number): void {
+            throw new Error("Method not implemented.")
+        }
         fooBar(input: number): string {
             return "custom " + (input + 2)
         }
@@ -15,6 +18,11 @@ runTest("TypeAlias", () : void => {
         }
     }
     var impl = new CustomImpl()
-    var consumer = new sample.type_alias.js.TypeAliasConsumer()
+    var consumer = new sample.generics.js.TypeAliasConsumer()
     assertEquals("consumed custom 125 / customs 1,2,3", consumer.consume(impl), "generics interface re-typed via TypeAlias")
+
+    // TODO: https://github.com/google/ksp/issues/731
+    //var defaultImpl = new sample.generics.js.TypeAliasInterfaceDefault()
+    //assertEquals("consumed custom 125 / customs 1,2,3", consumer.consume(impl), "generics interface re-typed via TypeAlias")
+
 })

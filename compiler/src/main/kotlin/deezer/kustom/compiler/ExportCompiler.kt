@@ -112,9 +112,9 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
 //file.annotations.toList()[0].arguments[0].value
                     Logger.warn("generics $generics")
                     val name =
-                        generics.arguments.first { it.name?.asString() == KustomGenerics::name.name }.value as String
+                        generics.arguments.firstOrNull { it.name?.asString() == KustomGenerics::name.name }?.value as? String
                     val kClass =
-                        generics.arguments.first { it.name?.asString() == KustomGenerics::kClass.name }.value as KSType
+                        generics.arguments.firstOrNull { it.name?.asString() == KustomGenerics::kClass.name }?.value as? KSType
                     val typeParameters = generics.arguments
                         .first { it.name?.asString() == KustomGenerics::typeParameters.name }
                         .value as List<KSType>
@@ -122,13 +122,17 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                     Logger.warn("name $name")
                     Logger.warn("kClass $kClass")
                     Logger.warn("typeParameters $typeParameters")
+                    if (kClass == null) return@forEach
 
                     val targetClassDeclaration = kClass.declaration as KSClassDeclaration
                     val targetTypeParameters = targetClassDeclaration.typeParameters
-                    val targetTypeNames = typeParameters
-                        .map { it.toClassName() }
-                        .mapIndexed { index, className -> targetTypeParameters[index].name.asString() to className }
-
+                    val targetTypeNames = if (targetTypeParameters.isNotEmpty()) {
+                        typeParameters.mapIndexed { index, type ->
+                            targetTypeParameters[index].name.asString() to type.toClassName()
+                        }
+                    } else {
+                        emptyList()
+                    }
                     // TODO: what if containingFile is null?
                     val sources = if (targetClassDeclaration.containingFile == null) {
                         arrayOf(file)

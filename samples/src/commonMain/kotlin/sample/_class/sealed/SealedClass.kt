@@ -26,7 +26,7 @@ sealed class ExtendedSealedParent(val foo: String) : SealedParent(4141)
 
 @KustomExport
 class ExtendedSealedChild(foo: String) : ExtendedSealedParent(foo) {
-    override val prop: Int = 3
+    override val prop: Int = 3 // TODO: KSP not detecting that as an override property when defined in ctor?
     val bar: Int = 9090
 }
 

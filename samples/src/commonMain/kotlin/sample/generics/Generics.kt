@@ -17,35 +17,48 @@
 
 @file:KustomExportGenerics(
     exportGenerics = [
-        KustomGenerics("Foo", TypeAliasInterface::class, arrayOf(Long::class))
+        KustomGenerics("NameNotHonoredYet", GenericsStuff::class, arrayOf(Long::class)),
+        KustomGenerics("NameNotHonoredYet", GenericsInterface::class, arrayOf(Long::class)),
     ]
 )
 
-package sample.type_alias
+package sample.generics
 
 import deezer.kustom.KustomExport
 import deezer.kustom.KustomExportGenerics
 import deezer.kustom.KustomGenerics
 import sample._class.data.DataClass
 
+interface GenericsStuff<Template>
+
 // Not exportable due to generics unresolvable
-interface TypeAliasInterface<Template> {
+interface GenericsInterface<Template> {
     fun fooBar(input: Template) = "fooBar $input"
     fun fooBars(inputs: List<Template>) =
         inputs.joinToString(prefix = "[[", postfix = "]]", separator = " | ") { it.toString() }
+
+    fun addListener(listener: (Long, GenericsStuff<Template>) -> Unit, default: GenericsStuff<Template>)
 
     // Class from different package (not really type alias related?)
     fun baz() = DataClass("baz data")
 }
 
-class TypeAliasInterfaceDefault<T> : TypeAliasInterface<T>
+// Concrete classes with generics cannot be generated without failing the compilation
+// TODO: https://github.com/google/ksp/issues/731
+/*
+class GenericsInterfaceDefault<T> : GenericsInterface<T> {
+    override fun addListener(listener: (Long, T) -> Unit, default: T) {
+        listener(33, default)
+    }
+}
+ */
 
 @KustomExport
-class TypeAliasConsumer {
-    fun consume(typeAlias: TypeAliasInterface<Long>) =
+class GenericsConsumer {
+    fun consume(typeAlias: GenericsInterface<Long>) =
         "consumed " + typeAlias.fooBar(123L) + " / " + typeAlias.fooBars(listOf(1, 2, 3))
 
-    fun create(): TypeAliasInterface<Long> = TypeAliasInterfaceDefault()
+    fun create(): GenericsInterface<Long> = TODO()//TypeAliasInterfaceDefault()
 }
 
 // Trick to export interface with generics type: specific typealias!

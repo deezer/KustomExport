@@ -124,10 +124,12 @@ data class EnumDescriptor(
 }
 
 fun TypeName.resolvedType(typeParameters: List<TypeParameterDescriptor>?): TypeName {
-    return if (this is TypeVariableName) {
+    return if (this is ClassName) {
+        this // Nothing to change here
+    } else if (this is TypeVariableName) {
         typeParameters?.firstOrNull { name == it.name }?.origin?.concreteTypeName ?: this
     } else if (this is ParameterizedTypeName) {
-        if (typeArguments.any { it is TypeVariableName }) {
+        if (typeArguments.any { it is TypeVariableName || it is ParameterizedTypeName }) {
             this.rawType.parameterizedBy(
                 typeArguments.map { it.resolvedType(typeParameters) }
             )
