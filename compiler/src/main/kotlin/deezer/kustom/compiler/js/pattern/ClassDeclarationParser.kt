@@ -128,6 +128,7 @@ fun parseClass(
             return SealedClassDescriptor(
                 packageName = packageName,
                 classSimpleName = classSimpleName,
+                supers = superTypes,
                 constructorParams = constructorParams,
                 properties = properties,
                 functions = functions,

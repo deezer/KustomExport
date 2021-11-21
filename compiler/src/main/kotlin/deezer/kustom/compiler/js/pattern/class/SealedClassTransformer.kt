@@ -18,6 +18,7 @@
 package deezer.kustom.compiler.js.pattern.`class`
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
@@ -49,16 +50,16 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
         .build()
 
     val properties = origin.properties.toList().map { p ->
-        if (p.name == "cause" && p.type.concreteTypeName.simpleName().endsWith("Exception")) {
-            // TODO: support sealed class super first...
+        val propSpec = if (p.name == "cause" && p.type.concreteTypeName.simpleName().endsWith("Exception")) {
             PropertySpec.builder("stackTrace", STRING)
-                .addModifiers(KModifier.ABSTRACT)
-                .build()
         } else {
             PropertySpec.builder(p.name, p.type.exportedTypeName)
-                .addModifiers(KModifier.ABSTRACT)
-                .build()
         }
+        propSpec.addModifiers(KModifier.ABSTRACT)
+        if (p.isOverride) {
+            propSpec.addModifiers(KModifier.OVERRIDE)
+        }
+        propSpec.build()
     }
 
     val functions = origin.functions.map {
@@ -66,11 +67,14 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
             ParameterSpec.builder(p.name, p.type.exportedTypeName)
                 .build()
         }
-        FunSpec.builder(it.name)
+        val funSpec = FunSpec.builder(it.name)
             .addModifiers(KModifier.ABSTRACT)
             .addParameters(params)
             .returns(it.returnType.exportedTypeName)
-            .build()
+        if (it.isOverride) {
+            funSpec.addModifiers(KModifier.OVERRIDE)
+        }
+        funSpec.build()
     }
 
     val exportFunSpec = FunSpec.builder("export${origin.classSimpleName}")
@@ -115,6 +119,18 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
             TypeSpec.classBuilder(origin.classSimpleName)
                 .addAnnotation(jsExport)
                 .addModifiers(KModifier.SEALED)
+                .also { b ->
+                    origin.supers.forEach { supr ->
+                        if (supr.parameters == null) {
+                            b.addSuperinterface(supr.origin.exportedTypeName)
+                        } else {
+                            b.superclass(supr.origin.exportedTypeName)
+                            b.addSuperclassConstructorParameter(
+                                CodeBlock.of(supr.parameters.joinToString { it.name + " = " + it.name })
+                            )
+                        }
+                    }
+                }
                 .primaryConstructor(ctor)
                 .addProperties(properties)
                 .addFunctions(functions)
