@@ -18,7 +18,7 @@ runTest("Generics", () : void => {
         }
     }
     var impl = new CustomImpl()
-    var consumer = new sample.generics.js.TypeAliasConsumer()
+    var consumer = new sample.generics.js.GenericsConsumer()
     assertEquals("consumed custom 125 / customs 1,2,3", consumer.consume(impl), "generics interface re-typed via TypeAlias")
 
     // TODO: https://github.com/google/ksp/issues/731

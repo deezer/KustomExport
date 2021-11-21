@@ -6,6 +6,10 @@ on:
   pull_request:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  # After push/PR merge
+  push:
+    branches:
+      - master
 
 jobs:
   build:
