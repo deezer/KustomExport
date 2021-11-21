@@ -68,20 +68,16 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                 .addStatement("return ${origin.classSimpleName}(this)")
                 .build()
         )
-        .addType(
-            TypeSpec.objectBuilder(origin.classSimpleName + "s")
-                .addAnnotation(jsExport)
-                .also { builder ->
-                    origin.entries.forEach { enumEntry ->
-                        builder.addProperty(
-                            PropertySpec.builder(enumEntry.name, jsExportedClass)
-                                .initializer("$commonClassSimpleName.${enumEntry.name}.export${origin.classSimpleName}()")
-                                .build()
-                        )
-                    }
-                }
-                .build()
-        )
+        .also { b ->
+            origin.entries.forEach { enumEntry ->
+                b.addProperty(
+                    PropertySpec.builder(origin.classSimpleName + "_" + enumEntry.name, jsExportedClass)
+                        .addAnnotation(jsExport)
+                        .initializer("$commonClassSimpleName.${enumEntry.name}.export${origin.classSimpleName}()")
+                        .build()
+                )
+            }
+        }
         .indent(INDENTATION)
         .build()
 }

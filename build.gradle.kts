@@ -46,7 +46,7 @@ subprojects {
 
     if (localProperties.getProperty("REPOSITORY_URL") != null) {
         publishing {
-            version = "0.0.1-SNAPSHOT"
+            version = "0.0.2-SNAPSHOT"
 
             repositories {
                 maven {
