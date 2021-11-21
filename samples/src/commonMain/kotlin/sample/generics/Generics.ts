@@ -1,9 +1,10 @@
 import { runTest } from "../shared_ts/RunTest"
 import { assert, assertEquals, assertQuiet } from "../shared_ts/Assert"
-import { sample } from '@kustom/Samples'
+import { Nullable, sample } from '@kustom/Samples'
 
 runTest("Generics", () : void => {
     class CustomImpl implements sample.generics.js.GenericsInterface {
+        bar: Nullable<number>
         addListener(listener: (p0: number, p1: number) => void, _default: number): void {
             throw new Error("Method not implemented.")
         }

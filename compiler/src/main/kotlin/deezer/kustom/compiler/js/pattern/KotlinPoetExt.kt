@@ -44,7 +44,7 @@ fun TypeName.asClassName(): ClassName =
 
 fun TypeName.removeTypeParameter(): TypeName =
     if (this is ParameterizedTypeName && !isParameterizedAllowed()) {
-        rawType
+        rawType.copy(this.isNullable)
     } else this
 
 private val regexFunctionX = Regex("kotlin\\.Function[0-9]+")

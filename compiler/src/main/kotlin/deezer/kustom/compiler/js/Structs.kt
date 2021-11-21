@@ -133,7 +133,7 @@ fun TypeName.resolvedType(typeParameters: List<TypeParameterDescriptor>?): TypeN
         if (typeArguments.any { it is TypeVariableName || it is ParameterizedTypeName }) {
             this.rawType.parameterizedBy(
                 typeArguments.map { it.resolvedType(typeParameters) }
-            )
+            ).copy(this.isNullable)
         } else this
     } else {
         this

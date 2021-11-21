@@ -79,14 +79,15 @@ object TypeMapping {
         return getMapping(origin)?.exportType?.invoke(origin, concreteTypeParameters)
             ?.copy(nullable = origin.isNullable)
             ?: run {
+                // If no mapping, assume it's a project type, and it has a generated file.
+
                 if (origin is TypeVariableName) {
                     val exportedBounds = origin.bounds.map { it.cached(concreteTypeParameters).exportedTypeName }
                     return TypeVariableName(
                         origin.name,
                         exportedBounds
-                    )
+                    ).copy(nullable = origin.isNullable)
                 }
-                // If no mapping, assume it's a project class, and it has a generated file
                 if (origin is ClassName) {
                     return ClassName(
                         packageName = origin.packageName.jsPackage(),
