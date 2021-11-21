@@ -33,7 +33,7 @@ interface GenericsStuff<Template>
 
 // Not exportable due to generics unresolvable
 interface GenericsInterface<Template> {
-    fun fooBar(input: Template) = "fooBar $input"
+    fun fooBar(input: Template?) = "fooBar $input"
     fun fooBars(inputs: List<Template>) =
         inputs.joinToString(prefix = "[[", postfix = "]]", separator = " | ") { it.toString() }
 

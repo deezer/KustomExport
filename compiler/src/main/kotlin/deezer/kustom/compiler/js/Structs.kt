@@ -127,7 +127,8 @@ fun TypeName.resolvedType(typeParameters: List<TypeParameterDescriptor>?): TypeN
     return if (this is ClassName) {
         this // Nothing to change here
     } else if (this is TypeVariableName) {
-        typeParameters?.firstOrNull { name == it.name }?.origin?.concreteTypeName ?: this
+        typeParameters?.firstOrNull { name == it.name }
+            ?.origin?.concreteTypeName?.copy(this.isNullable) ?: this
     } else if (this is ParameterizedTypeName) {
         if (typeArguments.any { it is TypeVariableName || it is ParameterizedTypeName }) {
             this.rawType.parameterizedBy(
