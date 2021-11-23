@@ -17,9 +17,7 @@
 
 package deezer.kustom
 
-@JsExport
 actual fun <T> Any.dynamicCastTo(): T {
     val dyn: dynamic = this
     return dyn as T
 }
-//TODO : crash on other platforms, shouldn't be used
