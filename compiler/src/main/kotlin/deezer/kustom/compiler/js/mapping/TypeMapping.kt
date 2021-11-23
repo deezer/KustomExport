@@ -42,6 +42,26 @@ class OriginTypeName(
     val exportedTypeName by lazy { TypeMapping.exportedType(concreteTypeName, typeParameters).removeTypeParameter() }
     fun exportedMethod(name: String) = TypeMapping.exportMethod(name, concreteTypeName, typeParameters)
     fun portMethod(import: Boolean, name: String) = if (import) importedMethod(name) else exportedMethod(name)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as OriginTypeName
+
+        if (originTypeName != other.originTypeName) return false
+        // Because TypeParameterDescriptor also contains an OriginTypeName
+        //if (typeParameters != other.typeParameters) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = originTypeName.hashCode()
+        // Because TypeParameterDescriptor also contains an OriginTypeName
+        // result = 31 * result + typeParameters.hashCode()
+        return result
+    }
 }
 
 object TypeMapping {
