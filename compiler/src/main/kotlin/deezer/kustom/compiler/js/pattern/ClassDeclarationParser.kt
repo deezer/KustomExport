@@ -104,7 +104,8 @@ fun parseClass(
     val properties = classDeclaration.parseProperties(typeParamResolver, concreteTypeParameters)
     val functions = classDeclaration.parseFunctions(typeParamResolver, concreteTypeParameters)
 
-    val isSealedClass = classDeclaration.modifiers.contains(Modifier.SEALED)
+    val isSealed = classDeclaration.modifiers.contains(Modifier.SEALED)
+    val isOpen = classDeclaration.modifiers.contains(Modifier.OPEN)
 
     val classKind = classDeclaration.classKind
     return when {
@@ -118,7 +119,7 @@ fun parseClass(
                 functions = functions,
             )
         }
-        classKind == ClassKind.CLASS && isSealedClass -> {
+        classKind == ClassKind.CLASS && isSealed -> {
             val sealedSubClasses = classDeclaration.getSealedSubclasses().map { sub ->
                 SealedSubClassDescriptor(
                     packageName = sub.packageName.asString(),
@@ -138,6 +139,7 @@ fun parseClass(
         classKind == ClassKind.CLASS -> ClassDescriptor(
             packageName = packageName,
             classSimpleName = classSimpleName,
+            isOpen = isOpen,
             concreteTypeParameters = concreteTypeParameters,
             supers = superTypes,
             constructorParams = constructorParams,

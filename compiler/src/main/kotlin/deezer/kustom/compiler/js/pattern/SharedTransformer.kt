@@ -17,28 +17,25 @@
 
 package deezer.kustom.compiler.js.pattern
 
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.PropertyDescriptor
-import deezer.kustom.compiler.js.jsPackage
 
 fun FunctionDescriptor.buildWrappingFunction(
     body: Boolean,
     import: Boolean,
     delegateName: String,
     mnd: MethodNameDisambiguation,
+    isClassOpen: Boolean,
     forceOverride: Boolean = false, // TODO: rework that shortcut for testing...
 ): FunSpec {
     val funExportedName = mnd.getMethodName(this)
 
     val fb = FunSpec.builder(if (!import) funExportedName else name)
-        .addModifiers(KModifier.OPEN) // Allow inheritance of wrapped classes
+    if (isClassOpen) fb.addModifiers(KModifier.OPEN)
     if (import) {
         fb.returns(returnType.concreteTypeName)
     } else {
@@ -75,72 +72,11 @@ fun FunctionDescriptor.buildWrappingFunction(
     return fb.build()
 }
 
-fun buildWrapperClass(
-    delegateName: String,
-    originalClass: TypeName,
-    import: Boolean,
-    properties: List<PropertyDescriptor>,
-    functions: List<FunctionDescriptor>,
-): TypeSpec {
-    val jsClassPackage = originalClass.packageName().jsPackage()
-    val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName())/*.let {
-        if (typeParametersMap.isNotEmpty()) {
-            it.parameterizedBy(typeParametersMap.map { (_, exportedTp) -> exportedTp })
-        } else it
-    }*/
-    val wrapperPrefix = if (import) "Imported" else "Exported"
-    val wrapperClass =
-        ClassName(jsClassPackage, wrapperPrefix + originalClass.simpleName())
-    val delegatedClass = if (import) jsExportedClass else originalClass
-    val superClass = if (import) originalClass else jsExportedClass
-
-    return TypeSpec.classBuilder(wrapperClass)
-        .addModifiers(KModifier.PRIVATE)
-        /*.also { b ->
-            allTypeParameters.forEach {
-                b.addTypeVariable(it)
-            }
-        }*/
-        .primaryConstructor(
-            FunSpec.constructorBuilder()
-                .addParameter(delegateName, delegatedClass, KModifier.INTERNAL)
-                .build()
-        )
-        .addProperty(PropertySpec.builder(delegateName, delegatedClass).initializer(delegateName).build())
-        .addSuperinterface(superClass)
-        .also { builder ->
-            properties.forEach { prop ->
-                // forceOverride = true because only used by interface right now
-                builder.addProperty(
-                    overrideGetterSetter(
-                        prop,
-                        delegateName,
-                        import,
-                        forceOverride = true
-                    )
-                )
-            }
-
-            val mnd = MethodNameDisambiguation()
-            functions.forEach { func ->
-                builder.addFunction(
-                    func.buildWrappingFunction(
-                        body = true,
-                        import = import,
-                        delegateName = delegateName,
-                        mnd = mnd,
-                        forceOverride = true,
-                    )
-                )
-            }
-        }
-        .build()
-}
-
 fun overrideGetterSetter(
     prop: PropertyDescriptor,
     target: String,
     import: Boolean,
+    isClassOpen: Boolean,
     forceOverride: Boolean // true for interface
 ): PropertySpec {
     val fieldName = prop.name
@@ -152,12 +88,9 @@ fun overrideGetterSetter(
         if (isStackTraceException) "$target.stackTraceToString()"
         else prop.type.portMethod(import, "$target.$fieldName")
 
-    val modifiers = if (forceOverride || prop.isOverride) listOf(KModifier.OVERRIDE) else emptyList()
-    val builder = PropertySpec.builder(fieldName, fieldClass, modifiers)
-        .addModifiers(KModifier.OPEN) // Allow inheritance for wrapper classes
-    // .getter(FunSpec.getterBuilder().addCode("$target.$fieldName").build())
-    // One-line version `get() = ...` is less verbose
-    // .initializer(fieldName)
+    val builder = PropertySpec.builder(fieldName, fieldClass)
+    if (forceOverride || prop.isOverride) builder.addModifiers(KModifier.OVERRIDE)
+    if (isClassOpen) builder.addModifiers(KModifier.OPEN)
 
     builder.getter(
         FunSpec.getterBuilder()

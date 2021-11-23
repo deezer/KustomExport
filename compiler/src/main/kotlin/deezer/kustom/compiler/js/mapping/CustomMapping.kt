@@ -168,7 +168,7 @@ fun initCustomMapping() {
                 val lambda = typeName as ParameterizedTypeName
                 val returnType = lambda.typeArguments.last()
                 val namedArgs = lambda.typeArguments.dropLast(1)
-                    .mapIndexed { index, typeName -> typeName to shortNamesForIndex(index) }
+                    .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
                 val signature = namedArgs
                     .joinToString { (type, name) -> "$name: $type" }
                 val importedArgs: String = namedArgs

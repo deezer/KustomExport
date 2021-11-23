@@ -18,6 +18,7 @@
 package deezer.kustom.compiler.js
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
@@ -25,7 +26,7 @@ import deezer.kustom.compiler.CompilerArgs
 
 val jsExport = ClassName("kotlin.js", "JsExport")
 val jsName = ClassName("kotlin.js", "JsName")
-val dynamicCastTo = ClassName("deezer.kustom", "dynamicCastTo")
+val dynamicCastTo = MemberName("deezer.kustom", "dynamicCastTo")
 
 fun String.jsPackage() = if (CompilerArgs.erasePackage) "" else "$this.js"
 

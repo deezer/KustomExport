@@ -23,6 +23,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import deezer.kustom.compiler.js.mapping.OriginTypeName
+import kotlin.math.absoluteValue
 
 data class PropertyDescriptor(
     val name: String,
@@ -100,6 +101,7 @@ data class SealedSubClassDescriptor(
 data class ClassDescriptor(
     val packageName: String,
     val classSimpleName: String,
+    val isOpen: Boolean,
     val concreteTypeParameters: List<TypeParameterDescriptor>,
     val supers: List<SuperDescriptor>,
     val constructorParams: List<ParameterDescriptor>,
@@ -113,6 +115,9 @@ data class ClassDescriptor(
             className.parameterizedBy(concreteTypeParameters.map { it.origin.concreteTypeName })
         } else className
     }
+
+    // Define a unique identifier to identify the class based on canonical name.
+    val classIdHash by lazy { "${packageName}.$classSimpleName".hashCode().absoluteValue.toString(36) }
 }
 
 data class EnumDescriptor(

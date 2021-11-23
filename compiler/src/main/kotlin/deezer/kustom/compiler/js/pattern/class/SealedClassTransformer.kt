@@ -34,8 +34,6 @@ import deezer.kustom.compiler.js.pattern.simpleName
 fun SealedClassDescriptor.transform() = transformSealedClass(this)
 
 fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
-    val originalClass = ClassName(origin.packageName, origin.classSimpleName)
-
     val jsClassPackage = origin.packageName.jsPackage()
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 
@@ -49,18 +47,17 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
 //        .addParameters(ctorParams)
         .build()
 
-    val properties = origin.properties.toList().map { p ->
-        val propSpec = if (p.name == "cause" && p.type.concreteTypeName.simpleName().endsWith("Exception")) {
-            PropertySpec.builder("stackTrace", STRING)
-        } else {
-            PropertySpec.builder(p.name, p.type.exportedTypeName)
+    val properties = origin.properties
+        .filter { !it.isOverride } // we're already inheriting the base class so method is already visible
+        .map { p ->
+            val propSpec = if (p.name == "cause" && p.type.concreteTypeName.simpleName().endsWith("Exception")) {
+                PropertySpec.builder("stackTrace", STRING)
+            } else {
+                PropertySpec.builder(p.name, p.type.exportedTypeName)
+            }
+            propSpec.addModifiers(KModifier.ABSTRACT)
+            propSpec.build()
         }
-        propSpec.addModifiers(KModifier.ABSTRACT)
-        if (p.isOverride) {
-            propSpec.addModifiers(KModifier.OVERRIDE)
-        }
-        propSpec.build()
-    }
 
     val functions = origin.functions.map {
         val params = it.parameters.map { p ->

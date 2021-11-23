@@ -26,8 +26,3 @@ fun shortNamesForIndex(index: Int): String {
         letter.toString()
     }
 }
-
-private val alphaNum = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-fun randomAlphaNum(length: Int): String = (1..length)
-    .map { alphaNum.random() }
-    .joinToString("")

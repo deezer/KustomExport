@@ -22,16 +22,21 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.InterfaceDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
+import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.INDENTATION
 import deezer.kustom.compiler.js.pattern.autoImport
-import deezer.kustom.compiler.js.pattern.buildWrapperClass
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
+import deezer.kustom.compiler.js.pattern.overrideGetterSetter
+import deezer.kustom.compiler.js.pattern.packageName
+import deezer.kustom.compiler.js.pattern.simpleName
 import java.util.Locale
 
 fun InterfaceDescriptor.transform() = transformInterface(this)
@@ -88,6 +93,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                                     import = false,
                                     delegateName = delegateName,
                                     mnd = mnd,
+                                    isClassOpen = false, // already an interface, so "open" is not required
                                 )
                             )
                         }
@@ -133,5 +139,64 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                 .build()
         )
         .indent(INDENTATION)
+        .build()
+}
+
+private fun buildWrapperClass(
+    delegateName: String,
+    originalClass: TypeName,
+    import: Boolean,
+    properties: List<PropertyDescriptor>,
+    functions: List<FunctionDescriptor>,
+): TypeSpec {
+    val jsClassPackage = originalClass.packageName().jsPackage()
+    val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName())/*.let {
+        if (typeParametersMap.isNotEmpty()) {
+            it.parameterizedBy(typeParametersMap.map { (_, exportedTp) -> exportedTp })
+        } else it
+    }*/
+    val wrapperPrefix = if (import) "Imported" else "Exported"
+    val wrapperClass =
+        ClassName(jsClassPackage, wrapperPrefix + originalClass.simpleName())
+    val delegatedClass = if (import) jsExportedClass else originalClass
+    val superClass = if (import) originalClass else jsExportedClass
+
+    return TypeSpec.classBuilder(wrapperClass)
+        .addModifiers(KModifier.PRIVATE)
+        .primaryConstructor(
+            FunSpec.constructorBuilder()
+                .addParameter(delegateName, delegatedClass, KModifier.INTERNAL)
+                .build()
+        )
+        .addProperty(PropertySpec.builder(delegateName, delegatedClass).initializer(delegateName).build())
+        .addSuperinterface(superClass)
+        .also { builder ->
+            properties.forEach { prop ->
+                // forceOverride = true because only used by interface right now
+                builder.addProperty(
+                    overrideGetterSetter(
+                        prop,
+                        delegateName,
+                        import,
+                        forceOverride = true,
+                        isClassOpen = false, // already an interface, so "open" is not required
+                    )
+                )
+            }
+
+            val mnd = MethodNameDisambiguation()
+            functions.forEach { func ->
+                builder.addFunction(
+                    func.buildWrappingFunction(
+                        body = true,
+                        import = import,
+                        delegateName = delegateName,
+                        mnd = mnd,
+                        forceOverride = true,
+                        isClassOpen = false, // already an interface, so "open" is not required
+                    )
+                )
+            }
+        }
         .build()
 }

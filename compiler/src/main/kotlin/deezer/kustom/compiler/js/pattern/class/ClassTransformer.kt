@@ -31,6 +31,7 @@ import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
+import deezer.kustom.compiler.js.dynamicCastTo
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.INDENTATION
@@ -38,7 +39,6 @@ import deezer.kustom.compiler.js.pattern.asClassName
 import deezer.kustom.compiler.js.pattern.autoImport
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
-import deezer.kustom.compiler.randomAlphaNum
 
 fun ClassDescriptor.transform() = transformClass(this)
 
@@ -68,7 +68,9 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.concreteTypeParameters}")
     }
 
-    val commonFieldName = "common_" + randomAlphaNum(8)
+    // The field containing the 'common' instance have to be internal to not be exported BUT be visible from extension method.
+    // Due to that limitation, when class is open, we need to define a "random" name to avoid conflicts.
+    val commonFieldName = if (origin.isOpen) "common_" + origin.classIdHash else "common"
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(origin.asClassName(), "Common${origin.classSimpleName}")
@@ -77,7 +79,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         .addType(
             TypeSpec.classBuilder(origin.classSimpleName)
                 .addAnnotation(jsExport)
-                .addModifiers(KModifier.OPEN)
+                .addModifiers(if (origin.isOpen) listOf(KModifier.OPEN) else emptyList())
                 .primaryConstructor(
                     /**
                      * Primary constructor have to contain the commonMain instance,
@@ -96,8 +98,9 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         .addModifiers(KModifier.INTERNAL)
                         .callThisConstructor(
                             CodeBlock.of(
-                                origin.constructorParams.joinToString { "${it.name}·=·$ctorDyn?.dynamicCastTo<%T>()" },
-                                *origin.constructorParams.map { it.type.exportedTypeName }.toTypedArray()
+                                origin.constructorParams.joinToString { "${it.name}·=·$ctorDyn?.%M<%T>()" },
+                                *origin.constructorParams.flatMap { listOf(dynamicCastTo, it.type.exportedTypeName) }
+                                    .toTypedArray()
                             )
                         )
                         .addParameter(ParameterSpec("common", originalClass))
@@ -105,14 +108,15 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         .build()
                 )
                 .addProperty(
-                    PropertySpec.builder(commonFieldName, originalClass, KModifier.INTERNAL, KModifier.LATEINIT)
+                    PropertySpec.builder(commonFieldName, originalClass, KModifier.INTERNAL)
+                        .also { if (origin.constructorParams.isNotEmpty()) it.addModifiers(KModifier.LATEINIT) }
                         .mutable(true) // because lateinit
                         .build()
                 )
                 .addInitializerBlock(
                     CodeBlock.of(
                         if (firstCtorParam == null) {
-                            "$commonFieldName = Common${origin.classSimpleName}()"
+                            "$commonFieldName = Common${origin.classSimpleName}()\n"
                         } else {
                             """
                             |if (${firstCtorParam.name} != $ctorDyn) {
@@ -126,6 +130,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                                     )
                             }$INDENTATION)
                             |}
+                            |
                             """.trimMargin()
                         }
                     )
@@ -165,7 +170,8 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                                     it,
                                     commonFieldName,
                                     import = false,
-                                    forceOverride = false
+                                    forceOverride = false,
+                                    isClassOpen = origin.isOpen,
                                 )
                             )
                         }
@@ -180,6 +186,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                                 import = false,
                                 delegateName = commonFieldName,
                                 mnd = mnd,
+                                isClassOpen = origin.isOpen
                             )
                         )
                     }

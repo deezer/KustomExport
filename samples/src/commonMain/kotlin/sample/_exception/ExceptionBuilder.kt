@@ -49,7 +49,7 @@ class ExceptionConsumer {
 
 // Can Exception subclasses
 @KustomExport
-class FooException(msg: String, e: Exception) : Exception(msg)
+class FooException(msg: String, val e: Exception) : Exception(msg)
 
 // Can other exception type subclasses
 @KustomExport

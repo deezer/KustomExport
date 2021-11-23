@@ -55,7 +55,6 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
 
-                    import deezer.kustom.dynamicCastTo
                     import kotlin.Double
                     import kotlin.js.JsExport
                     import foo.bar.SealedChild1 as CommonSealedChild1
@@ -85,6 +84,7 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
                     
+                    import deezer.kustom.dynamicCastTo
                     import foo.bar.js.exportSealedParent
                     import foo.bar.js.importSealedParent
                     import kotlin.Double
@@ -120,6 +120,7 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
                     
+                    import deezer.kustom.dynamicCastTo
                     import foo.bar.js.exportSealedParent
                     import foo.bar.js.importSealedParent
                     import kotlin.Double
@@ -139,7 +140,8 @@ class ExportSealedClassTest {
                                 common = CommonSealedChild2(
                                     field = field.toLong()
                                 )
-                            }}
+                            }
+                        }
                     
                         public val childField: String
                             get() = common.childField
@@ -153,7 +155,8 @@ class ExportSealedClassTest {
                         public override val ctorParam: Double
                             get() = common.ctorParam.toDouble()
                     
-                        internal constructor(common: CommonSealedChild2) : this(field = deezer.kustom.dynamicNull) {
+                        internal constructor(common: CommonSealedChild2) :
+                                this(field = deezer.kustom.dynamicNull?.dynamicCastTo<Double>()) {
                             this.common = common
                         }
                     

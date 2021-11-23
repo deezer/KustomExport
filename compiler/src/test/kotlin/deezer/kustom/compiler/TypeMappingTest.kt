@@ -21,7 +21,7 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import org.junit.Test
 
 @KotlinPoetKspPreview
-class ExportedTypesTest {
+class TypeMappingTest {
 
     @Test
     fun kotlinExportedTypeAreNotChanged() {
