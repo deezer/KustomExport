@@ -17,12 +17,12 @@
 
 package deezer.kustom.compiler.js.pattern.`class`
 
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
@@ -111,6 +111,13 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         )
                         .addParameter(ParameterSpec("common", originalClass))
                         .addStatement("this.$commonFieldName = common")
+
+                        //TODO: Annotation could be added only when there is 1+ params in ctor, else it's useless
+                        .addAnnotation(
+                            AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
+                                .addMember("%S", "UNNECESSARY_SAFE_CALL")
+                                .build()
+                        )
                         .build()
                 )
                 .addProperty(

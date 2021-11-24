@@ -101,8 +101,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         }
 
         override fun visitFile(file: KSFile, data: Unit) {
-            Logger.warn("visitFile ${file.fileName}")
-            Logger.warn("annotations ${file.annotations.toList().joinToString { it.shortName.asString() }}")
             file.annotations// All file annotations
                 // Get only the KustomExportGenerics one
                 .filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == KustomExportGenerics::class.qualifiedName }
@@ -110,7 +108,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                 .flatMap { it.arguments.first { it.name?.asString() == KustomExportGenerics::exportGenerics.name }.value as List<KSAnnotation> }
                 .forEach { generics ->
 //file.annotations.toList()[0].arguments[0].value
-                    Logger.warn("generics $generics")
                     val name =
                         generics.arguments.firstOrNull { it.name?.asString() == KustomGenerics::name.name }?.value as? String
                     val kClass =
@@ -119,9 +116,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                         .first { it.name?.asString() == KustomGenerics::typeParameters.name }
                         .value as List<KSType>
 
-                    Logger.warn("name $name")
-                    Logger.warn("kClass $kClass")
-                    Logger.warn("typeParameters $typeParameters")
                     if (kClass == null) return@forEach
 
                     val targetClassDeclaration = kClass.declaration as KSClassDeclaration
@@ -162,13 +156,9 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         }
 
         override fun visitTypeAlias(typeAlias: KSTypeAlias, data: Unit) {
-            Logger.warn("visitTypeAlias - ${typeAlias.name}")
             val target = (typeAlias.type.element?.parent as? KSTypeReference)?.resolve() ?: return
-            Logger.warn("visitTypeAlias resolved")
             // targetClassDeclaration is templated
             val targetClassDeclaration = target.declaration as? KSClassDeclaration ?: return
-
-            Logger.warn(typeAlias.toString() + " = " + typeAlias.name.asString()) // TypeAliasLong (probably name.asString() too)
 
             // Contains "Template" list
             val targetTypeParameters = targetClassDeclaration.typeParameters

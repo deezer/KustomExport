@@ -16,6 +16,7 @@ kotlin {
 
     sourceSets {
         all {
+            languageSettings.optIn("kotlin.RequiresOptIn")
             languageSettings.optIn("kotlin.js.ExperimentalJsExport")
         }
 
@@ -34,6 +35,14 @@ kotlin {
             kotlin.srcDir("build/generated/ksp/commonMain/kotlin")
             // Eventually we should go with:
             // kotlin.srcDir("build/generated/ksp/jsMain/kotlin")
+        }
+    }
+
+    targets.all {
+        compilations.all {
+            // Cannot enable rn due to native issue (stdlib included more than once)
+            // may be related to https://youtrack.jetbrains.com/issue/KT-46636
+            kotlinOptions.allWarningsAsErrors = false
         }
     }
 }

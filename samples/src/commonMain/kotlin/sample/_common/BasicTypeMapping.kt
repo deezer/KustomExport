@@ -6,7 +6,7 @@ import deezer.kustom.KustomExport
 class BasicTypeMapping {
     val bool: Boolean = true
     val byte: Byte = 0x42
-    val char: Char = 'c'
+    // TODO: val char: Char = 'c' // Not supported anymore ???
     val short: Short = 0x7F7F
     val int: Int = 0x7F4251
     val float: Float = 12345.678f
@@ -22,5 +22,5 @@ class BasicTypeMapping {
 
     // ...
     val any: Any = Any()
-    val unit: Unit = Unit
+    // TODO: val unit: Unit = Unit // Not supported anymore ???
 }

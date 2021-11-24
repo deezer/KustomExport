@@ -23,6 +23,7 @@ class ExceptionBuilder {
 @KustomExport
 class ExceptionConsumer {
     fun consume(e: Exception): String {
+        @Suppress("USELESS_IS_CHECK") // Cause typescript can go crazy
         return when (e) {
             is ArithmeticException -> "ArithmeticException=${e.message}"
             is ClassCastException -> "ClassCastException=${e.message}"
@@ -38,6 +39,7 @@ class ExceptionConsumer {
 
             is RuntimeException -> "RuntimeException=${e.message}"
 
+            // TODO :
             is AssertionError -> "AssertionError=${e.message}"
             is Error -> "Error=${e.message}"
             is Exception -> "Exception=${e.message}"
