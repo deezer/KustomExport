@@ -32,7 +32,6 @@ import deezer.kustom.compiler.js.PropertyDescriptor
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.INDENTATION
-import deezer.kustom.compiler.js.pattern.autoImport
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
 import deezer.kustom.compiler.js.pattern.packageName
@@ -53,7 +52,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(origin.asClassName, "Common${origin.classSimpleName}")
-        .autoImport(origin, origin.concreteTypeParameters)
+        //.autoImport(origin, origin.concreteTypeParameters)
         .addType(
             TypeSpec.interfaceBuilder(origin.classSimpleName) // ClassName(jsClassPackage, origin.classSimpleName).parameterizedBy(origin.generics.values.first()))
                 /*.also { b ->

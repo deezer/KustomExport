@@ -37,8 +37,8 @@ data class ParameterDescriptor(
     val name: String,
     val type: OriginTypeName,
 ) {
-    val exportedMethod by lazy { type.exportedMethod(name) }
-    val importedMethod by lazy { type.importedMethod(name) }
+    val exportedMethod by lazy { type.exportedMethod(name.toFormatString()) }
+    val importedMethod by lazy { type.importedMethod(name.toFormatString()) }
     inline fun portMethod(import: Boolean) = if (import) importedMethod else exportedMethod
 }
 
@@ -109,7 +109,7 @@ data class ClassDescriptor(
     val functions: List<FunctionDescriptor>,
 ) : Descriptor() {
     // Useful for aliased imports (don't care about type parameters)
-    fun asClassName() = ClassName(packageName, classSimpleName)
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
     fun asTypeName() = ClassName(packageName, classSimpleName).let { className ->
         if (concreteTypeParameters.isNotEmpty()) {
             className.parameterizedBy(concreteTypeParameters.map { it.origin.concreteTypeName })

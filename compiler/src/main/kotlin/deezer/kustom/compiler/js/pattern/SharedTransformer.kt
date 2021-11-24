@@ -20,9 +20,12 @@ package deezer.kustom.compiler.js.pattern
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
+import deezer.kustom.compiler.js.FormatString
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.PropertyDescriptor
+import deezer.kustom.compiler.js.mapping.INDENTATION
+import deezer.kustom.compiler.js.toFormatString
 
 fun FunctionDescriptor.buildWrappingFunction(
     body: Boolean,
@@ -56,18 +59,18 @@ fun FunctionDescriptor.buildWrappingFunction(
 
     if (body) {
         val funcName = if (import) funExportedName else name
-        fb.addStatement(
-            "val result = $delegateName.$funcName(" +
+        val params = parameters.fold(FormatString("")) { acc, item ->
+            acc + "$INDENTATION${item.name} = ".toFormatString() + item.portMethod(!import) + ",\n"
+        }
+        //TODO: Opti : could save the local "result" variable here
+        fb.addCode(
+            ("val result = $delegateName.$funcName(".toFormatString() +
                 (if (parameters.isNotEmpty()) "\n" else "") +
-                parameters.joinToString(",\n", transform = {
-                    it.name + " = " + it.portMethod(!import)
-                }) +
-                (if (parameters.isNotEmpty()) "" else ")")
+                params +
+                (if (parameters.isNotEmpty()) ")\n" else ")\n")).asCode()
         )
-        if (parameters.isNotEmpty())
-            fb.addStatement(")")
 
-        fb.addStatement("return " + returnType.portMethod(import, "result"))
+        fb.addCode(("return ".toFormatString() + returnType.portMethod(import, "result".toFormatString())).asCode())
     }
     return fb.build()
 }
@@ -85,8 +88,8 @@ fun overrideGetterSetter(
 
     val isStackTraceException = prop.name == "stackTrace" // Forbidden word! :/
     val getterMappingMethod =
-        if (isStackTraceException) "$target.stackTraceToString()"
-        else prop.type.portMethod(import, "$target.$fieldName")
+        if (isStackTraceException) "$target.stackTraceToString()".toFormatString()
+        else prop.type.portMethod(import, "$target.$fieldName".toFormatString())
 
     val builder = PropertySpec.builder(fieldName, fieldClass)
     if (forceOverride || prop.isOverride) builder.addModifiers(KModifier.OVERRIDE)
@@ -94,19 +97,19 @@ fun overrideGetterSetter(
 
     builder.getter(
         FunSpec.getterBuilder()
-            .addStatement("return $getterMappingMethod")
+            .addCode(("return ".toFormatString() + getterMappingMethod).asCode())
             .build()
     )
     if (prop.isMutable) {
         val setValName = "setValue" // fieldName
-        val setterMappingMethod = prop.type.portMethod(!import, setValName)
+        val setterMappingMethod = prop.type.portMethod(!import, setValName.toFormatString())
 
         builder
             .mutable()
             .setter(
                 FunSpec.setterBuilder()
                     .addParameter(setValName, setterValueClass)
-                    .addStatement("$target.$fieldName = $setterMappingMethod")
+                    .addCode(("$target.$fieldName = ".toFormatString() + setterMappingMethod).asCode())
                     .build()
             )
     }

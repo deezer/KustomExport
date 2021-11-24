@@ -25,7 +25,6 @@ class ExceptionConsumer {
     fun consume(e: Exception): String {
         return when (e) {
             is ArithmeticException -> "ArithmeticException=${e.message}"
-            is AssertionError -> "AssertionError=${e.message}"
             is ClassCastException -> "ClassCastException=${e.message}"
             is ConcurrentModificationException -> "ConcurrentModificationException=${e.message}"
             is NumberFormatException -> "NumberFormatException=${e.message}"
@@ -39,6 +38,7 @@ class ExceptionConsumer {
 
             is RuntimeException -> "RuntimeException=${e.message}"
 
+            is AssertionError -> "AssertionError=${e.message}"
             is Error -> "Error=${e.message}"
             is Exception -> "Exception=${e.message}"
 

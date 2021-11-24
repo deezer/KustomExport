@@ -25,8 +25,11 @@ import com.squareup.kotlinpoet.TypeName
 import deezer.kustom.compiler.CompilerArgs
 
 val jsExport = ClassName("kotlin.js", "JsExport")
-val jsName = ClassName("kotlin.js", "JsName")
 val dynamicCastTo = MemberName("deezer.kustom", "dynamicCastTo")
+val dynamicNull = MemberName("deezer.kustom", "dynamicNull")
+val dynamicString = MemberName("deezer.kustom", "dynamicString")
+val dynamicNotString = MemberName("deezer.kustom", "dynamicNotString")
+
 
 fun String.jsPackage() = if (CompilerArgs.erasePackage) "" else "$this.js"
 

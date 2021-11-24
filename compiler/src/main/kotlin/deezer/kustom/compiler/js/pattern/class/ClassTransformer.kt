@@ -30,13 +30,16 @@ import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.ClassDescriptor
+import deezer.kustom.compiler.js.FormatString
 import deezer.kustom.compiler.js.MethodNameDisambiguation
 import deezer.kustom.compiler.js.dynamicCastTo
+import deezer.kustom.compiler.js.dynamicNotString
+import deezer.kustom.compiler.js.dynamicNull
+import deezer.kustom.compiler.js.dynamicString
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
 import deezer.kustom.compiler.js.mapping.INDENTATION
 import deezer.kustom.compiler.js.pattern.asClassName
-import deezer.kustom.compiler.js.pattern.autoImport
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
 
@@ -59,9 +62,9 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
     val firstCtorParam = origin.constructorParams.firstOrNull()
     val ctorDyn = when {
         firstCtorParam == null -> null
-        !firstCtorParam.type.concreteTypeName.isNullable -> "deezer.kustom.dynamicNull"
-        firstCtorParam.type.concreteTypeName != STRING -> "deezer.kustom.dynamicString"
-        else -> "deezer.kustom.dynamicNotString"
+        !firstCtorParam.type.concreteTypeName.isNullable -> dynamicNull
+        firstCtorParam.type.concreteTypeName != STRING.copy(nullable = true) -> dynamicString
+        else -> dynamicNotString
     }
 
     if (origin.concreteTypeParameters.isNotEmpty()) {
@@ -73,9 +76,8 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
     val commonFieldName = if (origin.isOpen) "common_" + origin.classIdHash else "common"
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
-        .addAliasedImport(origin.asClassName(), "Common${origin.classSimpleName}")
-        .autoImport(origin, origin.concreteTypeParameters)
-        .addImport(ClassName("deezer", "kustom"), "dynamicCastTo")
+        .addAliasedImport(origin.asClassName, "Common${origin.classSimpleName}")
+        //.autoImport(origin, origin.concreteTypeParameters)
         .addType(
             TypeSpec.classBuilder(origin.classSimpleName)
                 .addAnnotation(jsExport)
@@ -98,9 +100,13 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         .addModifiers(KModifier.INTERNAL)
                         .callThisConstructor(
                             CodeBlock.of(
-                                origin.constructorParams.joinToString { "${it.name}·=·$ctorDyn?.%M<%T>()" },
-                                *origin.constructorParams.flatMap { listOf(dynamicCastTo, it.type.exportedTypeName) }
-                                    .toTypedArray()
+                                // The '?' is actually required by Typescript (Kotlin 1.6.0).
+                                // Without that, it fails at runtime because there is no dynamicCastTo method on null.
+                                // > TypeError: Cannot read properties of null (reading 'dynamicCastTo')
+                                origin.constructorParams
+                                    .joinToString { "${it.name}·=·%M${if (ctorDyn == dynamicNull) "?" else ""}.%M<%T>()" },
+                                *origin.constructorParams
+                                    .flatMap { listOf(ctorDyn, dynamicCastTo, it.type.exportedTypeName) }.toTypedArray()
                             )
                         )
                         .addParameter(ParameterSpec("common", originalClass))
@@ -113,28 +119,22 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         .mutable(true) // because lateinit
                         .build()
                 )
-                .addInitializerBlock(
-                    CodeBlock.of(
-                        if (firstCtorParam == null) {
-                            "$commonFieldName = Common${origin.classSimpleName}()\n"
-                        } else {
-                            """
-                            |if (${firstCtorParam.name} != $ctorDyn) {
-                            |${INDENTATION}$commonFieldName = Common${origin.classSimpleName}(${
-                                (
-                                    origin.constructorParams.joinToString(
-                                        ",\n$INDENTATION$INDENTATION",
-                                        prefix = "\n$INDENTATION$INDENTATION",
-                                        postfix = "\n"
-                                    ) { it.name + "·=·" + it.importedMethod }
-                                    )
-                            }$INDENTATION)
-                            |}
-                            |
-                            """.trimMargin()
+                .also { b ->
+                    if (firstCtorParam == null) {
+                        b.addInitializerBlock(CodeBlock.of("$commonFieldName = Common${origin.classSimpleName}()\n"))
+                    } else {
+                        var fs = FormatString("if (${firstCtorParam.name} != %M) {\n", ctorDyn)
+                        fs += FormatString("${INDENTATION}$commonFieldName = %T(\n", origin.asClassName)
+                        origin.constructorParams.forEach {
+                            fs += "$INDENTATION$INDENTATION${it.name}·=·"
+                            fs += it.importedMethod
+                            fs += ",\n"
                         }
-                    )
-                )
+                        fs += "$INDENTATION)\n"
+                        fs += "}\n"
+                        b.addInitializerBlock(fs.asCode())
+                    }
+                }
                 .also { b ->
                     origin.supers.forEach { supr ->
                         if (supr.parameters == null) {
@@ -151,9 +151,8 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                                 b.superclass(supr.origin.exportedTypeName)
                                 b.addSuperclassConstructorParameter(
                                     CodeBlock.of(
-                                        "common = %M.%M<${supr.origin.concreteTypeName.asClassName().canonicalName}>()",
-                                        MemberName("deezer.kustom", "dynamicNull"),
-                                        MemberName("deezer.kustom", "dynamicCastTo"),
+                                        "common = %M.%M<%T>()",
+                                        dynamicNull, dynamicCastTo, supr.origin.concreteTypeName.asClassName()
                                     )
                                 )
                             }

@@ -35,6 +35,7 @@ import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.LONG_ARRAY
 import com.squareup.kotlinpoet.LambdaTypeName
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -45,16 +46,21 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
+import deezer.kustom.compiler.js.FormatString
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustom.compiler.js.pattern.cached
 import deezer.kustom.compiler.js.pattern.isKotlinFunction
 import deezer.kustom.compiler.js.pattern.qdot
+import deezer.kustom.compiler.js.toFormatString
 import deezer.kustom.compiler.shortNamesForIndex
 
 const val INDENTATION = "    "
 
 const val EXCEPTION_JS_PACKAGE = "deezer.kustom"
 private fun TypeName.toJsException() = ClassName(EXCEPTION_JS_PACKAGE, (this as ClassName).simpleName)
+val exceptionExport = MemberName(EXCEPTION_JS_PACKAGE, "export")
+val toLongArray = MemberName("kotlin.collections", "toLongArray")
+val toTypedArray = MemberName("kotlin.collections", "toTypedArray")
 
 fun initCustomMapping() {
     // Doc interop: https://kotlinlang.org/docs/js-to-kotlin-interop.html#primitive-arrays
@@ -82,8 +88,8 @@ fun initCustomMapping() {
     TypeMapping.mappings += ALL_KOTLIN_EXCEPTIONS.map { exportableType ->
         exportableType to MappingOutput(
             exportType = { typeName, _ -> typeName.toJsException() },
-            importMethod = { targetName, typeName, _ -> "$targetName${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName, _ -> "$targetName${typeName.qdot}export()" },
+            importMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}import()" },
+            exportMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}%M()".toFormatString(exceptionExport) },
         )
     }
 
@@ -92,23 +98,26 @@ fun initCustomMapping() {
         // doc: kotlin.Long is not mapped to any JavaScript object, as there is no 64-bit integer number type in JavaScript. It is emulated by a Kotlin class.
         LONG to MappingOutput(
             exportType = { _, _ -> DOUBLE },
-            importMethod = { targetName, typeName, _ -> "$targetName${typeName.qdot}toLong()" },
-            exportMethod = { targetName, typeName, _ -> "$targetName${typeName.qdot}toDouble()" },
+            importMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}toLong()" },
+            exportMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}toDouble()" },
         ),
 
         LONG_ARRAY to MappingOutput(
             exportType = { _, concreteTypeParameters -> ARRAY.parameterizedBy(LONG.cached(concreteTypeParameters).exportedTypeName) },
             // TODO: improve perf by avoiding useless double transformation
-            // LongArray(value.size) { index -> value[index].toLong() }
             importMethod = { targetName, typeName, concreteTypeParameters ->
                 targetName +
-                    "${typeName.qdot}map { ${LONG.cached(concreteTypeParameters).importedMethod("it")} }" +
-                    "${typeName.qdot}toLongArray()"
+                    "${typeName.qdot}map { " +
+                    LONG.cached(concreteTypeParameters).importedMethod("it".toFormatString()) +
+                    " }" +
+                    "${typeName.qdot}%M()".toFormatString(toLongArray)
             },
             exportMethod = { targetName, typeName, concreteTypeParameters ->
                 targetName +
-                    "${typeName.qdot}map { ${LONG.cached(concreteTypeParameters).exportedMethod("it")} }" +
-                    "${typeName.qdot}toTypedArray()"
+                    "${typeName.qdot}map { " +
+                    LONG.cached(concreteTypeParameters).exportedMethod("it".toFormatString()) +
+                    " }" +
+                    "${typeName.qdot}%M()".toFormatString(toTypedArray)
             },
         ),
 
@@ -117,16 +126,25 @@ fun initCustomMapping() {
                 ARRAY.parameterizedBy(typeName.firstParameterizedType().cached(concreteTypeParameters).exportedTypeName)
             },
             importMethod = { targetName, typeName, concreteTypeParameters ->
-                val importMethod = typeName.firstParameterizedType().cached(concreteTypeParameters).importedMethod("it")
-                if (importMethod == "it") targetName else {
-                    "$targetName${typeName.qdot}map { $importMethod }${typeName.qdot}toTypedArray()"
+                val importMethod = typeName.firstParameterizedType().cached(concreteTypeParameters)
+                    .importedMethod("it".toFormatString())
+                if (importMethod.eq("it")) {
+                    targetName
+                } else {
+                    targetName +
+                        "${typeName.qdot}map { " +
+                        importMethod +
+                        " }${typeName.qdot}%M()".toFormatString(toTypedArray)
                 }
             },
             exportMethod = { targetName, typeName, concreteTypeParameters ->
-                val exportMethod =
-                    typeName.firstParameterizedType().cached(concreteTypeParameters).exportedMethod("it")
-                if (exportMethod == "it") targetName else {
-                    "$targetName${typeName.qdot}map { $exportMethod }${typeName.qdot}toTypedArray()"
+                val exportMethod = typeName.firstParameterizedType()
+                    .cached(concreteTypeParameters).exportedMethod("it".toFormatString())
+                if (exportMethod.eq("it")) {
+                    targetName
+                } else {
+                    "$targetName${typeName.qdot}map { ".toFormatString() + exportMethod +
+                        " }${typeName.qdot}%M()".toFormatString(toTypedArray)
                 }
             },
         ),
@@ -137,15 +155,17 @@ fun initCustomMapping() {
             },
             importMethod = { targetName, typeName, concreteTypeParameters ->
                 val firstParameterizedType = typeName.firstParameterizedType()
-                val importedMethod = firstParameterizedType.cached(concreteTypeParameters).importedMethod("it")
-                targetName + "${typeName.qdot}map { $importedMethod }"
+                val importedMethod =
+                    firstParameterizedType.cached(concreteTypeParameters).importedMethod("it".toFormatString())
+                targetName + "${typeName.qdot}map { " + importedMethod + " }"
             },
             exportMethod = { targetName, typeName, concreteTypeParameters ->
-                val exportedMethod =
-                    typeName.firstParameterizedType().cached(concreteTypeParameters).exportedMethod("it")
+                val exportedMethod = typeName.firstParameterizedType()
+                    .cached(concreteTypeParameters).exportedMethod("it".toFormatString())
                 targetName +
-                    "${typeName.qdot}map { $exportedMethod }" +
-                    "${typeName.qdot}toTypedArray()"
+                    "${typeName.qdot}map { " +
+                    exportedMethod +
+                    " }${typeName.qdot}%M()".toFormatString(toTypedArray)
             },
         ),
         // TODO: Handle other collections
@@ -169,36 +189,36 @@ fun initCustomMapping() {
                 val returnType = lambda.typeArguments.last()
                 val namedArgs = lambda.typeArguments.dropLast(1)
                     .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
-                val signature = namedArgs
-                    .joinToString { (type, name) -> "$name: $type" }
-                val importedArgs: String = namedArgs
-                    .joinToString { (type, name) -> type.cached(concreteTypeParameters).exportedMethod(name) }
-
-                """
-                    |{ $signature ->
-                    |$INDENTATION${
-                    returnType.cached(concreteTypeParameters).importedMethod("$targetName($importedArgs)")
+                val signature = namedArgs.fold(FormatString("")) { acc, (type, name) ->
+                    acc + "$name: %T,".toFormatString(type)
                 }
-                    |}
-                """.trimMargin()
+                val importedArgs =
+                    namedArgs.fold(FormatString("")) { acc, (type, name) ->
+                        acc + INDENTATION + INDENTATION + type.cached(concreteTypeParameters)
+                            .exportedMethod(name.toFormatString()) + ",\n"
+                    }
+                "{ ".toFormatString() + signature + " -> \n" +
+                    returnType.cached(concreteTypeParameters).importedMethod(targetName + "(\n" + importedArgs + ")") +
+                    "\n}"
             },
             exportMethod = { targetName, typeName, concreteTypeParameters ->
                 val lambda = typeName as ParameterizedTypeName
                 val returnType = lambda.typeArguments.last()
                 val namedArgs = lambda.typeArguments.dropLast(1)
                     .mapIndexed { index, typeName -> typeName to shortNamesForIndex(index) }
-                val signature = namedArgs
-                    .joinToString { (type, name) -> "$name: ${type.cached(concreteTypeParameters).exportedTypeName}" }
-                val importedArgs: String = namedArgs
-                    .joinToString { (type, name) -> type.cached(concreteTypeParameters).importedMethod(name) }
-
-                """
-                    |{ $signature ->
-                    |$INDENTATION${
-                    returnType.cached(concreteTypeParameters).exportedMethod("$targetName($importedArgs)")
+                val signature = namedArgs.fold(FormatString("")) { acc, (type, name) ->
+                    acc + "$name: %T, ".toFormatString(type.cached(concreteTypeParameters).exportedTypeName)
                 }
-                    |}
-                """.trimMargin()
+
+                val importedArgs =
+                    namedArgs.fold(FormatString("")) { acc, (type, name) ->
+                        acc + INDENTATION + INDENTATION + type.cached(concreteTypeParameters)
+                            .importedMethod(name.toFormatString()) + ",\n"
+                    }
+
+                "{".toFormatString() + signature + " -> \n" +
+                    returnType.cached(concreteTypeParameters).exportedMethod(targetName + "(" + importedArgs + ")") +
+                    "\n}"
             },
         )
     )

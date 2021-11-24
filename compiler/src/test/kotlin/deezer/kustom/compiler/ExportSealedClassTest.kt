@@ -54,7 +54,7 @@ class ExportSealedClassTest {
                     path = "foo/bar/js/SealedParent.kt",
                     content = """
                     package foo.bar.js
-
+                    
                     import kotlin.Double
                     import kotlin.js.JsExport
                     import foo.bar.SealedChild1 as CommonSealedChild1
@@ -84,7 +84,6 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
                     
-                    import deezer.kustom.dynamicCastTo
                     import foo.bar.js.exportSealedParent
                     import foo.bar.js.importSealedParent
                     import kotlin.Double
@@ -94,10 +93,11 @@ class ExportSealedClassTest {
                     
                     @JsExport
                     public class SealedChild1() : SealedParent() {
-                        internal lateinit var common: CommonSealedChild1
+                        internal var common: CommonSealedChild1
                     
                         init {
-                            common = CommonSealedChild1()}
+                            common = CommonSealedChild1()
+                        }
                     
                         public override val `field`: Double
                             get() = common.field.toDouble()
@@ -121,6 +121,7 @@ class ExportSealedClassTest {
                     package foo.bar.js
                     
                     import deezer.kustom.dynamicCastTo
+                    import deezer.kustom.dynamicNull
                     import foo.bar.js.exportSealedParent
                     import foo.bar.js.importSealedParent
                     import kotlin.Double
@@ -156,7 +157,7 @@ class ExportSealedClassTest {
                             get() = common.ctorParam.toDouble()
                     
                         internal constructor(common: CommonSealedChild2) :
-                                this(field = deezer.kustom.dynamicNull?.dynamicCastTo<Double>()) {
+                                this(field = dynamicNull?.dynamicCastTo<Double>()) {
                             this.common = common
                         }
                     
