@@ -86,10 +86,7 @@ fun overrideGetterSetter(
     val fieldClass = if (import) prop.type.concreteTypeName else prop.type.exportedTypeName
     val setterValueClass = if (import) prop.type.exportedTypeName else prop.type.concreteTypeName
 
-    val isStackTraceException = prop.name == "stackTrace" // Forbidden word! :/
-    val getterMappingMethod =
-        if (isStackTraceException) "$target.stackTraceToString()".toFormatString()
-        else prop.type.portMethod(import, "$target.$fieldName".toFormatString())
+    val getterMappingMethod = prop.type.portMethod(import, "$target.$fieldName".toFormatString())
 
     val builder = PropertySpec.builder(fieldName, fieldClass)
     if (forceOverride || prop.isOverride) builder.addModifiers(KModifier.OVERRIDE)

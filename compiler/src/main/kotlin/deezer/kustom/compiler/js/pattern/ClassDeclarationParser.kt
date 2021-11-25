@@ -25,7 +25,6 @@ import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.Modifier
-import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
@@ -201,13 +200,6 @@ fun KSClassDeclaration.parseProperties(
         val classExtendsException = this.simpleName.asString().endsWith("Exception")
         if (prop.isPrivate()) {
             null // Cannot be accessed
-        } else if (classExtendsException && prop.simpleName.asString() == "cause") {
-            PropertyDescriptor(
-                name = "stackTrace",
-                type = OriginTypeName(STRING, emptyList()),
-                isMutable = false,
-                isOverride = true
-            )
         } else {
             val type = prop.type.toTypeNamePatch(typeParamResolver)
             // Retrieve the names of function arguments, like: (*MyName*: String) -> Unit

@@ -42,23 +42,23 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.SHORT_ARRAY
 import com.squareup.kotlinpoet.STRING
+import com.squareup.kotlinpoet.THROWABLE
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
 import deezer.kustom.compiler.firstParameterizedType
 import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.FormatString
+import deezer.kustom.compiler.js.exceptionExport
 import deezer.kustom.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustom.compiler.js.pattern.cached
 import deezer.kustom.compiler.js.pattern.isKotlinFunction
 import deezer.kustom.compiler.js.pattern.qdot
 import deezer.kustom.compiler.js.toFormatString
+import deezer.kustom.compiler.js.toJsException
 import deezer.kustom.compiler.shortNamesForIndex
 
 const val INDENTATION = "    "
 
-const val EXCEPTION_JS_PACKAGE = "deezer.kustom"
-private fun TypeName.toJsException() = ClassName(EXCEPTION_JS_PACKAGE, (this as ClassName).simpleName)
-val exceptionExport = MemberName(EXCEPTION_JS_PACKAGE, "export")
 val toLongArray = MemberName("kotlin.collections", "toLongArray")
 val toTypedArray = MemberName("kotlin.collections", "toTypedArray")
 
@@ -85,9 +85,18 @@ fun initCustomMapping() {
         )
     }
 
+    TypeMapping.mappings += THROWABLE to MappingOutput(
+        exportType = { _, _ -> THROWABLE },
+        importMethod = { targetName, _, _ -> targetName },
+        exportMethod = { targetName, _, _ -> targetName },
+    )
+
     TypeMapping.mappings += ALL_KOTLIN_EXCEPTIONS.map { exportableType ->
         exportableType to MappingOutput(
             exportType = { typeName, _ -> typeName.toJsException() },
+            //importMethod = { targetName, _, _ -> targetName },
+            //exportMethod = { targetName, _, _ -> targetName },
+            //exportType = { typeName, _ -> typeName.toJsException() },
             importMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}import()" },
             exportMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}%M()".toFormatString(exceptionExport) },
         )
