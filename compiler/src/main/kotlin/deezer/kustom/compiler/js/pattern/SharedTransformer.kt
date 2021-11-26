@@ -20,6 +20,7 @@ package deezer.kustom.compiler.js.pattern
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.STRING
 import deezer.kustom.compiler.js.FormatString
 import deezer.kustom.compiler.js.FunctionDescriptor
 import deezer.kustom.compiler.js.MethodNameDisambiguation
@@ -80,10 +81,16 @@ fun overrideGetterSetter(
     target: String,
     import: Boolean,
     isClassOpen: Boolean,
-    forceOverride: Boolean // true for interface
+    forceOverride: Boolean, // true for interface
+    isClassThrowable: Boolean = false,
 ): PropertySpec {
     val fieldName = prop.name
-    val fieldClass = if (import) prop.type.concreteTypeName else prop.type.exportedTypeName
+    val isExceptionMessage = isClassThrowable && fieldName == "message"
+    val fieldClass = when {
+        isExceptionMessage -> STRING // Not nullable
+        import -> prop.type.concreteTypeName
+        else -> prop.type.exportedTypeName
+    }
     val setterValueClass = if (import) prop.type.exportedTypeName else prop.type.concreteTypeName
 
     val getterMappingMethod = prop.type.portMethod(import, "$target.$fieldName".toFormatString())
@@ -94,7 +101,9 @@ fun overrideGetterSetter(
 
     builder.getter(
         FunSpec.getterBuilder()
-            .addCode(("return·".toFormatString() + getterMappingMethod).asCode())
+            .addCode(
+                ("return·".toFormatString() + getterMappingMethod + if (isExceptionMessage) " ?: \"\"" else "").asCode()
+            )
             .build()
     )
     if (prop.isMutable) {

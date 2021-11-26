@@ -22,7 +22,9 @@ import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -136,3 +138,10 @@ private fun guessFromStdlib(classSimpleName: String, vararg parameterizedTypes: 
 
     return null
 }
+
+fun FunSpec.Builder.suppress(warning: String) =
+    addAnnotation(
+        AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
+            .addMember("%S", warning)
+            .build()
+    )

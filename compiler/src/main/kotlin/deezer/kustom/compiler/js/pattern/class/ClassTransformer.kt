@@ -42,6 +42,7 @@ import deezer.kustom.compiler.js.mapping.INDENTATION
 import deezer.kustom.compiler.js.pattern.asClassName
 import deezer.kustom.compiler.js.pattern.buildWrappingFunction
 import deezer.kustom.compiler.js.pattern.overrideGetterSetter
+import deezer.kustom.compiler.js.pattern.suppress
 
 fun ClassDescriptor.transform() = transformClass(this)
 
@@ -97,6 +98,8 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                 )
                 .addFunction(
                     FunSpec.constructorBuilder()
+                        //TODO: Annotation could be added only when there is 1+ params in ctor, else it's useless
+                        .suppress("UNNECESSARY_SAFE_CALL")
                         .addModifiers(KModifier.INTERNAL)
                         .callThisConstructor(
                             CodeBlock.of(
@@ -111,13 +114,6 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         )
                         .addParameter(ParameterSpec("common", originalClass))
                         .addStatement("this.$commonFieldName = common")
-
-                        //TODO: Annotation could be added only when there is 1+ params in ctor, else it's useless
-                        .addAnnotation(
-                            AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
-                                .addMember("%S", "UNNECESSARY_SAFE_CALL")
-                                .build()
-                        )
                         .build()
                 )
                 .addProperty(
@@ -178,6 +174,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                                     import = false,
                                     forceOverride = false,
                                     isClassOpen = origin.isOpen,
+                                    isClassThrowable = origin.isThrowable
                                 )
                             )
                         }
@@ -200,12 +197,8 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     if (origin.isThrowable) {
                         b.addFunction(
                             FunSpec.builder("import")
-                                .addAnnotation(
-                                    AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
-                                        .addMember("%S", "NON_EXPORTABLE_TYPE")
-                                        .build()
-                                )
-                                .also { if(origin.isOpen) it.addModifiers(KModifier.OPEN) }
+                                .suppress("NON_EXPORTABLE_TYPE")
+                                .also { if (origin.isOpen) it.addModifiers(KModifier.OPEN) }
                                 .addModifiers(KModifier.OVERRIDE)
                                 .returns(originalClass)
                                 .addStatement("return·this.$commonFieldName")
@@ -224,13 +217,13 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         )
         .also { b ->
             //if (!origin.isThrowable) { // Required by sealed class for now, to be improved
-                b.addFunction(
-                    FunSpec.builder("import${origin.classSimpleName}")
-                        .receiver(jsExportedClass)
-                        .returns(originalClass)
-                        .addStatement("return·this.$commonFieldName")
-                        .build()
-                )
+            b.addFunction(
+                FunSpec.builder("import${origin.classSimpleName}")
+                    .receiver(jsExportedClass)
+                    .returns(originalClass)
+                    .addStatement("return·this.$commonFieldName")
+                    .build()
+            )
             //}
         }
         .indent(INDENTATION)

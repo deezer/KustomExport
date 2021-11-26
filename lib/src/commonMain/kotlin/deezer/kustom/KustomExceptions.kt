@@ -53,8 +53,6 @@ expect open class BaseExceptionAny constructor(message: String?, cause: Throwabl
  */
 @JsExport
 open class Exception(message: String? = null, cause: Throwable? = null) : BaseExceptionAny(message, cause) {
-    open val msg: String? get() = super.message
-    open val causedBy: Throwable? get() = super.cause
 
     // "import": Cannot export common type BUT here we use a Typescript keyword 'import' to avoid
     // typescript method generation, see https://youtrack.jetbrains.com/issue/KT-38262
