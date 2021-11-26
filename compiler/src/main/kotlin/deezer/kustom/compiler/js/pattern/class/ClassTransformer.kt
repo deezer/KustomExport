@@ -200,7 +200,13 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     if (origin.isThrowable) {
                         b.addFunction(
                             FunSpec.builder("import")
-                                .addModifiers(KModifier.OVERRIDE, KModifier.OPEN)
+                                .addAnnotation(
+                                    AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
+                                        .addMember("%S", "NON_EXPORTABLE_TYPE")
+                                        .build()
+                                )
+                                .also { if(origin.isOpen) it.addModifiers(KModifier.OPEN) }
+                                .addModifiers(KModifier.OVERRIDE)
                                 .returns(originalClass)
                                 .addStatement("return·this.$commonFieldName")
                                 .build()

@@ -98,7 +98,8 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                 .addParameter("name", STRING)
                 .addCode(
                     origin.entries.joinToString("\n") {
-                        "if (name == ${origin.generatedName(it)}.name)\nreturn·${origin.generatedName(it)}\n"
+                        "if (name == ${origin.generatedName(it)}.name)\n" +
+                            "${INDENTATION}return·${origin.generatedName(it)}\n"
                     } + "\nreturn null"
                 )
                 .build()
