@@ -17,10 +17,12 @@
 
 package deezer.kustom.compiler.js.pattern.enum
 
+import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
@@ -52,6 +54,53 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                 )
                 .addProperty(PropertySpec.builder(delegateName, originalClass).initializer(delegateName).build())
                 .addProperty(PropertySpec.builder("name", STRING).initializer("$delegateName.name").build())
+                /*.addType(TypeSpec.companionObjectBuilder()
+                    .addFunction(
+                        FunSpec.builder("values")
+                            .returns(ARRAY.parameterizedBy(jsExportedClass))
+                            .addCode(
+                                "return arrayOf(" +
+                                    origin.entries.joinToString { origin.generatedName(it) } +
+                                    ")"
+                            )
+                            .build()
+                    )
+                    .addFunction(
+                        FunSpec.builder("valueOf")
+                            .returns(jsExportedClass.copy(nullable = true))
+                            .addParameter("name", STRING)
+                            .addCode(
+                                origin.entries.joinToString("\n") {
+                                    "if (name == ${origin.generatedName(it)}.name) return ${origin.generatedName(it)}"
+                                } + "\nreturn null"
+                            )
+                            .build()
+                    )
+                    .build()
+                )*/
+                .build()
+        )
+        .addFunction(
+            FunSpec.builder("${origin.classSimpleName}_values")
+                .addAnnotation(jsExport)
+                .returns(ARRAY.parameterizedBy(jsExportedClass))
+                .addCode(
+                    "return arrayOf(" +
+                        origin.entries.joinToString { origin.generatedName(it) } +
+                        ")"
+                )
+                .build()
+        )
+        .addFunction(
+            FunSpec.builder("${origin.classSimpleName}_valueOf")
+                .addAnnotation(jsExport)
+                .returns(jsExportedClass.copy(nullable = true))
+                .addParameter("name", STRING)
+                .addCode(
+                    origin.entries.joinToString("\n") {
+                        "if (name == ${origin.generatedName(it)}.name) return ${origin.generatedName(it)}"
+                    } + "\nreturn null"
+                )
                 .build()
         )
         .addFunction(
@@ -71,7 +120,7 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
         .also { b ->
             origin.entries.forEach { enumEntry ->
                 b.addProperty(
-                    PropertySpec.builder(origin.classSimpleName + "_" + enumEntry.name, jsExportedClass)
+                    PropertySpec.builder(origin.generatedName(enumEntry), jsExportedClass)
                         .addAnnotation(jsExport)
                         .initializer("$commonClassSimpleName.${enumEntry.name}.export${origin.classSimpleName}()")
                         .build()
