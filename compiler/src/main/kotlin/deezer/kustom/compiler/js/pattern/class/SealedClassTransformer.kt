@@ -24,6 +24,8 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.STRING
+import com.squareup.kotlinpoet.THROWABLE
 import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.jsExport
@@ -45,13 +47,22 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
 //        .addParameters(ctorParams)
         .build()
 
-    val properties = origin.properties
+    var properties = origin.properties
         .filter { !it.isOverride } // we're already inheriting the base class so method is already visible
         .map { p ->
             PropertySpec.builder(p.name, p.type.exportedTypeName)
                 .addModifiers(KModifier.ABSTRACT)
                 .build()
         }
+
+    if (origin.isThrowable) {
+        properties += PropertySpec.builder("message", STRING)
+            .addModifiers(KModifier.ABSTRACT, KModifier.OVERRIDE)
+            .build()
+        properties += PropertySpec.builder("cause", THROWABLE.copy(nullable = true))
+            .addModifiers(KModifier.ABSTRACT, KModifier.OVERRIDE)
+            .build()
+    }
 
     val functions = origin.functions.map {
         val params = it.parameters.map { p ->

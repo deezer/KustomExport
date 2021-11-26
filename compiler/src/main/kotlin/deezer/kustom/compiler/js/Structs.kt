@@ -83,6 +83,7 @@ data class SealedClassDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val supers: List<SuperDescriptor>,
+    val isThrowable: Boolean,
     val constructorParams: List<ParameterDescriptor>,
     val properties: List<PropertyDescriptor>,
     val functions: List<FunctionDescriptor>,

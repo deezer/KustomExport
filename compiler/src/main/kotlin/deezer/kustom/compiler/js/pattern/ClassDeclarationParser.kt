@@ -134,6 +134,7 @@ fun parseClass(
                 packageName = packageName,
                 classSimpleName = classSimpleName,
                 supers = superTypes,
+                isThrowable = classDeclaration.isThrowable(),
                 constructorParams = constructorParams,
                 properties = properties,
                 functions = functions,
