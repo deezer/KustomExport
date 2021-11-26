@@ -71,7 +71,7 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
     val exportFunSpec = FunSpec.builder("export${origin.classSimpleName}")
         .receiver(origin.asClassName)
         .returns(jsExportedClass)
-        .beginControlFlow("return when (this)")
+        .beginControlFlow("return·when·(this)")
         .also {
             origin.subClasses.forEach { subClass ->
                 it.addStatement("is %T -> export${subClass.classSimpleName}()", subClass.asClassName)
@@ -86,7 +86,7 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
     val importFunSpec = FunSpec.builder("import${origin.classSimpleName}")
         .receiver(jsExportedClass)
         .returns(origin.asClassName)
-        .beginControlFlow("return when (this)")
+        .beginControlFlow("return·when·(this)")
         .also {
             origin.subClasses.forEach { subClass ->
                 val exportedSubClass = ClassName(subClass.packageName.jsPackage(), subClass.classSimpleName)

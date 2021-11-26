@@ -202,7 +202,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                             FunSpec.builder("import")
                                 .addModifiers(KModifier.OVERRIDE, KModifier.OPEN)
                                 .returns(originalClass)
-                                .addStatement("return this.$commonFieldName")
+                                .addStatement("return·this.$commonFieldName")
                                 .build()
                         )
                     }
@@ -213,7 +213,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
             FunSpec.builder("export${origin.classSimpleName}")
                 .receiver(originalClass)
                 .returns(jsExportedClass)
-                .addStatement("return ${origin.classSimpleName}(this)")
+                .addStatement("return·${origin.classSimpleName}(this)")
                 .build()
         )
         .also { b ->
@@ -222,7 +222,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                     FunSpec.builder("import${origin.classSimpleName}")
                         .receiver(jsExportedClass)
                         .returns(originalClass)
-                        .addStatement("return this.$commonFieldName")
+                        .addStatement("return·this.$commonFieldName")
                         .build()
                 )
             //}

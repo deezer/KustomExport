@@ -122,7 +122,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                 .receiver(originalClass)
                 .returns(jsExportedClass)
                 .addStatement(
-                    "return (this as? %T)?.exported ?: %T(this)",
+                    "return·(this·as?·%T)?.exported·?: %T(this)",
                     importedClass, exportedClass
                 )
                 .build()
@@ -132,7 +132,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                 .receiver(jsExportedClass)
                 .returns(originalClass)
                 .addStatement(
-                    "return (this as? %T)?.common ?: %T(this)",
+                    "return·(this·as?·%T)?.common·?: %T(this)",
                     exportedClass, importedClass
                 )
                 .build()

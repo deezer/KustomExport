@@ -70,7 +70,7 @@ fun FunctionDescriptor.buildWrappingFunction(
                 (if (parameters.isNotEmpty()) ")\n" else ")\n")).asCode()
         )
 
-        fb.addCode(("return ".toFormatString() + returnType.portMethod(import, "result".toFormatString())).asCode())
+        fb.addCode(("return·".toFormatString() + returnType.portMethod(import, "result".toFormatString())).asCode())
     }
     return fb.build()
 }
@@ -94,7 +94,7 @@ fun overrideGetterSetter(
 
     builder.getter(
         FunSpec.getterBuilder()
-            .addCode(("return ".toFormatString() + getterMappingMethod).asCode())
+            .addCode(("return·".toFormatString() + getterMappingMethod).asCode())
             .build()
     )
     if (prop.isMutable) {

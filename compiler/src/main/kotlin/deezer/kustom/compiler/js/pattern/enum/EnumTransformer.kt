@@ -59,7 +59,7 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                         FunSpec.builder("values")
                             .returns(ARRAY.parameterizedBy(jsExportedClass))
                             .addCode(
-                                "return arrayOf(" +
+                                "return·arrayOf(" +
                                     origin.entries.joinToString { origin.generatedName(it) } +
                                     ")"
                             )
@@ -85,7 +85,7 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                 .addAnnotation(jsExport)
                 .returns(ARRAY.parameterizedBy(jsExportedClass))
                 .addCode(
-                    "return arrayOf(" +
+                    "return·arrayOf(" +
                         origin.entries.joinToString { origin.generatedName(it) } +
                         ")"
                 )
@@ -98,7 +98,7 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                 .addParameter("name", STRING)
                 .addCode(
                     origin.entries.joinToString("\n") {
-                        "if (name == ${origin.generatedName(it)}.name) return ${origin.generatedName(it)}"
+                        "if (name == ${origin.generatedName(it)}.name)\nreturn·${origin.generatedName(it)}\n"
                     } + "\nreturn null"
                 )
                 .build()
@@ -107,14 +107,14 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
             FunSpec.builder("import${origin.classSimpleName}")
                 .receiver(jsExportedClass)
                 .returns(originalClass)
-                .addStatement("return $delegateName")
+                .addStatement("return·$delegateName")
                 .build()
         )
         .addFunction(
             FunSpec.builder("export${origin.classSimpleName}")
                 .receiver(originalClass)
                 .returns(jsExportedClass)
-                .addStatement("return ${origin.classSimpleName}(this)")
+                .addStatement("return·${origin.classSimpleName}(this)")
                 .build()
         )
         .also { b ->
