@@ -183,7 +183,6 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         }
                 }
                 .also { b ->
-
                     val mnd = MethodNameDisambiguation()
                     origin.functions.forEach { func ->
                         b.addFunction(
@@ -197,6 +196,17 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                         )
                     }
                 }
+                .also { b ->
+                    if (origin.isThrowable) {
+                        b.addFunction(
+                            FunSpec.builder("import")
+                                .addModifiers(KModifier.OVERRIDE, KModifier.OPEN)
+                                .returns(originalClass)
+                                .addStatement("return this.$commonFieldName")
+                                .build()
+                        )
+                    }
+                }
                 .build()
         )
         .addFunction(
@@ -206,13 +216,17 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                 .addStatement("return ${origin.classSimpleName}(this)")
                 .build()
         )
-        .addFunction(
-            FunSpec.builder("import${origin.classSimpleName}")
-                .receiver(jsExportedClass)
-                .returns(originalClass)
-                .addStatement("return this.$commonFieldName")
-                .build()
-        )
+        .also { b ->
+            //if (!origin.isThrowable) { // Required by sealed class for now, to be improved
+                b.addFunction(
+                    FunSpec.builder("import${origin.classSimpleName}")
+                        .receiver(jsExportedClass)
+                        .returns(originalClass)
+                        .addStatement("return this.$commonFieldName")
+                        .build()
+                )
+            //}
+        }
         .indent(INDENTATION)
         .build()
 }

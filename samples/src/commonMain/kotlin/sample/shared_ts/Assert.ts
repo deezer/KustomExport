@@ -14,7 +14,7 @@ export function assert(condition: boolean, message: string) {
 }
 
 export function assertEqualsQuiet<T>(expected: T, actual: T, message: string) {
-    if (expected != actual) assert(false, message)
+    if (expected != actual) assertEquals(expected, actual, message)
 }
 
 export function assertEquals<T>(expected: T, actual: T, message: string) {

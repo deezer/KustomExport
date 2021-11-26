@@ -25,7 +25,11 @@ class ExceptionBuilder {
 
 @KustomExport
 class MyEx1 : IllegalStateException("hello")
-class MyEx2(msg: String) : IllegalStateException(msg)
+
+@KustomExport
+class MyEx2(msg: String) : IllegalStateException(msg) {
+    val ex2Bonus = "custom exception val"
+}
 
 
 @KustomExport
@@ -33,6 +37,7 @@ class ExceptionConsumer {
     fun consume(e: Exception): String {
         @Suppress("USELESS_IS_CHECK") // Cause typescript can go crazy
         return when (e) {
+            is MyEx1 -> "MyEx1=${e.message}"
             is MyEx2 -> "MyEx2=${e.message}"
             is ArithmeticException -> "ArithmeticException=${e.message}"
             is ClassCastException -> "ClassCastException=${e.message}"

@@ -102,6 +102,7 @@ data class ClassDescriptor(
     val packageName: String,
     val classSimpleName: String,
     val isOpen: Boolean,
+    val isThrowable: Boolean,
     val concreteTypeParameters: List<TypeParameterDescriptor>,
     val supers: List<SuperDescriptor>,
     val constructorParams: List<ParameterDescriptor>,
@@ -126,6 +127,8 @@ data class EnumDescriptor(
     val entries: List<Entry>
 ) : Descriptor() {
     data class Entry(val name: String)
+
+    fun generatedName(e: Entry) = classSimpleName + "_" + e.name
 }
 
 fun TypeName.resolvedType(typeParameters: List<TypeParameterDescriptor>?): TypeName {
