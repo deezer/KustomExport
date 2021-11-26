@@ -24,7 +24,6 @@ import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.BYTE_ARRAY
 import com.squareup.kotlinpoet.CHAR
 import com.squareup.kotlinpoet.CHAR_ARRAY
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.DOUBLE_ARRAY
 import com.squareup.kotlinpoet.FLOAT
@@ -98,7 +97,11 @@ fun initCustomMapping() {
             //exportMethod = { targetName, _, _ -> targetName },
             //exportType = { typeName, _ -> typeName.toJsException() },
             importMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}%M()".toFormatString(exceptionExport) },
+            exportMethod = { targetName, typeName, _ ->
+                targetName + "${typeName.qdot}%M()".toFormatString(
+                    exceptionExport
+                )
+            },
         )
     }
 
@@ -152,7 +155,7 @@ fun initCustomMapping() {
                 if (exportMethod.eq("it")) {
                     targetName
                 } else {
-                    "$targetName${typeName.qdot}map { ".toFormatString() + exportMethod +
+                    targetName + "${typeName.qdot}map { ".toFormatString() + exportMethod +
                         " }${typeName.qdot}%M()".toFormatString(toTypedArray)
                 }
             },
@@ -198,34 +201,44 @@ fun initCustomMapping() {
                 val returnType = lambda.typeArguments.last()
                 val namedArgs = lambda.typeArguments.dropLast(1)
                     .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
+
+                val (lastNamedArgsType, lastNamedArgsName) = namedArgs.last()
                 val signature = namedArgs.fold(FormatString("")) { acc, (type, name) ->
-                    acc + "$name: %T,".toFormatString(type)
+                    val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ", "
+                    acc + "$name: %T$separator".toFormatString(type)
                 }
                 val importedArgs =
-                    namedArgs.fold(FormatString("")) { acc, (type, name) ->
-                        acc + INDENTATION + INDENTATION + type.cached(concreteTypeParameters)
-                            .exportedMethod(name.toFormatString()) + ",\n"
+                    namedArgs.fold(FormatString(if (namedArgs.size <= 1) "" else "\n")) { acc, (type, name) ->
+                        val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ",\n"
+                        val indentation = if (namedArgs.size <= 1) "" else INDENTATION + INDENTATION
+                        acc + indentation + type.cached(concreteTypeParameters)
+                            .exportedMethod(name.toFormatString()) + separator
                     }
-                "{ ".toFormatString() + signature + " -> \n" +
-                    returnType.cached(concreteTypeParameters).importedMethod(targetName + "(\n" + importedArgs + ")") +
+                "{ ".toFormatString() + signature + " -> \n$INDENTATION" +
+                    returnType.cached(concreteTypeParameters).importedMethod(targetName + "(" + importedArgs + ")") +
                     "\n}"
             },
             exportMethod = { targetName, typeName, concreteTypeParameters ->
                 val lambda = typeName as ParameterizedTypeName
                 val returnType = lambda.typeArguments.last()
                 val namedArgs = lambda.typeArguments.dropLast(1)
-                    .mapIndexed { index, typeName -> typeName to shortNamesForIndex(index) }
+                    .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
+
+                val (lastNamedArgsType, lastNamedArgsName) = namedArgs.last()
                 val signature = namedArgs.fold(FormatString("")) { acc, (type, name) ->
-                    acc + "$name: %T, ".toFormatString(type.cached(concreteTypeParameters).exportedTypeName)
+                    val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ", "
+                    acc + "$name: %T$separator".toFormatString(type.cached(concreteTypeParameters).exportedTypeName)
                 }
 
                 val importedArgs =
-                    namedArgs.fold(FormatString("")) { acc, (type, name) ->
-                        acc + INDENTATION + INDENTATION + type.cached(concreteTypeParameters)
-                            .importedMethod(name.toFormatString()) + ",\n"
+                    namedArgs.fold(FormatString(if (namedArgs.size <= 1) "" else "\n")) { acc, (type, name) ->
+                        val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ",\n"
+                        val indentation = if (namedArgs.size <= 1) "" else INDENTATION + INDENTATION
+                        acc + indentation + type.cached(concreteTypeParameters)
+                            .importedMethod(name.toFormatString()) + separator
                     }
 
-                "{".toFormatString() + signature + " -> \n" +
+                "{ ".toFormatString() + signature + " -> \n" + INDENTATION +
                     returnType.cached(concreteTypeParameters).exportedMethod(targetName + "(" + importedArgs + ")") +
                     "\n}"
             },

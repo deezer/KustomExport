@@ -84,12 +84,10 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
                     
-                    import foo.bar.js.exportSealedParent
-                    import foo.bar.js.importSealedParent
                     import kotlin.Double
+                    import kotlin.Suppress
                     import kotlin.js.JsExport
                     import foo.bar.SealedChild1 as CommonSealedChild1
-                    import foo.bar.SealedParent as CommonSealedParent
                     
                     @JsExport
                     public class SealedChild1() : SealedParent() {
@@ -105,6 +103,7 @@ class ExportSealedClassTest {
                         public override val ctorParam: Double
                             get() = common.ctorParam.toDouble()
                     
+                        @Suppress("UNNECESSARY_SAFE_CALL")
                         internal constructor(common: CommonSealedChild1) : this() {
                             this.common = common
                         }
@@ -122,13 +121,11 @@ class ExportSealedClassTest {
                     
                     import deezer.kustom.dynamicCastTo
                     import deezer.kustom.dynamicNull
-                    import foo.bar.js.exportSealedParent
-                    import foo.bar.js.importSealedParent
                     import kotlin.Double
                     import kotlin.String
+                    import kotlin.Suppress
                     import kotlin.js.JsExport
                     import foo.bar.SealedChild2 as CommonSealedChild2
-                    import foo.bar.SealedParent as CommonSealedParent
                     
                     @JsExport
                     public class SealedChild2(
@@ -137,9 +134,9 @@ class ExportSealedClassTest {
                         internal lateinit var common: CommonSealedChild2
                     
                         init {
-                            if (field != deezer.kustom.dynamicNull) {
+                            if (field != dynamicNull) {
                                 common = CommonSealedChild2(
-                                    field = field.toLong()
+                                    field = field.toLong(),
                                 )
                             }
                         }
@@ -156,6 +153,7 @@ class ExportSealedClassTest {
                         public override val ctorParam: Double
                             get() = common.ctorParam.toDouble()
                     
+                        @Suppress("UNNECESSARY_SAFE_CALL")
                         internal constructor(common: CommonSealedChild2) :
                                 this(field = dynamicNull?.dynamicCastTo<Double>()) {
                             this.common = common
