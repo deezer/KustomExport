@@ -15,6 +15,8 @@
  * under the License.
  */
 
+@file:OptIn(KotlinPoetKspPreview::class)
+
 package deezer.kustom.compiler.js.pattern
 
 import com.google.devtools.ksp.getConstructors
@@ -25,12 +27,13 @@ import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.Modifier
-import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
+import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
 import deezer.kustom.compiler.Logger
+import deezer.kustom.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustom.compiler.js.ClassDescriptor
 import deezer.kustom.compiler.js.Descriptor
 import deezer.kustom.compiler.js.EnumDescriptor
@@ -75,6 +78,7 @@ fun parseClass(
     val classSimpleName = classDeclaration.simpleName.asString()
 
     //val superTypes = classDeclaration.getAllSuperTypes()
+
     val superTypes = classDeclaration.superTypes
         .map { superType ->
             val superTypeName = superType.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters)
@@ -140,6 +144,7 @@ fun parseClass(
             packageName = packageName,
             classSimpleName = classSimpleName,
             isOpen = isOpen,
+            isThrowable = classDeclaration.isThrowable(),
             concreteTypeParameters = concreteTypeParameters,
             supers = superTypes,
             constructorParams = constructorParams,
@@ -201,13 +206,6 @@ fun KSClassDeclaration.parseProperties(
         val classExtendsException = this.simpleName.asString().endsWith("Exception")
         if (prop.isPrivate()) {
             null // Cannot be accessed
-        } else if (classExtendsException && prop.simpleName.asString() == "cause") {
-            PropertyDescriptor(
-                name = "stackTrace",
-                type = OriginTypeName(STRING, emptyList()),
-                isMutable = false,
-                isOverride = true
-            )
         } else {
             val type = prop.type.toTypeNamePatch(typeParamResolver)
             // Retrieve the names of function arguments, like: (*MyName*: String) -> Unit
@@ -228,6 +226,21 @@ fun KSClassDeclaration.parseProperties(
             )
         }
     }.toList()
+}
+
+fun KSClassDeclaration.isThrowable(): Boolean {
+    var isException = false
+    superTypes
+        .forEach { superType ->
+            val superTypeResolved = superType.resolve()
+            val declaration = superTypeResolved.declaration
+            isException = isException || superTypeResolved.toClassName() in ALL_KOTLIN_EXCEPTIONS
+
+            if (declaration is KSClassDeclaration) {
+                isException = isException || declaration.isThrowable()
+            }
+        }
+    return isException
 }
 
 fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>) =

@@ -1,14 +1,17 @@
 package sample._exception
 
 import deezer.kustom.KustomExport
+import kotlin.js.JsExport
 
 @KustomExport
 class ExceptionBuilder {
     fun buildArithmeticException(msg: String) = ArithmeticException(msg)
-    fun buildAssertionError(msg: String) = AssertionError(msg)
+
+    //fun buildAssertionError(msg: String) = AssertionError(msg)
     fun buildClassCastException(msg: String) = ClassCastException(msg)
     fun buildConcurrentModificationException(msg: String) = ConcurrentModificationException(msg)
-    fun buildError(msg: String) = Error(msg)
+
+    //fun buildError(msg: String) = Error(msg)
     fun buildException(msg: String) = Exception(msg)
     fun buildIllegalArgumentException(msg: String) = IllegalArgumentException(msg)
     fun buildIllegalStateException(msg: String) = IllegalStateException(msg)
@@ -21,10 +24,21 @@ class ExceptionBuilder {
 }
 
 @KustomExport
+class MyEx1 : IllegalStateException("hello")
+
+@KustomExport
+class MyEx2(msg: String) : IllegalStateException(msg) {
+    val ex2Bonus = "custom exception val"
+}
+
+
+@KustomExport
 class ExceptionConsumer {
     fun consume(e: Exception): String {
         @Suppress("USELESS_IS_CHECK") // Cause typescript can go crazy
         return when (e) {
+            is MyEx1 -> "MyEx1=${e.message}"
+            is MyEx2 -> "MyEx2=${e.message}"
             is ArithmeticException -> "ArithmeticException=${e.message}"
             is ClassCastException -> "ClassCastException=${e.message}"
             is ConcurrentModificationException -> "ConcurrentModificationException=${e.message}"
@@ -40,8 +54,8 @@ class ExceptionConsumer {
             is RuntimeException -> "RuntimeException=${e.message}"
 
             // TODO :
-            is AssertionError -> "AssertionError=${e.message}"
-            is Error -> "Error=${e.message}"
+            //is AssertionError -> "AssertionError=${e.message}"
+            //is Error -> "Error=${e.message}"
             is Exception -> "Exception=${e.message}"
 
             else -> "Not an exception!!!"

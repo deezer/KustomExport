@@ -24,12 +24,10 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustom.compiler.js.SealedClassDescriptor
 import deezer.kustom.compiler.js.jsExport
 import deezer.kustom.compiler.js.jsPackage
-import deezer.kustom.compiler.js.pattern.simpleName
 
 fun SealedClassDescriptor.transform() = transformSealedClass(this)
 
@@ -50,13 +48,9 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
     val properties = origin.properties
         .filter { !it.isOverride } // we're already inheriting the base class so method is already visible
         .map { p ->
-            val propSpec = if (p.name == "cause" && p.type.concreteTypeName.simpleName().endsWith("Exception")) {
-                PropertySpec.builder("stackTrace", STRING)
-            } else {
-                PropertySpec.builder(p.name, p.type.exportedTypeName)
-            }
-            propSpec.addModifiers(KModifier.ABSTRACT)
-            propSpec.build()
+            PropertySpec.builder(p.name, p.type.exportedTypeName)
+                .addModifiers(KModifier.ABSTRACT)
+                .build()
         }
 
     val functions = origin.functions.map {
