@@ -42,6 +42,5 @@ class FormatString(val format: String, vararg args: Any?) {
 }
 
 fun String.eq(formatString: FormatString) = formatString.argsArray.isEmpty() && formatString.format == this
-operator fun String.plus(other: FormatString) = FormatString(this) + other
 
 fun String.toFormatString(vararg args: Any?) = FormatString(this, *args)

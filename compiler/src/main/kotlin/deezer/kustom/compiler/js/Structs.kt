@@ -65,6 +65,7 @@ sealed class Descriptor
 data class InterfaceDescriptor(
     val packageName: String,
     val classSimpleName: String,
+    val exportedClassSimpleName: String,
     val concreteTypeParameters: List<TypeParameterDescriptor>,
     val supers: List<SuperDescriptor>,
     val properties: List<PropertyDescriptor>,
@@ -102,6 +103,7 @@ data class SealedSubClassDescriptor(
 data class ClassDescriptor(
     val packageName: String,
     val classSimpleName: String,
+    val exportedClassSimpleName: String,
     val isOpen: Boolean,
     val isThrowable: Boolean,
     val concreteTypeParameters: List<TypeParameterDescriptor>,

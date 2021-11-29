@@ -32,6 +32,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
 import com.squareup.kotlinpoet.ksp.toTypeName
+import deezer.kustom.compiler.GenericsVisitor
 import deezer.kustom.compiler.Logger
 import deezer.kustom.compiler.js.mapping.isParameterizedAllowed
 import java.io.File
@@ -46,6 +47,7 @@ fun TypeName.asClassName(): ClassName =
 
 fun TypeName.removeTypeParameter(): TypeName =
     if (this is ParameterizedTypeName && !isParameterizedAllowed()) {
+    //GenericsVisitor.resolvedGenerics
         rawType.copy(this.isNullable)
     } else this
 

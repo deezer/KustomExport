@@ -15,6 +15,8 @@
  * under the License.
  */
 
+@file:OptIn(KotlinPoetKspPreview::class)
+
 package deezer.kustom.compiler.js.mapping
 
 import com.squareup.kotlinpoet.ClassName
@@ -23,6 +25,8 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
+import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import deezer.kustom.compiler.GenericsVisitor
 import deezer.kustom.compiler.js.FormatString
 import deezer.kustom.compiler.js.TypeParameterDescriptor
 import deezer.kustom.compiler.js.jsPackage
@@ -31,6 +35,7 @@ import deezer.kustom.compiler.js.pattern.cached
 import deezer.kustom.compiler.js.pattern.packageName
 import deezer.kustom.compiler.js.pattern.qdot
 import deezer.kustom.compiler.js.pattern.removeTypeParameter
+import deezer.kustom.compiler.js.pattern.simpleName
 import deezer.kustom.compiler.js.resolvedType
 import deezer.kustom.compiler.js.toFormatString
 
@@ -40,7 +45,12 @@ class OriginTypeName(
 ) {
     val concreteTypeName: TypeName by lazy { originTypeName.resolvedType(typeParameters) }
     fun importedMethod(name: FormatString) = TypeMapping.importMethod(name, concreteTypeName, typeParameters)
-    val exportedTypeName by lazy { TypeMapping.exportedType(concreteTypeName, typeParameters).removeTypeParameter() }
+    val exportedTypeName by lazy {
+        val exportedType = TypeMapping.exportedType(concreteTypeName, typeParameters)
+
+        exportedType.removeTypeParameter()
+    }
+
     fun exportedMethod(name: FormatString) = TypeMapping.exportMethod(name, concreteTypeName, typeParameters)
     fun portMethod(import: Boolean, name: FormatString) = if (import) importedMethod(name) else exportedMethod(name)
 
@@ -129,11 +139,16 @@ object TypeMapping {
                     ).copy(nullable = origin.isNullable)
                 }
                 if (origin is ParameterizedTypeName) {
+                    val generics =
+                        GenericsVisitor.resolvedGenerics.firstOrNull { it.originType == origin.rawType && it.typeParameters == origin.typeArguments }
                     return ClassName(
                         packageName = origin.rawType.packageName.jsPackage(),
-                        simpleNames = listOf(origin.rawType.simpleName)
+                        simpleNames = listOf(generics?.exportName ?: origin.rawType.simpleName)
                     )
-                        .parameterizedBy(origin.typeArguments.map { it.cached(concreteTypeParameters).exportedTypeName })
+                        .parameterizedBy(
+                            generics?.typeParameters?.map { it.cached(concreteTypeParameters).exportedTypeName }
+                                ?: origin.typeArguments.map { it.cached(concreteTypeParameters).exportedTypeName }
+                        )
                         .copy(nullable = origin.isNullable)
                 }
 
@@ -148,10 +163,11 @@ object TypeMapping {
     ): FormatString {
         return getMapping(origin)?.exportMethod?.invoke(targetName, origin, concreteTypeParameters) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
+            val simpleName = origin.cached(concreteTypeParameters).exportedTypeName.simpleName()
             val exportMethodName = if (origin is TypeVariableName) {
-                "export${origin.bounds.first().asClassName().simpleName}"
+                "export$simpleName"
             } else {
-                "export${origin.asClassName().simpleName}"
+                "export$simpleName"
             }
 
             targetName + "${origin.qdot}%M()".toFormatString(
@@ -170,10 +186,11 @@ object TypeMapping {
     ): FormatString {
         return getMapping(origin)?.importMethod?.invoke(targetName, origin, concreteTypeParameters) ?: run {
             // If no mapping, assume it's a project class, and it has a generated file
+            val simpleName = origin.cached(concreteTypeParameters).exportedTypeName.simpleName()
             val importMethodName = if (origin is TypeVariableName) {
-                "import${origin.bounds.first().asClassName().simpleName}"
+                "import$simpleName"
             } else {
-                "import${origin.asClassName().simpleName}"
+                "import$simpleName"
             }
 
             targetName + "${origin.qdot}%M()".toFormatString(

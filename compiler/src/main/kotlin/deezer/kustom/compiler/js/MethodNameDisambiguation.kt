@@ -39,6 +39,11 @@ class MethodNameDisambiguation {
             return newName
         }
 
-        TODO()
+        var poorName = origin.name
+        while (generatedNames.containsValue(poorName)) {
+            poorName += "_"
+        }
+        generatedNames[origin] = poorName
+        return poorName
     }
 }

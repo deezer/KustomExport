@@ -17,8 +17,12 @@
 
 @file:KustomExportGenerics(
     exportGenerics = [
-        KustomGenerics("NameNotHonoredYet", GenericsStuff::class, arrayOf(Long::class)),
-        KustomGenerics("NameNotHonoredYet", GenericsInterface::class, arrayOf(Long::class)),
+        KustomGenerics("GenericsStuff", GenericsStuff::class, arrayOf(Long::class)),
+        KustomGenerics("GenericsStuffFloat", GenericsStuff::class, arrayOf(Float::class)),
+        KustomGenerics("GenericsInterface", GenericsInterface::class, arrayOf(Long::class)),
+        KustomGenerics("GenericsInterfaceFloat", GenericsInterface::class, arrayOf(Float::class)),
+        KustomGenerics("GenericsImpl", GenericsImpl::class, arrayOf(Long::class)),
+        KustomGenerics("GenericsImplFloat", GenericsImpl::class, arrayOf(Float::class)),
     ]
 )
 
@@ -44,22 +48,26 @@ interface GenericsInterface<Template> {
     fun baz() = DataClass("baz data")
 }
 
-// Concrete classes with generics cannot be generated without failing the compilation
-// TODO: https://github.com/google/ksp/issues/731
-/*
-class GenericsInterfaceDefault<T> : GenericsInterface<T> {
-    override fun addListener(listener: (Long, T) -> Unit, default: T) {
-        listener(33, default)
-    }
+class GenericsImpl<Template> {
+    var bar: Template? = null
 }
- */
+
+@KustomExport
+class GenericsFactory {
+    fun buildCLong(value: Long) = GenericsImpl<Long>().apply { bar = value }
+    fun buildCFloat(value: Float) = GenericsImpl<Float>().apply { bar = value }
+}
 
 @KustomExport
 class GenericsConsumer {
-    fun consume(typeAlias: GenericsInterface<Long>) =
-        "consumed " + typeAlias.fooBar(123L) + " / " + typeAlias.fooBars(listOf(1, 2, 3))
+    fun consumeILong(generic: GenericsInterface<Long>) =
+        "consumed " + generic.fooBar(123L) + " / " + generic.fooBars(listOf(1, 2, 3))
 
-    fun create(): GenericsInterface<Long> = TODO()//TypeAliasInterfaceDefault()
+    fun consumeIFloat(generic: GenericsInterface<Float>) =
+        "consumed " + generic.fooBar(123f) + " / " + generic.fooBars(listOf(1.1f, 2.2f, 3.3f))
+
+    fun consumeCLong(generic: GenericsImpl<Long>) = "consumed " + generic.bar
+    fun consumeCFloat(generic: GenericsImpl<Float>) = "consumed " + generic.bar
 }
 
 // Trick to export interface with generics type: specific typealias!

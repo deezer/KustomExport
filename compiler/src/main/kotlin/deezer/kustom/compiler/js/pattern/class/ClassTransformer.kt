@@ -17,7 +17,6 @@
 
 package deezer.kustom.compiler.js.pattern.`class`
 
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -50,7 +49,7 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
     val originalClass = origin.asTypeName()
 
     val jsClassPackage = origin.packageName.jsPackage()
-    val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
+    val jsExportedClass = ClassName(jsClassPackage, origin.exportedClassSimpleName)
 
     // Primary constructor should respect the original class signature, and creates a 'common' instance.
     // Kotlin forces the 2nd ctor to call the 1st one, problematic in this case.
@@ -68,19 +67,14 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
         else -> dynamicNotString
     }
 
-    if (origin.concreteTypeParameters.isNotEmpty()) {
-        Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - generics=${origin.concreteTypeParameters}")
-    }
-
     // The field containing the 'common' instance have to be internal to not be exported BUT be visible from extension method.
     // Due to that limitation, when class is open, we need to define a "random" name to avoid conflicts.
     val commonFieldName = if (origin.isOpen) "common_" + origin.classIdHash else "common"
 
-    return FileSpec.builder(jsClassPackage, origin.classSimpleName)
+    return FileSpec.builder(jsClassPackage, origin.exportedClassSimpleName)
         .addAliasedImport(origin.asClassName, "Common${origin.classSimpleName}")
-        //.autoImport(origin, origin.concreteTypeParameters)
         .addType(
-            TypeSpec.classBuilder(origin.classSimpleName)
+            TypeSpec.classBuilder(origin.exportedClassSimpleName)
                 .addAnnotation(jsExport)
                 .addModifiers(if (origin.isOpen) listOf(KModifier.OPEN) else emptyList())
                 .primaryConstructor(
@@ -209,16 +203,16 @@ fun transformClass(origin: ClassDescriptor): FileSpec {
                 .build()
         )
         .addFunction(
-            FunSpec.builder("export${origin.classSimpleName}")
+            FunSpec.builder("export${origin.exportedClassSimpleName}")
                 .receiver(originalClass)
                 .returns(jsExportedClass)
-                .addStatement("return·${origin.classSimpleName}(this)")
+                .addStatement("return·%T(this)", jsExportedClass)
                 .build()
         )
         .also { b ->
             //if (!origin.isThrowable) { // Required by sealed class for now, to be improved
             b.addFunction(
-                FunSpec.builder("import${origin.classSimpleName}")
+                FunSpec.builder("import${origin.exportedClassSimpleName}")
                     .receiver(jsExportedClass)
                     .returns(originalClass)
                     .addStatement("return·this.$commonFieldName")

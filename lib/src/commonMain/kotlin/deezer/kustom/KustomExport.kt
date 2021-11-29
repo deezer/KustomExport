@@ -44,7 +44,7 @@ public annotation class KustomExportGenerics(
 
 @Target() // No target, only there for data container
 public annotation class KustomGenerics(
-    public val name: String,
+    public val name: String = "",
     public val kClass: KClass<*>,
     public val typeParameters: Array<KClass<*>>,
 )
