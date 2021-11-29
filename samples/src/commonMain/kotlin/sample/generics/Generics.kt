@@ -17,12 +17,12 @@
 
 @file:KustomExportGenerics(
     exportGenerics = [
-        KustomGenerics("GenericsStuff", GenericsStuff::class, arrayOf(Long::class)),
-        KustomGenerics("GenericsStuffFloat", GenericsStuff::class, arrayOf(Float::class)),
-        KustomGenerics("GenericsInterface", GenericsInterface::class, arrayOf(Long::class)),
-        KustomGenerics("GenericsInterfaceFloat", GenericsInterface::class, arrayOf(Float::class)),
-        KustomGenerics("GenericsImpl", GenericsImpl::class, arrayOf(Long::class)),
-        KustomGenerics("GenericsImplFloat", GenericsImpl::class, arrayOf(Float::class)),
+        KustomGenerics(GenericsStuff::class, arrayOf(Long::class)),
+        KustomGenerics(GenericsStuff::class, arrayOf(Float::class), "GenericsStuffFloat"),
+        KustomGenerics(GenericsInterface::class, arrayOf(Long::class), "GenericsInterface"),
+        KustomGenerics(GenericsInterface::class, arrayOf(Float::class), "GenericsInterfaceFloat"),
+        KustomGenerics(GenericsImpl::class, arrayOf(Long::class), "GenericsImpl"),
+        KustomGenerics(GenericsImpl::class, arrayOf(Float::class), "GenericsImplFloat"),
     ]
 )
 

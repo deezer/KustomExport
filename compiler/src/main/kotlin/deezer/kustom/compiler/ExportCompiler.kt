@@ -112,7 +112,7 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                 // Pick the first arguments matching 'exportGenerics' and flatmap all entries
                 .flatMap { it.getArg<List<KSAnnotation>>(KustomExportGenerics::exportGenerics) }
                 .forEach { generics ->
-                    val name = generics.getArg<String>(KustomGenerics::name)
+                    val name = generics.getArg<String?>(KustomGenerics::name)
                     val kClass = generics.getArg<KSType>(KustomGenerics::kClass)
                     val typeParameters = generics.getArg<List<KSType>>(KustomGenerics::typeParameters)
 
@@ -134,7 +134,7 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                     parseAndWrite(
                         targetClassDeclaration,
                         targetTypeNames,
-                        overrideClassSimpleName = name.ifBlank { targetClassDeclaration.simpleName.asString() },
+                        overrideClassSimpleName = if (name?.isNotBlank() == true) name else targetClassDeclaration.simpleName.asString(),
                         sources = sources
                     )
 

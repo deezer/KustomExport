@@ -50,9 +50,9 @@ class GenericsVisitor(val resolver: Resolver) : KSVisitorVoid() {
                     .value as List<KSAnnotation>
             }
             .forEach { generics ->
-                val name = generics.getArg<String>(KustomGenerics::name)
                 val kClass = generics.getArg<KSType>(KustomGenerics::kClass).toClassName()
                 val typeParameters = generics.getArg<List<KSType>>(KustomGenerics::typeParameters).map { it.toClassName() }
+                val name = generics.getArg<String?>(KustomGenerics::name) ?: kClass.simpleName
                 resolvedGenerics.add(Generics(name, kClass, typeParameters))
             }
     }
