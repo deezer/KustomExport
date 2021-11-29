@@ -169,7 +169,18 @@ private val nonExportableFunctions = listOf(
     "equals",
     "hashCode",
     "toString",
-    "copy"
+    "copy",
+
+    // For exceptions :
+    "getLocalizedMessage",
+    "initCause",
+    "printStackTrace",
+    "fillInStackTrace",
+    "getStackTrace",
+    "setStackTrace",
+    "addSuppressed",
+    "getSuppressed",
+
 ) + (1..30).map { "component$it" }
 
 @OptIn(KotlinPoetKspPreview::class)
@@ -230,18 +241,19 @@ fun KSClassDeclaration.parseProperties(
 }
 
 fun KSClassDeclaration.isThrowable(): Boolean {
-    var isException = false
     superTypes
         .forEach { superType ->
             val superTypeResolved = superType.resolve()
-            val declaration = superTypeResolved.declaration
-            isException = isException || superTypeResolved.toClassName() in ALL_KOTLIN_EXCEPTIONS
+            if (superTypeResolved.toClassName() in ALL_KOTLIN_EXCEPTIONS) {
+                return true
+            }
 
-            if (declaration is KSClassDeclaration) {
-                isException = isException || declaration.isThrowable()
+            val declaration = superTypeResolved.declaration
+            if (declaration is KSClassDeclaration && declaration.isThrowable()) {
+                return true
             }
         }
-    return isException
+    return false
 }
 
 fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>) =

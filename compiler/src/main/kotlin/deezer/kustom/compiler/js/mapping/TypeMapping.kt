@@ -34,9 +34,6 @@ import deezer.kustom.compiler.js.pattern.removeTypeParameter
 import deezer.kustom.compiler.js.resolvedType
 import deezer.kustom.compiler.js.toFormatString
 
-// TODO: possible optimisation : re-use resolution based on a static/shared map
-// val sharedMap: Map<TypeName, OriginTypeName>
-// directly in a fake constructor
 class OriginTypeName(
     private val originTypeName: TypeName,
     private val typeParameters: List<TypeParameterDescriptor>
@@ -65,6 +62,19 @@ class OriginTypeName(
         // Because TypeParameterDescriptor also contains an OriginTypeName
         // result = 31 * result + typeParameters.hashCode()
         return result
+    }
+
+    companion object {
+        private val allInstances = mutableMapOf<Pair<TypeName, List<TypeParameterDescriptor>>, OriginTypeName>()
+        operator fun invoke(
+            typeName: TypeName,
+            typeParameters: List<TypeParameterDescriptor>
+        ): OriginTypeName {
+            val key = typeName to typeParameters
+            allInstances[key]?.let { return it }
+            allInstances[key] = OriginTypeName(typeName, typeParameters)
+            return allInstances[key]!!
+        }
     }
 }
 
