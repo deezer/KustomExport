@@ -66,23 +66,28 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
     override fun process(resolver: Resolver): List<KSAnnotated> {
         CompilerArgs.erasePackage = environment.options["erasePackage"] == "true"
 
+        // prepare generics resolution before generating all classes
+        val genericsVisitor = GenericsVisitor(resolver)
+        val genericsAnnotated = resolver.getSymbolsWithAnnotation(KustomExportGenerics::class.qualifiedName!!)
+        genericsAnnotated.forEach { it.accept(genericsVisitor, Unit) }
+
         val annotations = listOf(
             KustomExport::class,
             KustomExportGenerics::class
         )
 
-        annotations.flatMap {
-            resolver.getSymbolsWithAnnotation(
-                annotationName = it.qualifiedName!!,
-                inDepth = true
-            )
-        }
+        val exportVisitor = ExportVisitor(resolver)
+        resolver.getSymbolsWithAnnotation(
+            annotationName = KustomExport::class.qualifiedName!!,
+            inDepth = true
+        )
             //.filter { it is KSClassDeclaration || it is KSTypeAlias /*&& it.validate()*/ }
             .forEach {
-                devLog("----- Symbol $it")
-                it.accept(ExportVisitor(resolver), Unit)
+                it.accept(exportVisitor, Unit)
                 //it.accept(LoggerVisitor(environment), Unit)
             }
+
+        genericsAnnotated.forEach { it.accept(exportVisitor, Unit) }
 
         /*return symbols.filter { !it.validate() }.toList()
             .also { list ->
@@ -105,18 +110,11 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                 // Get only the KustomExportGenerics one
                 .filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == KustomExportGenerics::class.qualifiedName }
                 // Pick the first arguments matching 'exportGenerics' and flatmap all entries
-                .flatMap { it.arguments.first { it.name?.asString() == KustomExportGenerics::exportGenerics.name }.value as List<KSAnnotation> }
+                .flatMap { it.getArg<List<KSAnnotation>>(KustomExportGenerics::exportGenerics) }
                 .forEach { generics ->
-//file.annotations.toList()[0].arguments[0].value
-                    val name =
-                        generics.arguments.firstOrNull { it.name?.asString() == KustomGenerics::name.name }?.value as? String
-                    val kClass =
-                        generics.arguments.firstOrNull { it.name?.asString() == KustomGenerics::kClass.name }?.value as? KSType
-                    val typeParameters = generics.arguments
-                        .first { it.name?.asString() == KustomGenerics::typeParameters.name }
-                        .value as List<KSType>
-
-                    if (kClass == null) return@forEach
+                    val name = generics.getArg<String?>(KustomGenerics::name)
+                    val kClass = generics.getArg<KSType>(KustomGenerics::kClass)
+                    val typeParameters = generics.getArg<List<KSType>>(KustomGenerics::typeParameters)
 
                     val targetClassDeclaration = kClass.declaration as KSClassDeclaration
                     val targetTypeParameters = targetClassDeclaration.typeParameters
@@ -133,7 +131,12 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                     } else {
                         arrayOf(file, targetClassDeclaration.containingFile!!)
                     }
-                    parseAndWrite(targetClassDeclaration, targetTypeNames, *sources)
+                    parseAndWrite(
+                        targetClassDeclaration,
+                        targetTypeNames,
+                        overrideClassSimpleName = if (name?.isNotBlank() == true) name else targetClassDeclaration.simpleName.asString(),
+                        sources = sources
+                    )
 
                     /*
                     val qualifiedName = gen.kClass.qualifiedName
@@ -173,10 +176,11 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         private fun parseAndWrite(
             classDeclaration: KSClassDeclaration,
             targetTypeNames: List<Pair<String, ClassName>>,
+            overrideClassSimpleName: String = classDeclaration.simpleName.asString(),
             vararg sources: KSFile
         ) {
             val allSources = if (sources.isNotEmpty()) sources else arrayOf(classDeclaration.containingFile!!)
-            when (val descriptor = parseClass(classDeclaration, targetTypeNames)) {
+            when (val descriptor = parseClass(classDeclaration, targetTypeNames, overrideClassSimpleName)) {
                 is ClassDescriptor -> descriptor.transform()
                     .writeCode(environment, *allSources)
                 is SealedClassDescriptor -> descriptor.transform()

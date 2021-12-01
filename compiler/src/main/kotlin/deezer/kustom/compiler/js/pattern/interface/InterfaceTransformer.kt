@@ -45,21 +45,15 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
 
     val delegateName = origin.classSimpleName.replaceFirstChar { it.lowercase(Locale.getDefault()) }
     val jsClassPackage = origin.packageName.jsPackage()
-    val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
+    val jsExportedClass = ClassName(jsClassPackage, origin.exportedClassSimpleName)
 
-    val importedClass = ClassName(jsClassPackage, "Imported${origin.classSimpleName}")
-    val exportedClass = ClassName(jsClassPackage, "Exported${origin.classSimpleName}")
+    val importedClass = ClassName(jsClassPackage, "Imported${origin.exportedClassSimpleName}")
+    val exportedClass = ClassName(jsClassPackage, "Exported${origin.exportedClassSimpleName}")
 
-    return FileSpec.builder(jsClassPackage, origin.classSimpleName)
+    return FileSpec.builder(jsClassPackage, origin.exportedClassSimpleName)
         .addAliasedImport(origin.asClassName, "Common${origin.classSimpleName}")
-        //.autoImport(origin, origin.concreteTypeParameters)
         .addType(
-            TypeSpec.interfaceBuilder(origin.classSimpleName) // ClassName(jsClassPackage, origin.classSimpleName).parameterizedBy(origin.generics.values.first()))
-                /*.also { b ->
-                    typeParametersMap.map { (_, exported) ->
-                        b.addTypeVariable(TypeVariableName(exported))
-                    }
-                }*/
+            TypeSpec.interfaceBuilder(origin.exportedClassSimpleName)
                 .addModifiers(KModifier.EXTERNAL)
                 .addAnnotation(jsExport)
                 .also { builder ->
@@ -103,6 +97,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
             buildWrapperClass(
                 delegateName = "exported",
                 originalClass = originalClass,
+                exportedClassSimpleName = origin.exportedClassSimpleName,
                 import = true,
                 properties = origin.properties,
                 functions = origin.functions,
@@ -110,15 +105,16 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
         )
         .addType(
             buildWrapperClass(
-                delegateName = "common", // delegateName,
+                delegateName = "common",
                 originalClass = originalClass,
+                exportedClassSimpleName = origin.exportedClassSimpleName,
                 import = false,
                 properties = origin.properties,
                 functions = origin.functions,
             )
         )
         .addFunction(
-            FunSpec.builder("export${origin.classSimpleName}")
+            FunSpec.builder("export${origin.exportedClassSimpleName}")
                 .receiver(originalClass)
                 .returns(jsExportedClass)
                 .addStatement(
@@ -128,7 +124,7 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                 .build()
         )
         .addFunction(
-            FunSpec.builder("import${origin.classSimpleName}")
+            FunSpec.builder("import${origin.exportedClassSimpleName}")
                 .receiver(jsExportedClass)
                 .returns(originalClass)
                 .addStatement(
@@ -147,16 +143,17 @@ private fun buildWrapperClass(
     import: Boolean,
     properties: List<PropertyDescriptor>,
     functions: List<FunctionDescriptor>,
+    exportedClassSimpleName: String,
 ): TypeSpec {
     val jsClassPackage = originalClass.packageName().jsPackage()
-    val jsExportedClass = ClassName(jsClassPackage, originalClass.simpleName())/*.let {
+    val jsExportedClass = ClassName(jsClassPackage, exportedClassSimpleName)/*.let {
         if (typeParametersMap.isNotEmpty()) {
             it.parameterizedBy(typeParametersMap.map { (_, exportedTp) -> exportedTp })
         } else it
     }*/
     val wrapperPrefix = if (import) "Imported" else "Exported"
     val wrapperClass =
-        ClassName(jsClassPackage, wrapperPrefix + originalClass.simpleName())
+        ClassName(jsClassPackage, wrapperPrefix + exportedClassSimpleName)
     val delegatedClass = if (import) jsExportedClass else originalClass
     val superClass = if (import) originalClass else jsExportedClass
 

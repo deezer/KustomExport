@@ -50,7 +50,8 @@ import deezer.kustom.compiler.js.mapping.OriginTypeName
 @KotlinPoetKspPreview
 fun parseClass(
     classDeclaration: KSClassDeclaration,
-    forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null
+    forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null,
+    exportedClassSimpleName: String
 ): Descriptor? {
     val typeParamResolver = classDeclaration.typeParameters.toTypeParameterResolver()
 
@@ -117,6 +118,7 @@ fun parseClass(
             InterfaceDescriptor(
                 packageName = packageName,
                 classSimpleName = classSimpleName,
+                exportedClassSimpleName = exportedClassSimpleName,
                 concreteTypeParameters = concreteTypeParameters,
                 supers = superTypes,
                 properties = properties,
@@ -141,10 +143,12 @@ fun parseClass(
                 subClasses = sealedSubClasses,
             )
         }
-        classKind == ClassKind.CLASS -> ClassDescriptor(
+        classKind == ClassKind.CLASS || classKind == ClassKind.OBJECT -> ClassDescriptor(
             packageName = packageName,
             classSimpleName = classSimpleName,
+            exportedClassSimpleName = exportedClassSimpleName,
             isOpen = isOpen,
+            isObject = classKind == ClassKind.OBJECT,
             isThrowable = classDeclaration.isThrowable(),
             concreteTypeParameters = concreteTypeParameters,
             supers = superTypes,
@@ -181,7 +185,7 @@ private val nonExportableFunctions = listOf(
     "addSuppressed",
     "getSuppressed",
 
-) + (1..30).map { "component$it" }
+    ) + (1..30).map { "component$it" }
 
 @OptIn(KotlinPoetKspPreview::class)
 fun KSClassDeclaration.parseFunctions(

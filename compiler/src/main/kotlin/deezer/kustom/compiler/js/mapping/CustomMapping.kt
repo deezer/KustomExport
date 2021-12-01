@@ -199,6 +199,13 @@ fun initCustomMapping() {
             importMethod = { targetName, typeName, concreteTypeParameters ->
                 val lambda = typeName as ParameterizedTypeName
                 val returnType = lambda.typeArguments.last()
+
+                if (lambda.typeArguments.size == 1) {
+                    return@MappingOutput "{ ".toFormatString() +
+                        returnType.cached(concreteTypeParameters).importedMethod(targetName + "()") +
+                        "}"
+                }
+
                 val namedArgs = lambda.typeArguments.dropLast(1)
                     .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
 
@@ -221,6 +228,12 @@ fun initCustomMapping() {
             exportMethod = { targetName, typeName, concreteTypeParameters ->
                 val lambda = typeName as ParameterizedTypeName
                 val returnType = lambda.typeArguments.last()
+
+                if (lambda.typeArguments.size == 1) {
+                    return@MappingOutput "{ ".toFormatString() +
+                        returnType.cached(concreteTypeParameters).exportedMethod(targetName + "()") +
+                        "}"
+                }
                 val namedArgs = lambda.typeArguments.dropLast(1)
                     .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
 
