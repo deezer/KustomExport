@@ -143,11 +143,12 @@ fun parseClass(
                 subClasses = sealedSubClasses,
             )
         }
-        classKind == ClassKind.CLASS -> ClassDescriptor(
+        classKind == ClassKind.CLASS || classKind == ClassKind.OBJECT -> ClassDescriptor(
             packageName = packageName,
             classSimpleName = classSimpleName,
             exportedClassSimpleName = exportedClassSimpleName,
             isOpen = isOpen,
+            isObject = classKind == ClassKind.OBJECT,
             isThrowable = classDeclaration.isThrowable(),
             concreteTypeParameters = concreteTypeParameters,
             supers = superTypes,

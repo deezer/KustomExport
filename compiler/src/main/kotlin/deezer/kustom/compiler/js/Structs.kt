@@ -105,6 +105,7 @@ data class ClassDescriptor(
     val classSimpleName: String,
     val exportedClassSimpleName: String,
     val isOpen: Boolean,
+    val isObject: Boolean,
     val isThrowable: Boolean,
     val concreteTypeParameters: List<TypeParameterDescriptor>,
     val supers: List<SuperDescriptor>,
