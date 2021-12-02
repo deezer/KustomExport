@@ -17,6 +17,8 @@ val localProperties = java.util.Properties().apply {
 
 plugins {
     id("maven-publish")
+    id("org.ajoberstar.git-publish") version "3.0.0"
+    id("org.ajoberstar.grgit") version "4.1.1"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
@@ -30,21 +32,13 @@ allprojects {
 
 subprojects {
     apply(plugin = "maven-publish")
-    /*
-    // TODO: Issue when running test directly
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-
-    ktlint {
-        debug.set(true)
-        filter {
-            exclude { element -> element.file.path.contains("build/") }
-        }
-    }
-     */
 
     group = "com.deezer.kustom"
 
-    if (localProperties.getProperty("REPOSITORY_URL") != null) {
+    if (
+        localProperties.getProperty("REPOSITORY_URL") != null &&
+        this.name != "samples"
+    ) {
         publishing {
             version = "0.0.2-SNAPSHOT"
 
@@ -60,3 +54,36 @@ subprojects {
         }
     }
 }
+
+val gitUser = System.getenv("GIT_USER")
+val gitPassword = System.getenv("GIT_PASSWORD")
+if (gitUser != null && gitPassword != null) {
+    System.setProperty("org.ajoberstar.grgit.auth.username", gitUser)
+    System.setProperty("org.ajoberstar.grgit.auth.password", gitPassword)
+}
+
+
+tasks.create<Sync>("copyMavenLocalArtifacts") {
+    group = "publishing"
+    dependsOn(":publishToMavenLocal", ":compiler:publishToMavenLocal", ":lib:publishToMavenLocal")
+
+    val userHome = System.getProperty("user.home")
+    val groupDir = project.group.toString().replace('.', '/')
+    val localRepository = "$userHome/.m2/repository/$groupDir/"
+
+    from(localRepository) {
+        include("*/${project.version}/**")
+    }
+
+    into("$buildDir/mvn-repo/$groupDir/")
+}
+
+gitPublish {
+    repoUri.set("https://github.com/Deezer/KustomExport.git")
+    branch.set("mvn-repo")
+    contents.from("$buildDir/mvn-repo")
+    preserve { include("**") }
+    val head = grgit.head()
+    commitMessage.set("${head.abbreviatedId}: ${project.version} : ${head.fullMessage}")
+}
+tasks["gitPublishCopy"].dependsOn("copyMavenLocalArtifacts")
