@@ -62,7 +62,6 @@ if (gitUser != null && gitPassword != null) {
     System.setProperty("org.ajoberstar.grgit.auth.password", gitPassword)
 }
 
-
 tasks.create<Sync>("copyMavenLocalArtifacts") {
     group = "publishing"
     dependsOn(":publishToMavenLocal", ":compiler:publishToMavenLocal", ":lib:publishToMavenLocal")
