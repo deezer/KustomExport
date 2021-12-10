@@ -29,3 +29,14 @@ dependencies {
 sourceSets.main {
     java.srcDirs("src/main/kotlin")
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "deezer.kustomexport"
+            artifactId = "compiler"
+
+            from(components["java"])
+        }
+    }
+}

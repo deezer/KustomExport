@@ -36,18 +36,13 @@ allprojects {
 subprojects {
     apply(plugin = "maven-publish")
 
-    if (
-        localProperties.getProperty("REPOSITORY_URL") != null &&
-        !this.name.startsWith("samples")
-    ) {
-        publishing {
-            repositories {
-                maven {
-                    url = uri(localProperties.getProperty("REPOSITORY_URL"))
-                    credentials {
-                        username = localProperties.getProperty("REPOSITORY_USERNAME")
-                        password = localProperties.getProperty("REPOSITORY_PASSWORD")
-                    }
+    publishing {
+        repositories {
+            maven {
+                url = uri(localProperties.getProperty("REPOSITORY_URL"))
+                credentials {
+                    username = localProperties.getProperty("REPOSITORY_USERNAME")
+                    password = localProperties.getProperty("REPOSITORY_PASSWORD")
                 }
             }
         }
@@ -63,7 +58,7 @@ if (gitUser != null && gitPassword != null) {
 
 tasks.create<Sync>("copyMavenLocalArtifacts") {
     group = "publishing"
-    dependsOn(":publishToMavenLocal", ":compiler:publishToMavenLocal", ":lib:publishToMavenLocal")
+    dependsOn(":compiler:publishToMavenLocal", ":lib:publishToMavenLocal")
 
     val userHome = System.getProperty("user.home")
     val groupDir = project.group.toString().replace('.', '/')

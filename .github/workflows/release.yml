@@ -24,4 +24,4 @@ jobs:
         env:
           GIT_USER: ${{ secrets.GIT_USER }}
           GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
-        run: ./gradlew publishToMavenLocal gitPublishPush
+        run: ./gradlew gitPublishPush
