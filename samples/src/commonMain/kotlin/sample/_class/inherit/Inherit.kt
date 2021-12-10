@@ -1,6 +1,6 @@
 package sample._class.inherit
 
-import deezer.kustom.KustomExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 interface BaseInterface {

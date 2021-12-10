@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package deezer.kustom
+package deezer.kustomexport
 
 actual fun <T> Any.dynamicCastTo(): T {
     error("Not available on this platform")

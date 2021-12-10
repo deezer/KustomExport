@@ -1,6 +1,6 @@
 package sample._class.constructor
 
-import deezer.kustom.KustomExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 open class Constructible(val count: Int, val foo: String)

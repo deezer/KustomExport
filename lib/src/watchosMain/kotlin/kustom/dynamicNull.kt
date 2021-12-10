@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package deezer.kustom
+package deezer.kustomexport
 
 actual val dynamicNull: Any
     get() = TODO("Not yet implemented")

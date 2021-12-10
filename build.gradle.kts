@@ -23,6 +23,9 @@ plugins {
 }
 
 allprojects {
+    group = "deezer.kustomexport"
+    version = "0.0.3-SNAPSHOT"
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -33,15 +36,11 @@ allprojects {
 subprojects {
     apply(plugin = "maven-publish")
 
-    group = "com.deezer.kustom"
-
     if (
         localProperties.getProperty("REPOSITORY_URL") != null &&
-        this.name != "samples"
+        !this.name.startsWith("samples")
     ) {
         publishing {
-            version = "0.0.2-SNAPSHOT"
-
             repositories {
                 maven {
                     url = uri(localProperties.getProperty("REPOSITORY_URL"))

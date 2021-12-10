@@ -1,6 +1,6 @@
 package sample._common
 
-import deezer.kustom.KustomExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 class CollectionMapping {

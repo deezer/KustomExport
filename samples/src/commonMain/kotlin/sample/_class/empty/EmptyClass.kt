@@ -1,6 +1,6 @@
 package sample._class.empty
 
-import deezer.kustom.KustomExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 class EmptyClass

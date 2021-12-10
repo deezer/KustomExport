@@ -15,6 +15,6 @@
  * under the License.
  */
 
-package deezer.kustom
+package deezer.kustomexport
 
 actual typealias BaseExceptionAny = Throwable

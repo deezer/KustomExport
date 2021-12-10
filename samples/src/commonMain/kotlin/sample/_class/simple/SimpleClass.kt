@@ -1,6 +1,6 @@
 package sample._class.simple
 
-import deezer.kustom.KustomExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 class SimpleClass {

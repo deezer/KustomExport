@@ -23,8 +23,8 @@
 
 package sample._class.static
 
-import deezer.kustom.KustomExport
-import deezer.kustom.KustomExportGenerics
+import deezer.kustomexport.KustomExport
+import deezer.kustomexport.KustomExportGenerics
 import sample.generics.GenericsImpl
 
 fun createString() = "string from factory method"

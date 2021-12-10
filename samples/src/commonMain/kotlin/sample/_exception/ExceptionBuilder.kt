@@ -1,7 +1,6 @@
 package sample._exception
 
-import deezer.kustom.KustomExport
-import kotlin.js.JsExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 class ExceptionBuilder {

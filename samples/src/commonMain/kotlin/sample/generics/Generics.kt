@@ -28,9 +28,9 @@
 
 package sample.generics
 
-import deezer.kustom.KustomExport
-import deezer.kustom.KustomExportGenerics
-import deezer.kustom.KustomGenerics
+import deezer.kustomexport.KustomExport
+import deezer.kustomexport.KustomExportGenerics
+import deezer.kustomexport.KustomGenerics
 import sample._class.data.DataClass
 
 interface GenericsStuff<Template>

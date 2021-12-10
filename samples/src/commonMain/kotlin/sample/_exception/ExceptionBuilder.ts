@@ -2,7 +2,7 @@ import { runTest } from "../shared_ts/RunTest"
 import { assert, assertQuiet, assertEquals, assertEqualsQuiet } from "../shared_ts/Assert"
 import { sample, deezer } from '@kustom/Samples'
 
-function assertException(e: deezer.kustom.Exception, msg: string, ...klass: any[]) {
+function assertException(e: deezer.kustomexport.Exception, msg: string, ...klass: any[]) {
     var name = e.constructor.name
     if (name.endsWith("_0")) {
         // Remove the '_0' added by Kotlin when using user types
@@ -22,40 +22,40 @@ runTest("Exceptions", () : void => {
     var consumer = new sample._exception.js.ExceptionConsumer()
    var myEx1 = new sample._exception.js.MyEx1()// msg="hello" in Kotlin
     assertException(myEx1, "hello",
-        sample._exception.js.MyEx1, Error, deezer.kustom.Exception,
-        deezer.kustom.RuntimeException, deezer.kustom.IllegalStateException)
+        sample._exception.js.MyEx1, Error, deezer.kustomexport.Exception,
+        deezer.kustomexport.RuntimeException, deezer.kustomexport.IllegalStateException)
 
     var myEx2 = new sample._exception.js.MyEx2("testing MyEx2")
     assertException(myEx2, "testing MyEx2",
-        sample._exception.js.MyEx2, Error, deezer.kustom.Exception,
-        deezer.kustom.RuntimeException, deezer.kustom.IllegalStateException)
+        sample._exception.js.MyEx2, Error, deezer.kustomexport.Exception,
+        deezer.kustomexport.RuntimeException, deezer.kustomexport.IllegalStateException)
     assertEqualsQuiet("custom exception val", myEx2.ex2Bonus, "custom field")
 
     var builder = new sample._exception.js.ExceptionBuilder()
-    //assertException(builder.buildError("error"), "error", deezer.kustom.Error)
-    //assertException(builder.buildException("exception"), "exception", deezer.kustom.Exception)
+    //assertException(builder.buildError("error"), "error", deezer.kustomexport.Error)
+    //assertException(builder.buildException("exception"), "exception", deezer.kustomexport.Exception)
     assertException(builder.buildRuntimeException("re"), "re",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException)
     assertException(builder.buildIllegalArgumentException("iae"), "iae",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.IllegalArgumentException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.IllegalArgumentException)
     assertException(builder.buildIllegalStateException("ise"), "ise",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.IllegalStateException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.IllegalStateException)
     assertException(builder.buildIndexOutOfBoundsException("ioobe"), "ioobe",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.IndexOutOfBoundsException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.IndexOutOfBoundsException)
     assertException(builder.buildConcurrentModificationException("cme"), "cme",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.ConcurrentModificationException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.ConcurrentModificationException)
     assertException(builder.buildUnsupportedOperationException("uoe"), "uoe",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.UnsupportedOperationException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.UnsupportedOperationException)
     assertException(builder.buildNumberFormatException("nfe"), "nfe",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.IllegalArgumentException, deezer.kustom.NumberFormatException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.IllegalArgumentException, deezer.kustomexport.NumberFormatException)
     assertException(builder.buildNullPointerException("uoe"), "uoe",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.NullPointerException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.NullPointerException)
     assertException(builder.buildClassCastException("cce"), "cce",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.ClassCastException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.ClassCastException)
     //assertException(builder.buildAssertionError("az"), "az",
-        //deezer.kustom.AssertionError, deezer.kustom.Error)
+        //deezer.kustomexport.AssertionError, deezer.kustomexport.Error)
     assertException(builder.buildNoSuchElementException("nsee"), "nsee",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.NoSuchElementException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.NoSuchElementException)
     assertException(builder.buildArithmeticException("ae"), "ae",
-        Error, deezer.kustom.Exception, deezer.kustom.RuntimeException, deezer.kustom.ArithmeticException)
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.ArithmeticException)
 })

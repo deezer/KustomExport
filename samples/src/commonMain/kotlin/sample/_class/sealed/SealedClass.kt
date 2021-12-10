@@ -1,6 +1,6 @@
 package sample._class.sealed
 
-import deezer.kustom.KustomExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 sealed class SealedParent(val ctorParam: Long) {

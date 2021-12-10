@@ -17,7 +17,7 @@
 
 package sample._enum
 
-import deezer.kustom.KustomExport
+import deezer.kustomexport.KustomExport
 
 @KustomExport
 enum class Direction {
