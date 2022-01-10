@@ -77,7 +77,7 @@ tasks.create<Sync>("copyMavenLocalArtifacts") {
 }
 
 gitPublish {
-    repoUri.set("https://github.com/Deezer/KustomExport.git")
+    repoUri.set("git@github.com:deezer/KustomExport.git")
     branch.set("mvn-repo")
     contents.from("$buildDir/mvn-repo")
     preserve { include("**") }
