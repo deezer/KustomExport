@@ -73,6 +73,49 @@ What we don't support yet:
 
 You can have a look to the [Samples](samples/src/commonMain/kotlin/sample) to have a feel of how it can be used.
 
+# Setup
+
+KustomExport use [KSP](https://github.com/google/ksp) (Kotlin Symbol Processor), and you need to install it in your `build.gradle.kts`
+
+```kotlin
+plugins {
+    kotlin("multiplatform")
+    id("com.google.devtools.ksp") version "1.6.0-1.0.2"
+}
+```
+
+Then you need to define the dependency to the library
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven(url = "https://raw.githubusercontent.com/Deezer/KustomExport/mvn-repo")
+}
+
+kotlin {
+    // jvm(), js() and other platforms...
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation("deezer.kustomexport:lib:0.1.0")
+            }
+        }
+    }
+}
+```
+
+And finally enable the compiler with 
+
+```kotlin
+kotlin { 
+    // KMP configuration
+}
+dependencies {
+    add("kspMetadata", "deezer.kustomexport:compiler:0.1.0")
+}
+```
+
+For now the compiler is added on kspMetadata due to some KSP/JS-IR limitations, we expect to be able to use `kspJs` in a more stable way soon.
 
 ## Licence
 ```
