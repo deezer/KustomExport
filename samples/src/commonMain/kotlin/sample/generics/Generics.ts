@@ -49,4 +49,25 @@ runTest("Generics", () : void => {
     //var defaultImpl = new sample.generics.js.TypeAliasInterfaceDefault()
     //assertEquals("consumed custom 125 / customs 1,2,3", consumer.consume(impl), "generics interface re-typed via TypeAlias")
 
+
+    // Check that generic interface implementing another generic interface works
+    class CustomSuperImplFloat implements sample.generics.js.SuperGenericsInterfaceFloat {
+        bar: Nullable<number>
+        superFoo: number
+        addListener(listener: (p0: number, p1: number) => void, _default: number): void {
+            throw new Error("Method not implemented.")
+        }
+        fooBar(input: number): string {
+            return "custom " + (input + 2)
+        }
+        fooBars(inputs: Array<number>): string {
+            return "customs " + inputs.join()
+        }
+        baz() : sample._class.data.js.DataClass {
+            return new sample._class.data.js.DataClass("4", 4)
+        }
+    }
+
+    var superImpl = new CustomSuperImplFloat()
+
 })

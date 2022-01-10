@@ -21,6 +21,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
@@ -57,10 +58,9 @@ fun transformInterface(origin: InterfaceDescriptor): FileSpec {
                 .addAnnotation(jsExport)
                 .also { builder ->
                     origin.supers.forEach { supr ->
-                        val superType = supr.origin.concreteTypeName
-                        if (superType is ClassName) {
-                            val superClassName = ClassName(superType.packageName.jsPackage(), superType.simpleName)
-                            builder.addSuperinterface(superClassName)
+                        val superType = supr.origin.exportedTypeName
+                        if (superType is ClassName || superType is ParameterizedTypeName) {
+                            builder.addSuperinterface(superType)
                         } else {
                             Logger.error("ClassTransformer - ${origin.classSimpleName} superTypes - ClassName($jsClassPackage, $superType)")
                         }

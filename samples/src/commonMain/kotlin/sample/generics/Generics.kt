@@ -21,6 +21,7 @@
         KustomGenerics(GenericsStuff::class, arrayOf(Float::class), "GenericsStuffFloat"),
         KustomGenerics(GenericsInterface::class, arrayOf(Long::class), "GenericsInterface"),
         KustomGenerics(GenericsInterface::class, arrayOf(Float::class), "GenericsInterfaceFloat"),
+        KustomGenerics(SuperGenericsInterface::class, arrayOf(Float::class), "SuperGenericsInterfaceFloat"),
         KustomGenerics(GenericsImpl::class, arrayOf(Long::class), "GenericsImpl"),
         KustomGenerics(GenericsImpl::class, arrayOf(Float::class), "GenericsImplFloat"),
     ]
@@ -46,6 +47,10 @@ interface GenericsInterface<Template> {
 
     // Class from different package (not really type alias related?)
     fun baz() = DataClass("baz data")
+}
+
+interface SuperGenericsInterface<Template> : GenericsInterface<Template> {
+    val superFoo: Template
 }
 
 class GenericsImpl<Template> {
