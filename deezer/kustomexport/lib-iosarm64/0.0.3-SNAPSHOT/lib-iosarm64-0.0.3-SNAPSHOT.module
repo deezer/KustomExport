@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.0.3-SNAPSHOT/lib-0.0.3-SNAPSHOT.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.0.3-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-iosarm64-0.0.3-SNAPSHOT.klib",
+          "size": 14550,
+          "sha512": "0b283551457ced63dcf151790c7773839553758197aa73488df2f2a3209bd6fb01046d997589eef6fe963bf679b671f1875837166e3719032bb5b60af1dd645b",
+          "sha256": "711987ac38446a34d8bc0ad9cf8affb55d56eb0126754edfcf7f5cc9c584309d",
+          "sha1": "c3244854c7ad87faa7f61bf137c37d29045838c0",
+          "md5": "f05025b53d68e54df5942927b948d8af"
+        }
+      ]
+    },
+    {
+      "name": "iosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-iosarm64-0.0.3-SNAPSHOT-metadata.jar",
+          "url": "lib-iosarm64-0.0.3-SNAPSHOT-metadata.jar",
+          "size": 3562,
+          "sha512": "f761158b99dbd7e9873e4e9a7abd8adfd4ecd24a0b16a0f867265981378fe0c89a8b9471ad2db911868060a5961c0730644e3b8c34bdc62a308b27f79f6b5348",
+          "sha256": "e2842eb46a53a6e845a5dcad851a4c369012e3a08fee834dc85bb8c6a491ed91",
+          "sha1": "ce9464160580da236921c0a40c17b8f223830f29",
+          "md5": "9018a40ce85615cad98f73e33c6164b2"
+        }
+      ]
+    }
+  ]
+}
