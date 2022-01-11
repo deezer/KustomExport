@@ -44,10 +44,10 @@
           "name": "lib-js-0.1.0.klib",
           "url": "lib-js-0.1.0.klib",
           "size": 14174,
-          "sha512": "7ecfe3a5271f30bc36fe7b5e8cfd3ce853e523f476a57eef23151ec570d12b458d5b48a3bbdd18e7e3d5944d61560af36885ba0561417b898ac29ae557fa926f",
-          "sha256": "bce7d03b2d06a3317a08d7081d5a1968afe9e561164cef39e9c24cba8b2917c2",
-          "sha1": "213117150a32a0c89fb50865a6fa64453dc58f6d",
-          "md5": "00064ae219a4777980387424cd86e6a4"
+          "sha512": "866728ed3194ffb3e14fd5ebadf0a85c265fa40fcdf984e7da5520235cbc18fb6b059c526b559ea4c8213c5480913f222e669f0860765733826ec35f35643220",
+          "sha256": "cf85e50590d72053587a2fd20d15a0d87278adf220e2a7fa96d5c644ba46a257",
+          "sha1": "6ca0862c5f3deb7d9562205ce38a68ee5522ffc6",
+          "md5": "7d9c2bc627934169af13f6d3a7225e3d"
         }
       ]
     },
@@ -80,10 +80,10 @@
           "name": "lib-js-0.1.0.klib",
           "url": "lib-js-0.1.0.klib",
           "size": 14174,
-          "sha512": "7ecfe3a5271f30bc36fe7b5e8cfd3ce853e523f476a57eef23151ec570d12b458d5b48a3bbdd18e7e3d5944d61560af36885ba0561417b898ac29ae557fa926f",
-          "sha256": "bce7d03b2d06a3317a08d7081d5a1968afe9e561164cef39e9c24cba8b2917c2",
-          "sha1": "213117150a32a0c89fb50865a6fa64453dc58f6d",
-          "md5": "00064ae219a4777980387424cd86e6a4"
+          "sha512": "866728ed3194ffb3e14fd5ebadf0a85c265fa40fcdf984e7da5520235cbc18fb6b059c526b559ea4c8213c5480913f222e669f0860765733826ec35f35643220",
+          "sha256": "cf85e50590d72053587a2fd20d15a0d87278adf220e2a7fa96d5c644ba46a257",
+          "sha1": "6ca0862c5f3deb7d9562205ce38a68ee5522ffc6",
+          "md5": "7d9c2bc627934169af13f6d3a7225e3d"
         }
       ]
     }

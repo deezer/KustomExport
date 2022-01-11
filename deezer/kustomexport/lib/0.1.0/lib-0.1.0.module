@@ -35,10 +35,10 @@
           "name": "lib-metadata-0.1.0-all.jar",
           "url": "lib-0.1.0-all.jar",
           "size": 4595,
-          "sha512": "de67c682e8995a39bbf123dc68913acaf9c52126a93ffcc71ee46a58aae7f5cacd2d90b5579e0649961a6c41684658635b511ef06176f5128810ed7acb1cd005",
-          "sha256": "5baced8db0fc2b35e40ab3773a5f225afc2bdc1818be7ead58a25913748d63c9",
-          "sha1": "1730a73f5efa0514a698304f576bbd6ab94aaec4",
-          "md5": "c69d3bf05525a4f814dc3b2ed83104ce"
+          "sha512": "91794430e3ebf38fcb22a43188e2882a7f892ccc4f3e1c87fe2a38cd38fe07387b6dac6563b975eb37235b8b38df8de22a124b3c8a532c9adca602185cc18a4f",
+          "sha256": "f2bd295bf98877e6c7840e9fa8cd03e177746d72c3b1438665874313111bc7cf",
+          "sha1": "5aec97874fdb5bc0d8a27f89c047820a1c218924",
+          "md5": "6b439a8ae89125c4cb868eba5d6a45b9"
         }
       ]
     },
@@ -63,10 +63,10 @@
           "name": "lib-0.1.0.jar",
           "url": "lib-0.1.0.jar",
           "size": 8811,
-          "sha512": "d4cbe6f8d29ede40446fdb8a37f4772b7dc820518f8fcd9076bc66296d6d6cfc1cfc0f010c0d713a72258ae6625c99c5696d2bf2580efb00b06da77729a12bd0",
-          "sha256": "8e1a33485e5e9d802de1dbbe0914261a6fae2a8bec3fbb33e6cc103b4ecf72de",
-          "sha1": "bf2d33fef1239c07925db356badb36ded87f2d80",
-          "md5": "57337cde4cc341c6f0a7236a8190d64f"
+          "sha512": "225af56f0841e6a51143b649962d4e7239d6b3192feeb26b4a8699251fda3f7fd54db9c149a0565b9d28cdabf665a10fd70d4bf3c7446ecc65b452ce72d16fec",
+          "sha256": "c4e06005db06d00b8d51bead02682cf5bf19a0da70801f75fe4af2c506e9e8d9",
+          "sha1": "6cf047cac755a8be01a1c083190c700a88cfb5d5",
+          "md5": "f3de08064e512fb0ebdb6aae6c59671f"
         }
       ]
     },
