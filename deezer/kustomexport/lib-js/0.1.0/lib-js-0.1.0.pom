@@ -13,13 +13,13 @@
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-common</artifactId>
+      <artifactId>kotlin-stdlib-js</artifactId>
       <version>1.6.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-js</artifactId>
+      <artifactId>kotlin-stdlib-common</artifactId>
       <version>1.6.0</version>
       <scope>compile</scope>
     </dependency>
