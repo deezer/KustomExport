@@ -33,9 +33,11 @@ import deezer.kustomexport.compiler.js.PropertyDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
+import deezer.kustomexport.compiler.js.pattern.asClassName
 import deezer.kustomexport.compiler.js.pattern.buildWrappingFunction
 import deezer.kustomexport.compiler.js.pattern.overrideGetterSetter
 import deezer.kustomexport.compiler.js.pattern.packageName
+import deezer.kustomexport.compiler.js.pattern.simpleName
 import java.util.Locale
 
 fun InterfaceDescriptor.transform() = transformInterface(this)

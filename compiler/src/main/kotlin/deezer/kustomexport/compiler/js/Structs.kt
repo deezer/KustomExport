@@ -128,7 +128,8 @@ data class ClassDescriptor(
 data class EnumDescriptor(
     val packageName: String,
     val classSimpleName: String,
-    val entries: List<Entry>
+    val properties: List<PropertyDescriptor>,
+    val entries: List<Entry>,
 ) : Descriptor() {
     data class Entry(val name: String)
 

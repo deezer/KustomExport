@@ -9,9 +9,9 @@ buildscript {
 }
 
 val localProperties = java.util.Properties().apply {
-    val propPath = "local.properties"
-    if (File(propPath).exists()) {
-        load(java.io.FileInputStream(File(rootProject.rootDir, propPath)))
+    val file = File(rootProject.rootDir, "local.properties")
+    if (file.exists()) {
+        load(java.io.FileInputStream(file))
     }
 }
 
@@ -24,7 +24,7 @@ plugins {
 
 allprojects {
     group = "deezer.kustomexport"
-    version = "0.1.0"
+    version = "0.1.1"
 
     repositories {
         mavenLocal()
@@ -61,6 +61,10 @@ if (gitUser != null && gitPassword != null) {
     System.setProperty("org.ajoberstar.grgit.auth.password", gitPassword)
 }
 
+tasks.create<Delete>("cleanMavenLocalArtifacts") {
+    delete = setOf("$buildDir/mvn-repo/")
+}
+
 tasks.create<Sync>("copyMavenLocalArtifacts") {
     group = "publishing"
     dependsOn(":compiler:publishToMavenLocal", ":lib:publishToMavenLocal")
@@ -84,4 +88,5 @@ gitPublish {
     val head = grgit.head()
     commitMessage.set("${head.abbreviatedId}: ${project.version} : ${head.fullMessage}")
 }
+tasks["copyMavenLocalArtifacts"].dependsOn("cleanMavenLocalArtifacts")
 tasks["gitPublishCopy"].dependsOn("copyMavenLocalArtifacts")

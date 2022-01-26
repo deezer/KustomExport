@@ -30,6 +30,7 @@ import deezer.kustomexport.compiler.js.EnumDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
+import deezer.kustomexport.compiler.js.pattern.overrideGetterSetter
 
 fun EnumDescriptor.transform() = transformEnum(this)
 
@@ -54,30 +55,26 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                 )
                 .addProperty(PropertySpec.builder(delegateName, originalClass).initializer(delegateName).build())
                 .addProperty(PropertySpec.builder("name", STRING).initializer("$delegateName.name").build())
-                /*.addType(TypeSpec.companionObjectBuilder()
-                    .addFunction(
-                        FunSpec.builder("values")
-                            .returns(ARRAY.parameterizedBy(jsExportedClass))
-                            .addCode(
-                                "return·arrayOf(" +
-                                    origin.entries.joinToString { origin.generatedName(it) } +
-                                    ")"
-                            )
-                            .build()
-                    )
-                    .addFunction(
-                        FunSpec.builder("valueOf")
-                            .returns(jsExportedClass.copy(nullable = true))
-                            .addParameter("name", STRING)
-                            .addCode(
-                                origin.entries.joinToString("\n") {
-                                    "if (name == ${origin.generatedName(it)}.name) return ${origin.generatedName(it)}"
-                                } + "\nreturn null"
-                            )
-                            .build()
-                    )
-                    .build()
-                )*/
+                .also { builder ->
+                    origin.properties
+                        // Don't export fields only present in super implementation
+                        // .filterNot { p -> origin.supers.any { s -> s.parameters?.any { it.name == p.name } ?: false } }
+                        .forEach {
+                            if (it.name != "name" && it.name != "ordinal") { // Kotlin keywords
+                                builder.addProperty(
+                                    overrideGetterSetter(
+                                        prop = it,
+                                        target = delegateName,
+                                        import = false,
+                                        forceOverride = false,
+                                        isClassOpen = false,
+                                        isClassThrowable = false
+                                    )
+                                )
+                            }
+                        }
+
+                }
                 .build()
         )
         .addFunction(

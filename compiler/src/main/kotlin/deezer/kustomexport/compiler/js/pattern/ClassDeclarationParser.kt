@@ -19,6 +19,7 @@
 
 package deezer.kustomexport.compiler.js.pattern
 
+import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
@@ -80,6 +81,7 @@ fun parseClass(
 
     //val superTypes = classDeclaration.getAllSuperTypes()
 
+    Logger.warn("PARSING - ${classSimpleName} ${classDeclaration.superTypes.count()} ${classDeclaration.getAllSuperTypes().count()}")
     val superTypes = classDeclaration.superTypes
         .map { superType ->
             val superTypeName = superType.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters)
@@ -159,6 +161,7 @@ fun parseClass(
         classKind == ClassKind.ENUM_CLASS -> EnumDescriptor(
             packageName = packageName,
             classSimpleName = classSimpleName,
+            properties = properties,
             entries = classDeclaration.declarations
                 .filterIsInstance<KSClassDeclaration>()
                 .map { EnumDescriptor.Entry(it.simpleName.asString()) }

@@ -24,6 +24,16 @@ enum class Direction {
     NORTH, SOUTH, WEST, EAST
 }
 
+val d = Direction.NORTH
+
+@KustomExport
+enum class DirectionWithData(val enName: String, val frName: String) {
+    NORTH("North", "Nord"),
+    SOUTH("South", "Sud"),
+    WEST("West", "Ouest"),
+    EAST("East", "Est")
+}
+
 @KustomExport
 class Engine {
     fun goTo(direction: Direction): String {
@@ -33,5 +43,13 @@ class Engine {
             Direction.WEST -> "⬅️"
             Direction.EAST -> "➡️"
         }
+    }
+
+    fun translateEnName(d: DirectionWithData): String {
+        return d.frName
+    }
+
+    fun translateFrName(d: DirectionWithData): String {
+        return d.enName
     }
 }
