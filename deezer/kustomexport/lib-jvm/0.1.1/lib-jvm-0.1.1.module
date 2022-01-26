@@ -1,0 +1,93 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.1.1/lib-0.1.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.1.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-jvm-0.1.1.jar",
+          "url": "lib-jvm-0.1.1.jar",
+          "size": 20607,
+          "sha512": "0c2ceffccfa745d1e2329447972b70dfb199cac6efada5c3b7a5f3ec9407e7b3f79b7047a931f86dec0213c1b693117c0cc26c7ef06f2e0a1d520752684c86ed",
+          "sha256": "025cb1c59686a132443ea01496d0465f8b73e19c9ffd13b1b21bbcd88fdea2e2",
+          "sha1": "0fbf5c646798f083ab87759e4619388535e65c8b",
+          "md5": "d8cfb80e83f2ba3b612eaad8e27be26c"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-jvm-0.1.1.jar",
+          "url": "lib-jvm-0.1.1.jar",
+          "size": 20607,
+          "sha512": "0c2ceffccfa745d1e2329447972b70dfb199cac6efada5c3b7a5f3ec9407e7b3f79b7047a931f86dec0213c1b693117c0cc26c7ef06f2e0a1d520752684c86ed",
+          "sha256": "025cb1c59686a132443ea01496d0465f8b73e19c9ffd13b1b21bbcd88fdea2e2",
+          "sha1": "0fbf5c646798f083ab87759e4619388535e65c8b",
+          "md5": "d8cfb80e83f2ba3b612eaad8e27be26c"
+        }
+      ]
+    }
+  ]
+}

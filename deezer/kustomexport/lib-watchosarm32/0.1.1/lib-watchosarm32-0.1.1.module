@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.1.1/lib-0.1.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.1.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "watchosArm32ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_arm32",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-watchosarm32-0.1.1.klib",
+          "size": 14801,
+          "sha512": "34e523ed69f8f821e83e27d4f7b7a9b034f16193951b681a42dd28f6a2c06ce978928e3c12d29f4a1e49190b3da300af49d2be13fbbcfc3d1ce00b297d24d941",
+          "sha256": "3e54ffa9c3a320f5f6f1403d219da7bd9a8548875ad92d4ff179a128d876b32e",
+          "sha1": "fa3ef81ef11557bba4b7faf2ccac2204616c237e",
+          "md5": "7d199b636fd565035600a94513ddabc9"
+        }
+      ]
+    },
+    {
+      "name": "watchosArm32MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_arm32",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-watchosarm32-0.1.1-metadata.jar",
+          "url": "lib-watchosarm32-0.1.1-metadata.jar",
+          "size": 3750,
+          "sha512": "1b55f72c9ad279217124a1da9ef9f108cd06c612e3e2493229aa71a58e28c001e9c999cfde53c33390994bc086179fe1ea5686f114d746274ddae19845e32566",
+          "sha256": "7245488d97b218d34d133f21e47abc190fc9ae2559875efa71ee4feb1f2ed6bb",
+          "sha1": "7a9c50aea9a99fc3e547ae034024608c6cb81db7",
+          "md5": "11b7a29a046930bfefd5847902e8ae3f"
+        }
+      ]
+    }
+  ]
+}

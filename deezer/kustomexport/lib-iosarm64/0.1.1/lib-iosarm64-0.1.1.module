@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.1.1/lib-0.1.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.1.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-iosarm64-0.1.1.klib",
+          "size": 14760,
+          "sha512": "734b26b80ca61c37413f3217d7afa2a5b951b4058158272df381ed8ce2276b3226c0facb4170187fc11419c6732fe962d2e7482f2dae8273ca92799069b4b753",
+          "sha256": "ea8932f17f6dfed09b52c1896f368e034a6f2a5e887e6d08e32af42049461d47",
+          "sha1": "29dd0e53b985623f11e5117c6fe15204dc1dba6f",
+          "md5": "8f005e41b47ba9102228d4cc5e9b5089"
+        }
+      ]
+    },
+    {
+      "name": "iosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-iosarm64-0.1.1-metadata.jar",
+          "url": "lib-iosarm64-0.1.1-metadata.jar",
+          "size": 3562,
+          "sha512": "9c478407d9406c54edc5c0aaa7fa6a7e4bd4a064be56817ec34fffc1dada987be625956e97d7a4bb6e554a2770187ed7569571deed2c3c09a4b881944258db93",
+          "sha256": "7d3255e1e700f57b91c6f7b82d3cb7125419cf9f6bfd62c122bb7f924af1fa32",
+          "sha1": "036e3436c839ef0c580020f16a5d6e36fae28678",
+          "md5": "1271c6d9159d19e769d5626bd3ec0c60"
+        }
+      ]
+    }
+  ]
+}
