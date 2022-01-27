@@ -26,6 +26,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
+import deezer.kustomexport.compiler.Logger
 import deezer.kustomexport.compiler.js.EnumDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
@@ -40,7 +41,7 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
 
     val commonClassSimpleName = "Common${origin.classSimpleName}"
-    val delegateName = "value"
+    val delegateName = "common"
 
     return FileSpec.builder(jsClassPackage, origin.classSimpleName)
         .addAliasedImport(originalClass, commonClassSimpleName)
@@ -60,6 +61,8 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                         // Don't export fields only present in super implementation
                         // .filterNot { p -> origin.supers.any { s -> s.parameters?.any { it.name == p.name } ?: false } }
                         .forEach {
+                            if (it.name == "common") error("Cannot export an enum that use a property named 'common'. " +
+                                "Please rename the property for something else (enum=${origin.classSimpleName})")
                             if (it.name != "name" && it.name != "ordinal") { // Kotlin keywords
                                 builder.addProperty(
                                     overrideGetterSetter(

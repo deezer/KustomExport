@@ -34,6 +34,6 @@ runTest("Enum", () : void => {
     assertEqualsQuiet(sample._enum.js.Direction_EAST, sample._enum.js.Direction_valueOf("EAST"), "valueOf(EAST) -> EAST")
     assertEquals(null, sample._enum.js.Direction_valueOf("UP"), "valueOf(UP) is null")
 
-    assertEqualsQuiet("South", engine.translateFrName(sample._enum.js.DirectionWithData_SOUTH), "check additional field 1")
-    assertEqualsQuiet("Sud", engine.translateEnName(sample._enum.js.DirectionWithData_SOUTH), "check additional field 2")
+    assertEqualsQuiet("South", engine.translateEnName(sample._enum.js.DirectionWithData_SOUTH), "check additional field 1")
+    assertEqualsQuiet("Sud", engine.translateFrName(sample._enum.js.DirectionWithData_SOUTH), "check additional field 2")
 })
