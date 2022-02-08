@@ -37,6 +37,8 @@ enum class DirectionWithData(val enName: String, val frName: String) {
 
 @KustomExport
 class Engine {
+    fun south() = Direction.SOUTH
+
     fun goTo(direction: Direction): String {
         return when (direction) {
             Direction.NORTH -> "⬆️"
