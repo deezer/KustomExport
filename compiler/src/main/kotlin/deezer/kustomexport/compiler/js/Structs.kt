@@ -100,6 +100,14 @@ data class SealedSubClassDescriptor(
     val asClassName by lazy { ClassName(packageName, classSimpleName) }
 }
 
+data class ValueClassDescriptor(
+    val packageName: String,
+    val classSimpleName: String,
+    val inlinedType: ParameterDescriptor
+) : Descriptor() {
+    val asClassName by lazy { ClassName(packageName, classSimpleName) }
+}
+
 data class ClassDescriptor(
     val packageName: String,
     val classSimpleName: String,

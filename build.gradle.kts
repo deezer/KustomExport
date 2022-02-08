@@ -2,6 +2,10 @@ buildscript {
     val kotlinVersion: String by project
     repositories {
         mavenCentral()
+        maven {
+            name = "ajoberstar-backup"
+            url = java.net.URI("https://ajoberstar.org/bintray-backup/")
+        }
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")

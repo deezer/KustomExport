@@ -46,6 +46,7 @@ import deezer.kustomexport.compiler.js.SealedClassDescriptor
 import deezer.kustomexport.compiler.js.SealedSubClassDescriptor
 import deezer.kustomexport.compiler.js.SuperDescriptor
 import deezer.kustomexport.compiler.js.TypeParameterDescriptor
+import deezer.kustomexport.compiler.js.ValueClassDescriptor
 import deezer.kustomexport.compiler.js.mapping.OriginTypeName
 
 @KotlinPoetKspPreview
@@ -81,7 +82,12 @@ fun parseClass(
 
     //val superTypes = classDeclaration.getAllSuperTypes()
 
-    Logger.warn("PARSING - ${classSimpleName} ${classDeclaration.superTypes.count()} ${classDeclaration.getAllSuperTypes().count()}")
+    Logger.warn(
+        "PARSING - ${classSimpleName} ${classDeclaration.superTypes.count()} ${
+            classDeclaration.getAllSuperTypes().count()
+        }"
+    )
+
     val superTypes = classDeclaration.superTypes
         .map { superType ->
             val superTypeName = superType.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters)
@@ -113,6 +119,8 @@ fun parseClass(
 
     val isSealed = classDeclaration.modifiers.contains(Modifier.SEALED)
     val isOpen = classDeclaration.modifiers.contains(Modifier.OPEN)
+    val isValueClass =
+        classDeclaration.classKind == ClassKind.CLASS && classDeclaration.modifiers.contains(Modifier.VALUE)
 
     val classKind = classDeclaration.classKind
     return when {
@@ -125,6 +133,14 @@ fun parseClass(
                 supers = superTypes,
                 properties = properties,
                 functions = functions,
+            )
+        }
+        isValueClass -> {
+            if (constructorParams.size != 1) Logger.error("value class with more than 1 constructor param is not exportable")
+            return ValueClassDescriptor(
+                packageName = packageName,
+                classSimpleName = classSimpleName,
+                inlinedType = constructorParams[0]
             )
         }
         classKind == ClassKind.CLASS && isSealed -> {

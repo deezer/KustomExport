@@ -44,7 +44,7 @@ class OriginTypeName(
 ) {
     val concreteTypeName: TypeName by lazy { originTypeName.resolvedType(typeParameters) }
     fun importedMethod(name: FormatString) = TypeMapping.importMethod(name, concreteTypeName, typeParameters)
-    val exportedTypeName by lazy {
+    val exportedTypeName: TypeName by lazy {
         val exportedType = TypeMapping.exportedType(concreteTypeName, typeParameters)
 
         exportedType.removeTypeParameter()

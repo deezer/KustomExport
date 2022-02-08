@@ -36,7 +36,6 @@ public annotation class KustomExport(
     public val mode: ExportMode = ExportMode.IMPORT_EXPORT,
 )
 
-// Because typealias doesn't work well rn
 @Target(AnnotationTarget.FILE)
 public annotation class KustomExportGenerics(
     public val exportGenerics: Array<KustomGenerics> = []
