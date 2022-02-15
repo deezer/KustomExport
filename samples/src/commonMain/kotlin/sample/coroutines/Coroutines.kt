@@ -18,16 +18,11 @@
 package sample.coroutines
 
 import deezer.kustomexport.KustomExport
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import kotlin.coroutines.coroutineContext
 
 @KustomExport
 interface IComputer {
@@ -62,22 +57,4 @@ class ComputerTester(private val computer: IComputer) {
             }
         }
     }
-
-    suspend fun startCancellable(): Cancellable {
-        val coroutineScope = CoroutineScope(Dispatchers.Unconfined + SupervisorJob())
-        val job = coroutineScope.launch {
-            computer.longCompute()
-        }
-
-        return object : Cancellable {
-            override fun cancel() {
-                job.cancel()
-            }
-        }
-    }
-}
-
-@KustomExport
-interface Cancellable {
-    fun cancel()
 }
