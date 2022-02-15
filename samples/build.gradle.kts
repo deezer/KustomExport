@@ -27,6 +27,7 @@ kotlin {
 
             dependencies {
                 implementation(project(":lib"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
             }
         }
         val jsMain by getting {
@@ -35,6 +36,9 @@ kotlin {
             kotlin.srcDir("build/generated/ksp/commonMain/kotlin")
             // Eventually we should go with:
             // kotlin.srcDir("build/generated/ksp/jsMain/kotlin")
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.0")
+            }
         }
     }
 
@@ -53,12 +57,7 @@ dependencies {
     // KotlinJsIr crash
     val enableKsp: String? by project
     if (enableKsp == "true") {
-        // KSP issue is limiting JS generation at the moment
-        // https://github.com/google/ksp/issues/728
-        // As a hack, we generate JS facade for KotlinMetadata instead, so we define this expect/actual pattern
-
-        //add("kspJs", project(":compiler"))
-        add("kspMetadata", project(":compiler"))
+        add("kspJs", project(":compiler"))
     }
 }
 

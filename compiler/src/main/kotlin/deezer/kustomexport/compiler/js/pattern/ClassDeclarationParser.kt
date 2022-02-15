@@ -219,6 +219,7 @@ fun KSClassDeclaration.parseFunctions(
             FunctionDescriptor(
                 name = func.simpleName.asString(),
                 isOverride = func.findOverridee() != null || !declaredNames.contains(func.simpleName),
+                isSuspend = func.modifiers.contains(Modifier.SUSPEND),
                 returnType = func.returnType!!.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
                 parameters = func.parameters.map { p ->
                     ParameterDescriptor(

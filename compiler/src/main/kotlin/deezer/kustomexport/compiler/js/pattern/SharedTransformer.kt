@@ -25,6 +25,10 @@ import deezer.kustomexport.compiler.js.FormatString
 import deezer.kustomexport.compiler.js.FunctionDescriptor
 import deezer.kustomexport.compiler.js.MethodNameDisambiguation
 import deezer.kustomexport.compiler.js.PropertyDescriptor
+import deezer.kustomexport.compiler.js.asCoroutinesPromise
+import deezer.kustomexport.compiler.js.coroutinesAwait
+import deezer.kustomexport.compiler.js.coroutinesGlobalScope
+import deezer.kustomexport.compiler.js.coroutinesPromiseFunc
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
 import deezer.kustomexport.compiler.js.toFormatString
 
@@ -40,14 +44,18 @@ fun FunctionDescriptor.buildWrappingFunction(
 
     val fb = FunSpec.builder(if (!import) funExportedName else name)
     if (isClassOpen) fb.addModifiers(KModifier.OPEN)
-    if (import) {
-        fb.returns(returnType.concreteTypeName)
+    val returns = if (import) {
+        returnType.concreteTypeName
     } else {
-        fb.returns(returnType.exportedTypeName)
+        returnType.exportedTypeName
     }
+    fb.returns(if (!import && isSuspend) returns.asCoroutinesPromise() else returns)
 
     if (forceOverride || isOverride) {
         fb.addModifiers(KModifier.OVERRIDE)
+    }
+    if (import && isSuspend) {
+        fb.addModifiers(KModifier.SUSPEND)
     }
 
     parameters.forEach { param ->
@@ -59,6 +67,8 @@ fun FunctionDescriptor.buildWrappingFunction(
     }
 
     if (body) {
+        if (!import && isSuspend)fb.addCode("return %T.%M·{\n", coroutinesGlobalScope, coroutinesPromiseFunc)
+
         val funcName = if (import) funExportedName else name
         val params = parameters.fold(FormatString("")) { acc, item ->
             acc + "$INDENTATION${item.name} = ".toFormatString() + item.portMethod(!import) + ",\n"
@@ -71,7 +81,12 @@ fun FunctionDescriptor.buildWrappingFunction(
                 (if (parameters.isNotEmpty()) ")\n" else ")\n")).asCode()
         )
 
-        fb.addCode(("return·".toFormatString() + returnType.portMethod(import, "result".toFormatString())).asCode())
+        fb.addCode(
+            ((if (import || !isSuspend) "return·" else "").toFormatString() +
+                returnType.portMethod(import, "result".toFormatString()) +
+                (if (import && isSuspend) ".%M()".toFormatString(coroutinesAwait) else "".toFormatString())).asCode()
+        )
+        if (!import && isSuspend) fb.addCode("\n}")
     }
     return fb.build()
 }

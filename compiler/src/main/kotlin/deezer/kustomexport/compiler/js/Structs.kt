@@ -45,6 +45,7 @@ data class ParameterDescriptor(
 data class FunctionDescriptor(
     val name: String,
     val isOverride: Boolean,
+    val isSuspend: Boolean,
     val returnType: OriginTypeName,
     val parameters: List<ParameterDescriptor>,
 )

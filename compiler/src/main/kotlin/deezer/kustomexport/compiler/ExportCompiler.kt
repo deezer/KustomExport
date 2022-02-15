@@ -73,11 +73,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         val genericsAnnotated = resolver.getSymbolsWithAnnotation(KustomExportGenerics::class.qualifiedName!!)
         genericsAnnotated.forEach { it.accept(genericsVisitor, Unit) }
 
-        val annotations = listOf(
-            KustomExport::class,
-            KustomExportGenerics::class
-        )
-
         val exportVisitor = ExportVisitor(resolver)
         resolver.getSymbolsWithAnnotation(
             annotationName = KustomExport::class.qualifiedName!!,

@@ -10,4 +10,4 @@ pluginManagement {
     }
 }
 
-include(":lib", ":compiler", ":samples")
+include(":lib", ":lib-coroutines", ":compiler", ":samples")
