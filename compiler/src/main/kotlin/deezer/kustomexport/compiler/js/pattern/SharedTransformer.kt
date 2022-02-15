@@ -25,8 +25,12 @@ import deezer.kustomexport.compiler.js.FormatString
 import deezer.kustomexport.compiler.js.FunctionDescriptor
 import deezer.kustomexport.compiler.js.MethodNameDisambiguation
 import deezer.kustomexport.compiler.js.PropertyDescriptor
+import deezer.kustomexport.compiler.js.abortController
+import deezer.kustomexport.compiler.js.abortSignal
 import deezer.kustomexport.compiler.js.asCoroutinesPromise
 import deezer.kustomexport.compiler.js.coroutinesAwait
+import deezer.kustomexport.compiler.js.coroutinesContext
+import deezer.kustomexport.compiler.js.coroutinesContextJob
 import deezer.kustomexport.compiler.js.coroutinesGlobalScope
 import deezer.kustomexport.compiler.js.coroutinesPromiseFunc
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
@@ -65,14 +69,35 @@ fun FunctionDescriptor.buildWrappingFunction(
             fb.addParameter(param.name, param.type.exportedTypeName)
         }
     }
+    if (!import && isSuspend) {
+        fb.addParameter("abortSignal", abortSignal)
+    }
 
     if (body) {
-        if (!import && isSuspend)fb.addCode("return %T.%M·{\n", coroutinesGlobalScope, coroutinesPromiseFunc)
+        if (!import && isSuspend) {
+            fb.addCode("return %T.%M·{\n", coroutinesGlobalScope, coroutinesPromiseFunc)
+        }
+        if (import && isSuspend) {
+            fb.addStatement("val abortController = %T()", abortController)
+            fb.addStatement("val abortSignal = abortController.signal")
+            fb.addStatement(
+                "%M.%M.invokeOnCompletion { abortController.abort() }",
+                coroutinesContext,
+                coroutinesContextJob
+            )
+        }
+        if (!import && isSuspend) {
+            fb.addStatement("abortSignal.onabort = { %M.%M.cancel() }", coroutinesContext, coroutinesContextJob)
+        }
 
         val funcName = if (import) funExportedName else name
-        val params = parameters.fold(FormatString("")) { acc, item ->
+        var params = parameters.fold(FormatString("")) { acc, item ->
             acc + "$INDENTATION${item.name} = ".toFormatString() + item.portMethod(!import) + ",\n"
         }
+        if (import && isSuspend) {
+            params += FormatString("${INDENTATION}abortSignal = abortSignal")
+        }
+
         //TODO: Opti : could save the local "result" variable here
         fb.addCode(
             ("val result = $delegateName.$funcName(".toFormatString() +
@@ -86,6 +111,7 @@ fun FunctionDescriptor.buildWrappingFunction(
                 returnType.portMethod(import, "result".toFormatString()) +
                 (if (import && isSuspend) ".%M()".toFormatString(coroutinesAwait) else "".toFormatString())).asCode()
         )
+
         if (!import && isSuspend) fb.addCode("\n}")
     }
     return fb.build()

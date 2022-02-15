@@ -3,12 +3,14 @@ import { assert, assertEquals, assertQuiet, assertEqualsQuiet } from "../shared_
 import { sample } from '@kustom/Samples'
 
 runTest("Coroutines", async () : Promise<void> => {
-    console.log("start at " + Date())
+    var neverAbortController = new AbortController()
+    var neverAbortSignal = neverAbortController.signal
+
     var computer = new sample.coroutines.js.Computer()
-    var res = await computer.longCompute()
+    var res = await computer.longCompute(neverAbortSignal)
     assertEquals(42, res, "execute Kotlin coroutines")
 
-    var p = computer.longCompute()
+    var p = computer.longCompute(neverAbortSignal)
         .then((res) => {
             return res
         })
@@ -25,71 +27,96 @@ runTest("Coroutines", async () : Promise<void> => {
     }
 
     var tester = new sample.coroutines.js.ComputerTester(new MyComputer())
-    assertEquals(1998, await tester.testAsync(), "parallel setTimeout")
+    assertEquals(1998, await tester.testAsync(neverAbortSignal), "parallel setTimeout")
 
     class RejectComputer implements sample.coroutines.js.IComputer {
         async longCompute() {
             return new Promise<void>((resolve, reject) => {
                 setTimeout(() => {
-                    //reject(new Error("bug"));
-                    //reject(undefined); // null, undefined, <nothing> == resolve()
-                    resolve()
-                    //resolve(55)
+                    reject(new Error("bug"));
                 }, 1000);
               });
         }
     }
 
     var rejectTester = new sample.coroutines.js.ComputerTester(new RejectComputer())
-    await rejectTester.testAsync()
-    assertEquals(0, await rejectTester.testAsync(), "parallel reject")
+    try {
+        await rejectTester.testAsync(neverAbortSignal)
+    } catch(e) {
+        assert(e instanceof Error, "reject throws an Error")
+    }
 
+    cancelTypescriptPromiseFromKotlin()
+
+    cancelKotlinCoroutinesFromTypescript()
+})
+
+async function cancelTypescriptPromiseFromKotlin() {
+    var neverAbortController = new AbortController()
+    var neverAbortSignal = neverAbortController.signal
 
     class CancellableComputer implements sample.coroutines.js.IComputer {
+        workAborted: boolean
         // Should be passed in parameters in the longCompute method for cooperative cancellation
         // Cancellation is not available yet.
-        isJobActive() {
-            return true
-        }
-        async longCompute() {
+        async longCompute(abortSignal) {
             return new Promise((resolve, reject) => {
                 var timeout = 5000
                 var currTime = 0
-                this.rec(this.isJobActive, resolve, reject, currTime, timeout)
+                this.rec(abortSignal, resolve, reject, currTime, timeout)
               });
         }
-        rec(isJobActive, resolve, reject, currTime, timeout) {
+        rec(abortSignal, resolve, reject, currTime, timeout) {
             setTimeout(() => {
-                console.log("rec " + currTime + " / " + timeout)
                 if (currTime >= timeout) {
                     resolve(1234)
                 } else {
-                    if (isJobActive()) {
-                        this.rec(isJobActive, resolve, reject, currTime + 100, timeout)
+                    if (!abortSignal.aborted) {
+                        this.rec(abortSignal, resolve, reject, currTime + 100, timeout)
+                    } else {
+                        this.workAborted = true
                     }
                 }
             }, 100);
         }
     }
 
-    var cancellableTester = new sample.coroutines.js.ComputerTester(new CancellableComputer())
+    var cancellableComputer = new CancellableComputer()
+    var cancellableTester = new sample.coroutines.js.ComputerTester(cancellableComputer)
     try {
-        console.log(Date() + " startAndCancelAfter")
-        await cancellableTester.startAndCancelAfter(1000)
+        var abortController = new AbortController()
+        var abortSignal = neverAbortController.signal
+        await cancellableTester.startAndCancelAfter(1000, abortSignal)
+        assertQuiet(false, "TimeoutCancellationException should have been thrown")
     } catch (tce) {
         // this check is ok, but the Promise is not really cancelled, so not good enough...
-        // assert(tce.name === "TimeoutCancellationException", "can cancel (timeout)")
+        assert(tce.name === "TimeoutCancellationException", "can cancel (timeout throw CancellationException)")
+        // Exception is thrown immediately when the signal is emitted, work is really stopped a few ms after that
+        setTimeout(() => {
+            assertEquals(true, cancellableComputer.workAborted, "can cancel (work is aborted)")
+        }, 100);
     }
-    //assertEquals(91, await infiniteTester.testAsync(), "parallel reject")
+}
 
-    //console.log(await new RejectComputer().longCompute())
+async function cancelKotlinCoroutinesFromTypescript() {
+    var abortController = new AbortController()
+    var abortSignal = abortController.signal
+    var computer = new sample.coroutines.js.Computer()
+    var promise = computer.longCompute(abortSignal) // Trigger promise, duration = 1s
+    // Catch on promise is required, or else the test will stop before the end
+    var cancellationException = null
+    promise.catch((e) => {
+        cancellationException = e
+        //console.log("Catching the cancellation exception: " + e.name + " - " + e.message)
+    })
 
-    //var cancellableTester = new sample.coroutines.js.ComputerTester(new InfiniteComputer())
-    //var cancellable = cancellableTester.startCancellable()
-    /*
     setTimeout(() => {
-        console.log("time !")
-        //cancellable.cancel()
-    }, 500);
-    */
-})
+        abortController.abort()
+    }, 100);
+
+    setTimeout(() => {
+        assertEquals(false, computer.completed, "can cancel Kotlin coroutines from Typescript (work has been cancelled and will never complete)")
+        assertEqualsQuiet("JobCancellationException", cancellationException.name, "cancellation exception")
+        assertEqualsQuiet("DeferredCoroutine was cancelled", cancellationException.message, "cancellation exception")
+    }, 1200);
+}

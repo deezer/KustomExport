@@ -18,31 +18,29 @@
 package sample.coroutines
 
 import deezer.kustomexport.KustomExport
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlin.coroutines.coroutineContext
-import kotlin.js.Date
 
 @KustomExport
 interface IComputer {
-    suspend fun longCompute(abortSignal: AbortSignal): Int
+    suspend fun longCompute(): Int
 }
 
 @KustomExport
 class Computer : IComputer {
-    override suspend fun longCompute(abortSignal: AbortSignal): Int {
+    var completed = false
+    override suspend fun longCompute(): Int {
         // listen abortSignal , if aborted => throw
         delay(1000)
+        completed = true
         return 42
     }
 }
@@ -51,15 +49,8 @@ class Computer : IComputer {
 class ComputerTester(private val computer: IComputer) {
     suspend fun testAsync(): Int {
         return withContext(Dispatchers.Unconfined) {
-            println(Date())
-            val task1 = async { computer.longCompute() } //coroutineContext.job::isActive) }
-            val task2 = async { computer.longCompute() } //coroutineContext.job::isActive) }
-
-            coroutineContext.job.invokeOnCompletion { error ->
-                if (error is CancellationException) {
-                    //ctrler.abort()
-                }
-            }
+            val task1 = async { computer.longCompute() }
+            val task2 = async { computer.longCompute() }
             return@withContext task1.await() + task2.await()
         }
     }
@@ -67,7 +58,7 @@ class ComputerTester(private val computer: IComputer) {
     suspend fun startAndCancelAfter(duration: Long) {
         withContext(Dispatchers.Unconfined) {
             withTimeout(duration) {
-                computer.longCompute()// { coroutineContext.job.isActive }
+                computer.longCompute()
             }
         }
     }
@@ -75,7 +66,7 @@ class ComputerTester(private val computer: IComputer) {
     suspend fun startCancellable(): Cancellable {
         val coroutineScope = CoroutineScope(Dispatchers.Unconfined + SupervisorJob())
         val job = coroutineScope.launch {
-            computer.longCompute() //coroutineContext.job::isActive)
+            computer.longCompute()
         }
 
         return object : Cancellable {

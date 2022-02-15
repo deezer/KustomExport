@@ -13,6 +13,7 @@ val kspVersion: String by project
 dependencies {
 
     implementation(project(":lib"))
+    implementation(project(":lib-coroutines"))
     implementation("com.squareup:kotlinpoet:1.10.2") {
         exclude(module = "kotlin-reflect")
     }

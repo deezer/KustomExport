@@ -25,5 +25,14 @@ import com.squareup.kotlinpoet.TypeName
 val coroutinesGlobalScope = ClassName("kotlinx.coroutines", "GlobalScope")
 val coroutinesPromiseFunc = MemberName("kotlinx.coroutines", "promise")
 val coroutinesAwait = MemberName("kotlinx.coroutines", "await")
+val coroutinesJob = ClassName("kotlinx.coroutines", "Job")
+
+//val coroutinesScope = ClassName("kotlinx.coroutines", "CoroutineScope")
+val coroutinesContext = MemberName("kotlin.coroutines", "coroutineContext")
+val coroutinesContextJob = MemberName("kotlinx.coroutines", "job")
+val coroutinesCancellationException = ClassName("kotlinx.coroutines", "CancellationException")
 val coroutinesPromise = ClassName("kotlin.js", "Promise")
+val abortController = ClassName("", "AbortController")
+val abortSignal = ClassName("", "AbortSignal")
+
 fun TypeName.asCoroutinesPromise() = coroutinesPromise.parameterizedBy(this)
