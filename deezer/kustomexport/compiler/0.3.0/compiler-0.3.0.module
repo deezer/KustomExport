@@ -1,0 +1,137 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "deezer.kustomexport",
+    "module": "compiler",
+    "version": "0.3.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "compiler-0.3.0.jar",
+          "url": "compiler-0.3.0.jar",
+          "size": 214441,
+          "sha512": "9ea674f03828e1f390149c650c66f5909885ef952b7f5e26e018ab71ef6c5ff0bd1502619bdcd73f08fe2f8d49293d988f2ff6e7790578f26b6a5cd468c6c6b9",
+          "sha256": "548280e1eac6b23c3769169b8e4825d60319c29d6a59211c26f6491e1a84a441",
+          "sha1": "a937e8b149864bc9146b9fea1b7b994ce49de8b6",
+          "md5": "a81de04c51c184dc7d2260b4cf33f73a"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.3.0"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib-coroutines",
+          "version": {
+            "requires": "0.3.0"
+          }
+        },
+        {
+          "group": "com.squareup",
+          "module": "kotlinpoet",
+          "version": {
+            "requires": "1.10.2"
+          },
+          "excludes": [
+            {
+              "group": "*",
+              "module": "kotlin-reflect"
+            }
+          ]
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-reflect",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "com.squareup",
+          "module": "kotlinpoet-ksp",
+          "version": {
+            "requires": "1.10.2"
+          }
+        },
+        {
+          "group": "com.google.devtools.ksp",
+          "module": "symbol-processing",
+          "version": {
+            "requires": "1.6.0-1.0.2"
+          }
+        },
+        {
+          "group": "com.google.devtools.ksp",
+          "module": "symbol-processing-api",
+          "version": {
+            "requires": "1.6.0-1.0.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "compiler-0.3.0.jar",
+          "url": "compiler-0.3.0.jar",
+          "size": 214441,
+          "sha512": "9ea674f03828e1f390149c650c66f5909885ef952b7f5e26e018ab71ef6c5ff0bd1502619bdcd73f08fe2f8d49293d988f2ff6e7790578f26b6a5cd468c6c6b9",
+          "sha256": "548280e1eac6b23c3769169b8e4825d60319c29d6a59211c26f6491e1a84a441",
+          "sha1": "a937e8b149864bc9146b9fea1b7b994ce49de8b6",
+          "md5": "a81de04c51c184dc7d2260b4cf33f73a"
+        }
+      ]
+    }
+  ]
+}
