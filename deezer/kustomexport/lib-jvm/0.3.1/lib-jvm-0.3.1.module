@@ -1,0 +1,93 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.3.1/lib-0.3.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.3.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-jvm-0.3.1.jar",
+          "url": "lib-jvm-0.3.1.jar",
+          "size": 20607,
+          "sha512": "a79a6e2e62a9fbef7884ce1604bbeb537898c4e764369ad0eeff6f23c43b6dee385dbe8a1440b9f1c6f60ccea9e020217824999ef9f5b3c8d96a40d9230d8b14",
+          "sha256": "924c56b56e914176b455076174d06beea1ecf157ed163cf1c5a4852196606ac3",
+          "sha1": "132d4906b9eb934c7cc3dc7f4ee9e9a13944d702",
+          "md5": "82bd13de9e8690ab0321bf4fe9efecea"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-jvm-0.3.1.jar",
+          "url": "lib-jvm-0.3.1.jar",
+          "size": 20607,
+          "sha512": "a79a6e2e62a9fbef7884ce1604bbeb537898c4e764369ad0eeff6f23c43b6dee385dbe8a1440b9f1c6f60ccea9e020217824999ef9f5b3c8d96a40d9230d8b14",
+          "sha256": "924c56b56e914176b455076174d06beea1ecf157ed163cf1c5a4852196606ac3",
+          "sha1": "132d4906b9eb934c7cc3dc7f4ee9e9a13944d702",
+          "md5": "82bd13de9e8690ab0321bf4fe9efecea"
+        }
+      ]
+    }
+  ]
+}
