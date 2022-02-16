@@ -26,14 +26,14 @@
       "dependencies": [
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-jdk8",
+          "module": "kotlin-stdlib-common",
           "version": {
             "requires": "1.6.10"
           }
         },
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-common",
+          "module": "kotlin-stdlib-jdk8",
           "version": {
             "requires": "1.6.10"
           }
@@ -62,14 +62,14 @@
       "dependencies": [
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-jdk8",
+          "module": "kotlin-stdlib-common",
           "version": {
             "requires": "1.6.10"
           }
         },
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-common",
+          "module": "kotlin-stdlib-jdk8",
           "version": {
             "requires": "1.6.10"
           }
