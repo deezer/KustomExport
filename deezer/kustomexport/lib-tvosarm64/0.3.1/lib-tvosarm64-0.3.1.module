@@ -29,7 +29,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-tvosarm64-0.3.1.klib",
-          "size": 14560,
-          "sha512": "cc9d4bcc42ce5fcc3fc60c9080fffd59aa68b13a99c1db92150430d4ade2cbc9613211f48cc68331f316893d309a51a281d29df368a6253349aa9172b1f814b5",
-          "sha256": "a0d01bfad0ddbd7bd34ee585e5627762a62ff109ea54ee943fd056d51030da88",
-          "sha1": "c03aa8441997468322b196b9b24b03933cb9ff8f",
-          "md5": "b4e9d82ad3a4466872414ecd70c26933"
+          "size": 14562,
+          "sha512": "3e90a2ede3d743a5707332aaf723dae8e7e490c1474af9d797568142d7bf4a7c4583992670c4c6cf04b931d1888cac6ed8398da764e5a641fa57668358778038",
+          "sha256": "78bb61864f3e2e7c58a5732767c39e38816620b74008446bcb2642c7b38402dd",
+          "sha1": "84617922bd54087fe4e3b78075b604ef7ff4cba2",
+          "md5": "861c2f574685b94573bcd68673c3319a"
         }
       ]
     },
@@ -59,7 +59,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -67,11 +67,11 @@
         {
           "name": "lib-tvosarm64-0.3.1-metadata.jar",
           "url": "lib-tvosarm64-0.3.1-metadata.jar",
-          "size": 4259,
-          "sha512": "cea94976d3f46325b29a8c2c5913a85d8b564bdd722cc339fbe383a6e034e606ac212a2b6c7e4a072d55af33e475996c3bb5ed48753ad58fdf5ac578aa482f2f",
-          "sha256": "4cf8ab004e5e1d6415c5f394bd937c36dffca3207d95ca94ec37ac4510b43483",
-          "sha1": "259f45b1abee6199bfc50f8343dd88f8b918c3a1",
-          "md5": "53058aaf975ea9555d5d5ee9a7dbf333"
+          "size": 3609,
+          "sha512": "8daa3525ba78ec4d7eb965adce2365cc7ca12883d13fab22172b697a90e5455dced9be60351bf17eea9dc2e03e4aa78f502f8ad8dbf5cf209c8ce953700fc698",
+          "sha256": "22589c0daa67efcb7d0bc0e869f0f6a8f28e7fb1810fed126eb979812831aff1",
+          "sha1": "ece8e6a55c10b9c37ea0bb4ea63a14476f9b3f34",
+          "md5": "5d4a08402fa55a74ce920971e450c0a5"
         }
       ]
     }

@@ -29,7 +29,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-watchosarm64-0.3.1.klib",
-          "size": 14590,
-          "sha512": "da9bf1f22b0289b74e8a730532f0f3293117fd2d2981dd211e268baeb32587ce20a3acd88361789f3331aae65cfbf40c41ea70f58e65659c65715c7864dd4f5e",
-          "sha256": "b28c2e23ddd778934a6b8716a26a9a77f64a311055a1e892f35ae9216d068381",
-          "sha1": "2308fdb7c0073abb8efffe825c59128f9bd95c4c",
-          "md5": "fc5feb1b3929f1aa4330e457faba1230"
+          "size": 14592,
+          "sha512": "d3eb1b417c99704ed03182b74a34b5acdd9b9ba77a9884b263de902106d206eda938418b30643be2db959fd3c39d0f7f36ba063449cb8564949aa3ac257673b7",
+          "sha256": "ebae6224597506dbfc0463badf0a237f85c56300debcd3608ce856253ac8188f",
+          "sha1": "57c5f755750c9c93ef757cf74cb7a601f55b1e70",
+          "md5": "251feb663f69cf236262ce2c06d4a7ea"
         }
       ]
     },
@@ -59,7 +59,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -67,11 +67,11 @@
         {
           "name": "lib-watchosarm64-0.3.1-metadata.jar",
           "url": "lib-watchosarm64-0.3.1-metadata.jar",
-          "size": 4123,
-          "sha512": "6c13d20ee323192e06fb6e722f02ddbcd96233c898f7c27a3ad4e16aec7d781e4094a2bc86d6fb9cda7c20655919aa18817695f726bb844504fe9785e0daac92",
-          "sha256": "0e011201b74c8990e5b507ccf700a9ce2ca5fa5b078a265f9ec60fc9ce11a9ba",
-          "sha1": "36abf18cead7200e476cb991c8bc0d589312210d",
-          "md5": "7814296d66fa361173aba411b3cb0b8f"
+          "size": 3752,
+          "sha512": "c69963f493c25676a79c5107fc97c49885b37187c349b2e940cbbedcebdc45db03a14ce9e16302cf4b41b7d30a60c46f986b9d157d4748eb0f9e760669607d41",
+          "sha256": "64ba41fcae8c0f68d4dd464aeb3312992c28c0c2687e7597c3bdc7da18084503",
+          "sha1": "010cefc3df6af8ccfaf1a07c2712d3b11b886772",
+          "md5": "30fd9e6b697e817998ff130a42046a31"
         }
       ]
     }

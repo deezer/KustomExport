@@ -26,7 +26,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -34,11 +34,11 @@
         {
           "name": "lib-metadata-0.3.1-all.jar",
           "url": "lib-0.3.1-all.jar",
-          "size": 4595,
-          "sha512": "fe481b299c5638c897692715ba900f3ee91b5dabdbbfbf438e7386c5f813fa231a210eaee423707ab5ccc8d8930039028da79ab778047cafbafef4c14934be62",
-          "sha256": "a7007577276de282c86447faa3645270df09d0ef21cf3753bc8feaa7b562736b",
-          "sha1": "651c8c76df01130ddcc901745150e504c04f2d0c",
-          "md5": "2cd4fea6ebe788fd80606aec858db78d"
+          "size": 4598,
+          "sha512": "78b701fab989967c5b86f497d3b7affc94da44db6fd34bc23f8509203d56929b3629f58c2f54138a1ae47ab4d888767cae0e519ade29116df6cdeec3fadf7a9d",
+          "sha256": "54e6facb8d644c55c77ed9957859d1c2479f37451f157f53af72d599118b3a94",
+          "sha1": "7d79288267a07c37bd5e829b605d54d490fdb784",
+          "md5": "b1e46de705268c41f893583a01665e03"
         }
       ]
     },
@@ -54,7 +54,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -63,10 +63,10 @@
           "name": "lib-0.3.1.jar",
           "url": "lib-0.3.1.jar",
           "size": 8811,
-          "sha512": "fc04cc874c275380e120f36ac794a3b02f393cb3123b8cf149a00e864869cc09e66d100f053e6e7662876c23a026ffbbfbebdca581d11882586880dd5873f649",
-          "sha256": "e17ea5193d49e7beabe3cd96b01d93c688a2fe311042f91982eeb8066ea298a0",
-          "sha1": "bf41b0aed6b0ca41924cd365fcccd9aa51271e6c",
-          "md5": "3120f6144f6490b531a635ae4a9c4447"
+          "sha512": "0f033cfeacd8f284ab4e49146d669084b1845be0fa96e2117478ea123a17d2f692c2e348a90e4839e3c8f2b47828b1811277328e63b551cffc79c4f147b020bd",
+          "sha256": "ebb623ccf1f0ca1390dda379f97efac2cbc97c06b30aa01f6f0626895d0381fe",
+          "sha1": "9ba00d32ec2579034c9dc8382119b6c8c1e71359",
+          "md5": "68a2b6780516e8362384feb58a8e75dd"
         }
       ]
     },
@@ -200,7 +200,6 @@
       "name": "jvmApiElements-published",
       "attributes": {
         "org.gradle.category": "library",
-        "org.gradle.jvm.environment": "standard-jvm",
         "org.gradle.libraryelements": "jar",
         "org.gradle.usage": "java-api",
         "org.jetbrains.kotlin.platform.type": "jvm"
@@ -216,7 +215,6 @@
       "name": "jvmRuntimeElements-published",
       "attributes": {
         "org.gradle.category": "library",
-        "org.gradle.jvm.environment": "standard-jvm",
         "org.gradle.libraryelements": "jar",
         "org.gradle.usage": "java-runtime",
         "org.jetbrains.kotlin.platform.type": "jvm"

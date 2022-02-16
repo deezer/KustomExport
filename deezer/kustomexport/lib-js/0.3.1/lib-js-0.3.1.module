@@ -26,16 +26,16 @@
       "dependencies": [
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-js",
+          "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         },
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-common",
+          "module": "kotlin-stdlib-js",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -43,11 +43,11 @@
         {
           "name": "lib-js-0.3.1.klib",
           "url": "lib-js-0.3.1.klib",
-          "size": 14170,
-          "sha512": "cbca4af7d08ec7a41e1586a20bfbd7089876413897b66c968aeb1847b9cc1c01926f51430309461b29f48ee409e36715d8090437047ca1ad511e8d9157179235",
-          "sha256": "9c4e9e592d681564d1930f799b162c7c1c25729e3a2665aa77f2f29a20541417",
-          "sha1": "413711cb2be1b2d0c0aa3d0052d4427b9053503a",
-          "md5": "e5adb9f8bd1847565cd03c64a5f8c256"
+          "size": 14171,
+          "sha512": "6904336426d854b9a994a67fb337b9ebed1a31d8173f6d4907b95dad3625e6bfdc0f654a35da243929b702b4f0a669d9928095900d773b40c2d5815b05cfaae5",
+          "sha256": "a7862dd25dd3ba066f3720939c39cbe4954faea3d5b17f15e94e8935f1940d3e",
+          "sha1": "1b9684e6629f867c2cec62ce16770afcba189e32",
+          "md5": "da3f2e9b6fbc9020adb4e8c3a5c917be"
         }
       ]
     },
@@ -62,16 +62,16 @@
       "dependencies": [
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-js",
+          "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         },
         {
           "group": "org.jetbrains.kotlin",
-          "module": "kotlin-stdlib-common",
+          "module": "kotlin-stdlib-js",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -79,11 +79,11 @@
         {
           "name": "lib-js-0.3.1.klib",
           "url": "lib-js-0.3.1.klib",
-          "size": 14170,
-          "sha512": "cbca4af7d08ec7a41e1586a20bfbd7089876413897b66c968aeb1847b9cc1c01926f51430309461b29f48ee409e36715d8090437047ca1ad511e8d9157179235",
-          "sha256": "9c4e9e592d681564d1930f799b162c7c1c25729e3a2665aa77f2f29a20541417",
-          "sha1": "413711cb2be1b2d0c0aa3d0052d4427b9053503a",
-          "md5": "e5adb9f8bd1847565cd03c64a5f8c256"
+          "size": 14171,
+          "sha512": "6904336426d854b9a994a67fb337b9ebed1a31d8173f6d4907b95dad3625e6bfdc0f654a35da243929b702b4f0a669d9928095900d773b40c2d5815b05cfaae5",
+          "sha256": "a7862dd25dd3ba066f3720939c39cbe4954faea3d5b17f15e94e8935f1940d3e",
+          "sha1": "1b9684e6629f867c2cec62ce16770afcba189e32",
+          "md5": "da3f2e9b6fbc9020adb4e8c3a5c917be"
         }
       ]
     }

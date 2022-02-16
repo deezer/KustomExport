@@ -29,7 +29,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-iossimulatorarm64-0.3.1.klib",
-          "size": 14653,
-          "sha512": "fd9a7a1be4a6c5a4835b8582a6b0ec1c480b56607fc03898bb7f06710fb28d4dd831e66c9516dfca9f1bce66260fbf4a80da23e906cdf2a828c83ae7007c2dce",
-          "sha256": "5363d6a618c161f2c4bd610da0c3825af15af2b2acdf31dea773ca141b4ad852",
-          "sha1": "71140b748adba2ad36f00a4f8e7a887c0c5adb9d",
-          "md5": "5dc62993b6ffe5e1e78f90b190ea419f"
+          "size": 14655,
+          "sha512": "4ed7083e6501e4523bb7e24d9d51b086272fd2dea66d805ca55d4db8b028461f3294cbc0776bba8d3ae8fbb4a969a6397ea9384d93a8ab3e30e9af2718be9099",
+          "sha256": "3a3566ed6f016667e793e507af7269fd2f76f77b856e337ddd700ed7f5493071",
+          "sha1": "053ce4cb96d5935a283e36d7e230e33bad119733",
+          "md5": "c581092a9b9556fb4b4abc02ac9c8797"
         }
       ]
     },
@@ -59,7 +59,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -68,10 +68,10 @@
           "name": "lib-iossimulatorarm64-0.3.1-metadata.jar",
           "url": "lib-iossimulatorarm64-0.3.1-metadata.jar",
           "size": 261,
-          "sha512": "83f17a0285cad7f69013d61b3f4950a6ff3d8914f4e4268055db60773fd1eb2d222e5b63bd4a70514e150188708f58d3c71f02b6edc9832950752702e566e070",
-          "sha256": "f599c880f8130b466a518afe85616c1b768abb7563736655c743d43902246f73",
-          "sha1": "8d767c1cf312df4ddf1dbfebe1edb8815a2a3f79",
-          "md5": "792a6b27023655dda064b1756b75a558"
+          "sha512": "6beddc26a308de843edb97d9135ff1d1c51c8eee617832afc0b2cfb0aaed5a1fb0f2ff09d69fd9583943ad0a4e37e503872d6e731d546f6665b61247e752eba1",
+          "sha256": "85c002f5ab1aa496a257d8d10fdfbec8cdfdab549771d040a33425cdd6a8832a",
+          "sha1": "6001ccf15a1ea17008a601c8790c22b22159ccf4",
+          "md5": "294eb9db897b8b919887e0eae9dcaf58"
         }
       ]
     }

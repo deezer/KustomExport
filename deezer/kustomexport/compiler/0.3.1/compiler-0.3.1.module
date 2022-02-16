@@ -30,7 +30,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-jdk8",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -39,10 +39,10 @@
           "name": "compiler-0.3.1.jar",
           "url": "compiler-0.3.1.jar",
           "size": 214441,
-          "sha512": "f52fb63a1079a43f6118f6f78e86a119088e6443292cc24011c0ff5b739cafdb626f90bfb509d64e69194ad478d2e51128771ad27bf2ce674d7f812391345d48",
-          "sha256": "7b2076cff76500fc3421791eee35b38b70e77dcd375baa4e2ecbf7fd266c893f",
-          "sha1": "e364c901365b3c1883601c2fe4453bf5f55f0de9",
-          "md5": "521e49ae1ca50c49ec6469096097ed7b"
+          "sha512": "a3c238eaacc9f2d4b4bf675656721bf5b26948152530f02ea06eecffc407eb7d94ed913b199802d9e5f870e4c3f43becc548680dafbafe7d4420d2938f86c246",
+          "sha256": "da6684fce67be925ef8d46d102f7d5455ff8dbaaa8333db041e85cdf7da77edb",
+          "sha1": "1fe3c67211245c994d740b33ab361d387eece515",
+          "md5": "44218846e27e03d2ed7bdf7afd43c85b"
         }
       ]
     },
@@ -89,7 +89,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-reflect",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         },
         {
@@ -103,21 +103,21 @@
           "group": "com.google.devtools.ksp",
           "module": "symbol-processing",
           "version": {
-            "requires": "1.6.0-1.0.2"
+            "requires": "1.6.10-1.0.2"
           }
         },
         {
           "group": "com.google.devtools.ksp",
           "module": "symbol-processing-api",
           "version": {
-            "requires": "1.6.0-1.0.2"
+            "requires": "1.6.10-1.0.2"
           }
         },
         {
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-jdk8",
           "version": {
-            "requires": "1.6.0"
+            "requires": "1.6.10"
           }
         }
       ],
@@ -126,10 +126,10 @@
           "name": "compiler-0.3.1.jar",
           "url": "compiler-0.3.1.jar",
           "size": 214441,
-          "sha512": "f52fb63a1079a43f6118f6f78e86a119088e6443292cc24011c0ff5b739cafdb626f90bfb509d64e69194ad478d2e51128771ad27bf2ce674d7f812391345d48",
-          "sha256": "7b2076cff76500fc3421791eee35b38b70e77dcd375baa4e2ecbf7fd266c893f",
-          "sha1": "e364c901365b3c1883601c2fe4453bf5f55f0de9",
-          "md5": "521e49ae1ca50c49ec6469096097ed7b"
+          "sha512": "a3c238eaacc9f2d4b4bf675656721bf5b26948152530f02ea06eecffc407eb7d94ed913b199802d9e5f870e4c3f43becc548680dafbafe7d4420d2938f86c246",
+          "sha256": "da6684fce67be925ef8d46d102f7d5455ff8dbaaa8333db041e85cdf7da77edb",
+          "sha1": "1fe3c67211245c994d740b33ab361d387eece515",
+          "md5": "44218846e27e03d2ed7bdf7afd43c85b"
         }
       ]
     }

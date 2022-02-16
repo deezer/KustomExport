@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.3.1/lib-coroutines-0.3.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.3.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-iossimulatorarm64-0.3.1.klib",
+          "size": 4034,
+          "sha512": "18f6b0e5806db3e432b2f71fc4463d0af38134f2df71b5819e886a86ec20fd2d6cf71d02866bb4e9575cc69ced2b87eb2423d2cf8ec693e002121e72e5be35d3",
+          "sha256": "cc104d2696dccd676cd5977393181c1997e6509ecd50396511b61b50293994b0",
+          "sha1": "1ca530aa920ca040e92e6986d54778efb1d0aaf0",
+          "md5": "90cff7395a13295308a332fa22051070"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-iossimulatorarm64-0.3.1-metadata.jar",
+          "url": "lib-coroutines-iossimulatorarm64-0.3.1-metadata.jar",
+          "size": 261,
+          "sha512": "d859250890e7e1465fa8ced98453359213584064f23d1564c1df922f3e8b42fe5c03f7dacf28e952906b7e381a04b59129c183ad283ef4100994ffef77c0f1cc",
+          "sha256": "64e6ccd1550b2e3dc90453d461116446e272c2886b65dcf9653b57710f15ccd4",
+          "sha1": "6b39e2361e74d2e9d385c28fea6bb64aece0813e",
+          "md5": "55dfdcc7d4ac83af6857a0064eef1fbd"
+        }
+      ]
+    }
+  ]
+}
