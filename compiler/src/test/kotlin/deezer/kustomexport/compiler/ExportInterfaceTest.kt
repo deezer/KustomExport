@@ -29,7 +29,7 @@ class ExportInterfaceTest {
             """
             package flux
             
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             interface Exportable
@@ -69,7 +69,7 @@ class ExportInterfaceTest {
             """
             package flux
             
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             interface BasicInterface {
@@ -120,7 +120,7 @@ class ExportInterfaceTest {
             """
             package flux
             
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             interface BasicInterface {
@@ -177,7 +177,7 @@ class ExportInterfaceTest {
             """
             package flux
             
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             interface BasicInterface {
@@ -249,7 +249,7 @@ class ExportInterfaceTest {
                     content = """
                         package flux
                         
-                        import deezer.kustom.KustomExport
+                        import deezer.kustomexport.KustomExport
                         import bar.Bar
             
                         @KustomExport
@@ -327,7 +327,7 @@ class ExportInterfaceTest {
                     content = """
                         package flux
                         
-                        import deezer.kustom.KustomExport
+                        import deezer.kustomexport.KustomExport
                         import bar.Bar
             
                         @KustomExport

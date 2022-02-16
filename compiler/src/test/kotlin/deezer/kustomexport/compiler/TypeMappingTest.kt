@@ -28,7 +28,7 @@ class TypeMappingTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             class AllTypesHandledByKotlinJs {
@@ -192,7 +192,7 @@ class TypeMappingTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             class MyLongClass {
@@ -252,7 +252,7 @@ class TypeMappingTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             class Nullables {
@@ -336,7 +336,7 @@ class TypeMappingTest {
                     package foo.bar
 
                     import pokemon.Pikachu
-                    import deezer.kustom.KustomExport
+                    import deezer.kustomexport.KustomExport
         
                     @KustomExport
                     class Arrays {
@@ -428,7 +428,7 @@ class TypeMappingTest {
                     """
                 package pokedex
                 
-                import deezer.kustom.KustomExport
+                import deezer.kustomexport.KustomExport
                 import pokemon.Pikachu
     
                 @KustomExport
@@ -503,7 +503,7 @@ class TypeMappingTest {
                     "Lambdas.kt",
                     """
                     package foo
-                    import deezer.kustom.KustomExport
+                    import deezer.kustomexport.KustomExport
                     import pokemon.Pikachu
         
                     @KustomExport

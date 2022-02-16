@@ -28,7 +28,7 @@ class ExportClassTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             class BasicClass
@@ -69,7 +69,7 @@ class ExportClassTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             class BasicClass(val id: String)
@@ -79,8 +79,8 @@ class ExportClassTest {
                 content = """
                 package foo.bar.js
                 
-                import deezer.kustom.dynamicCastTo
-                import deezer.kustom.dynamicNull
+                import deezer.kustomexport.dynamicCastTo
+                import deezer.kustomexport.dynamicNull
                 import kotlin.String
                 import kotlin.Suppress
                 import kotlin.js.JsExport
@@ -137,7 +137,7 @@ class ExportClassTest {
             """
             package foo.bar
             
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
             import kotlin.Any
 
             @KustomExport

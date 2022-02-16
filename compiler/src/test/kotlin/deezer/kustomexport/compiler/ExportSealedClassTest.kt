@@ -31,7 +31,7 @@ class ExportSealedClassTest {
                     """
                     package foo.bar
         
-                    import deezer.kustom.KustomExport
+                    import deezer.kustomexport.KustomExport
         
                     @KustomExport
                     sealed class SealedParent(val ctorParam: Long) {
@@ -119,8 +119,8 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
                     
-                    import deezer.kustom.dynamicCastTo
-                    import deezer.kustom.dynamicNull
+                    import deezer.kustomexport.dynamicCastTo
+                    import deezer.kustomexport.dynamicNull
                     import kotlin.Double
                     import kotlin.String
                     import kotlin.Suppress
@@ -184,7 +184,7 @@ class ExportSealedClassTest {
                     """
                     package foo.bar
         
-                    import deezer.kustom.KustomExport
+                    import deezer.kustomexport.KustomExport
                     import java.lang.IllegalStateException // Or else it's interpreted as a typealias and fail in the toClassName() koktlinpoet ext
         
                     @KustomExport
@@ -246,8 +246,8 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
                     
-                    import deezer.kustom.dynamicCastTo
-                    import deezer.kustom.dynamicNull
+                    import deezer.kustomexport.dynamicCastTo
+                    import deezer.kustomexport.dynamicNull
                     import kotlin.Double
                     import kotlin.String
                     import kotlin.Suppress
@@ -327,8 +327,8 @@ class ExportSealedClassTest {
                     content = """
                     package foo.bar.js
                     
-                    import deezer.kustom.dynamicCastTo
-                    import deezer.kustom.dynamicNull
+                    import deezer.kustomexport.dynamicCastTo
+                    import deezer.kustomexport.dynamicNull
                     import kotlin.Double
                     import kotlin.String
                     import kotlin.Suppress

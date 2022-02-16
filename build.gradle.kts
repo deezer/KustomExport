@@ -67,7 +67,7 @@ tasks.create<Delete>("cleanMavenLocalArtifacts") {
 
 tasks.create<Sync>("copyMavenLocalArtifacts") {
     group = "publishing"
-    dependsOn(":compiler:publishToMavenLocal", ":lib:publishToMavenLocal")
+    dependsOn(":compiler:publishToMavenLocal", ":lib:publishToMavenLocal", ":lib-coroutines:publishToMavenLocal")
 
     val userHome = System.getProperty("user.home")
     val groupDir = project.group.toString().replace('.', '/')

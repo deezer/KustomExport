@@ -97,7 +97,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("deezer.kustomexport:lib:0.1.0")
+                implementation("deezer.kustomexport:lib:<version>")
+                implementation("deezer.kustomexport:lib-coroutines:<version>")
             }
         }
     }

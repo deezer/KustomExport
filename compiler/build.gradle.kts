@@ -22,7 +22,7 @@ dependencies {
     implementation("com.google.devtools.ksp:symbol-processing:$kspVersion")
     implementation("com.google.devtools.ksp:symbol-processing-api:$kspVersion")
 
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.6")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.7")
     testImplementation("junit:junit:4.13.2")
     testImplementation(kotlin("test"))
 }

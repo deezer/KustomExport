@@ -30,7 +30,7 @@ class GenericsInterfaceTest {
         assertCompilationOutput(
             """
             package foo.bar
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             open class GenericsBase
 

@@ -29,7 +29,7 @@ class ExportEnumTest {
             """
             package foo.bar
             
-            import deezer.kustom.KustomExport
+            import deezer.kustomexport.KustomExport
 
             @KustomExport
             enum class Season {
@@ -51,9 +51,9 @@ class ExportEnumTest {
                 
                 @JsExport
                 public class Season internal constructor(
-                    internal val `value`: CommonSeason
+                    internal val common: CommonSeason
                 ) {
-                    public val name: String = value.name
+                    public val name: String = common.name
                 }
                 
                 @JsExport
@@ -77,21 +77,21 @@ class ExportEnumTest {
                     return null
                 }
                 
-                public fun Season.importSeason(): CommonSeason = value
+                public fun Season.importSeason(): CommonSeason = common
                 
-                public fun CommonSeason.exportSeason(): Season = Season(this)
-                
-                @JsExport
-                public val Season_SPRING: Season = CommonSeason.SPRING.exportSeason()
+                public fun CommonSeason.exportSeason(): Season = Season_valueOf(this.name)!!
                 
                 @JsExport
-                public val Season_SUMMER: Season = CommonSeason.SUMMER.exportSeason()
+                public val Season_SPRING: Season = Season(CommonSeason.SPRING)
                 
                 @JsExport
-                public val Season_AUTUMN: Season = CommonSeason.AUTUMN.exportSeason()
+                public val Season_SUMMER: Season = Season(CommonSeason.SUMMER)
                 
                 @JsExport
-                public val Season_WINTER: Season = CommonSeason.WINTER.exportSeason()
+                public val Season_AUTUMN: Season = Season(CommonSeason.AUTUMN)
+                
+                @JsExport
+                public val Season_WINTER: Season = Season(CommonSeason.WINTER)
                 """.trimIndent()
             )
         )
