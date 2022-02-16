@@ -2,10 +2,6 @@ buildscript {
     val kotlinVersion: String by project
     repositories {
         mavenCentral()
-        maven {
-            name = "ajoberstar-backup"
-            url = java.net.URI("https://ajoberstar.org/bintray-backup/")
-        }
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
@@ -21,14 +17,14 @@ val localProperties = java.util.Properties().apply {
 
 plugins {
     id("maven-publish")
-    id("org.ajoberstar.git-publish") version "3.0.0"
+    id("org.ajoberstar.git-publish") version "3.0.1"
     id("org.ajoberstar.grgit") version "4.1.1"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
 allprojects {
     group = "deezer.kustomexport"
-    version = "0.3.0"
+    version = "0.3.1"
 
     repositories {
         mavenLocal()
