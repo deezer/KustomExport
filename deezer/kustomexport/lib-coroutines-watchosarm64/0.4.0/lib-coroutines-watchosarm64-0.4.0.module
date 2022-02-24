@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.4.0/lib-coroutines-0.4.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.4.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "watchosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-watchosarm64-0.4.0.klib",
+          "size": 3983,
+          "sha512": "5cb832031eced708e3ed8f5453baf765cf71ed9cb4796eac04af8d03b4ba0687899177ad91bb0e8f633d6dec21d8916ae9660a8b64f2b01767d7440892770684",
+          "sha256": "882118ba0ed6a32fac171edf50ec7d27a11d0fe59ccce27d7cb6779070532193",
+          "sha1": "736adf2b8232f4b95f873478031ced497bdbee46",
+          "md5": "c5ed1866516ca9ba9a045bdf0a46a987"
+        }
+      ]
+    },
+    {
+      "name": "watchosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-watchosarm64-0.4.0-metadata.jar",
+          "url": "lib-coroutines-watchosarm64-0.4.0-metadata.jar",
+          "size": 261,
+          "sha512": "ed2488242680411bda9cb8725da735c86afcfb6b79397432ea025c2ce35e55b2393da42bee1293fceea7f3ff477da9c92c4c018ea042a661a08aab31b7463561",
+          "sha256": "68fc4049952b6c81f6166466caec6aacd369e5d04ffebe066ccdbe5502969bcb",
+          "sha1": "8136e56a08ae3532374ed9323c14df6e11f7be3e",
+          "md5": "4d1964b3efdbd7b214c7dd68bbd0dc9a"
+        }
+      ]
+    }
+  ]
+}

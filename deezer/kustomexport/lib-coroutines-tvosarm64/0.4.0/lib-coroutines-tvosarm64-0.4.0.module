@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.4.0/lib-coroutines-0.4.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.4.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "tvosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "tvos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-tvosarm64-0.4.0.klib",
+          "size": 3957,
+          "sha512": "2486eb2f60d6fc6a735d69d101d500aac0c7fbb4129ef6f56df542fa54430e6f74e783eda41ac87a85ea5bd88355001eeaea874fc08d9dc6ab7178fe8146dd9a",
+          "sha256": "cbb64fde4fbf5d836e28727be2a072690962cd96c9766e0802f730a42051fd4f",
+          "sha1": "57fd90f8f73ffc1fd534786703ee62e132446938",
+          "md5": "d428ba2a5b505978f653cd4bece96d44"
+        }
+      ]
+    },
+    {
+      "name": "tvosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "tvos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-tvosarm64-0.4.0-metadata.jar",
+          "url": "lib-coroutines-tvosarm64-0.4.0-metadata.jar",
+          "size": 261,
+          "sha512": "a6a7443cb87decb574afe40ac7fdf5c5d1e0d93b81de78e095ed7dd3a4190a63b19dd6e2f8cc7dede8812d2974575d52ec6c69015b26d6e672f6b81366f88977",
+          "sha256": "be6620ee1218a707e0c922f236ffe5f499b5c6f9b94e180e025f54be1708a71b",
+          "sha1": "fbd19734ae53a6ce2de72dd5b1616b78ecddcc53",
+          "md5": "29d18f2789929e342005a193aa4835e0"
+        }
+      ]
+    }
+  ]
+}
