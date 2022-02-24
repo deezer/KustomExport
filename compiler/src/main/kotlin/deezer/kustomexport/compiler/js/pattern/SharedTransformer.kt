@@ -21,9 +21,11 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
+import com.squareup.kotlinpoet.TypeName
 import deezer.kustomexport.compiler.js.FormatString
 import deezer.kustomexport.compiler.js.FunctionDescriptor
 import deezer.kustomexport.compiler.js.MethodNameDisambiguation
+import deezer.kustomexport.compiler.js.ParameterDescriptor
 import deezer.kustomexport.compiler.js.PropertyDescriptor
 import deezer.kustomexport.compiler.js.abortController
 import deezer.kustomexport.compiler.js.abortSignal
@@ -36,85 +38,116 @@ import deezer.kustomexport.compiler.js.coroutinesPromiseFunc
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
 import deezer.kustomexport.compiler.js.toFormatString
 
-fun FunctionDescriptor.buildWrappingFunction(
-    body: Boolean,
-    import: Boolean,
-    delegateName: String,
-    mnd: MethodNameDisambiguation,
-    isClassOpen: Boolean,
-    forceOverride: Boolean = false, // TODO: rework that shortcut for testing...
-): FunSpec {
-    val funExportedName = mnd.getMethodName(this)
+enum class OverrideMode { FORCE_OVERRIDE, FORCE_NO_OVERRIDE, AUTO }
 
-    val fb = FunSpec.builder(if (!import) funExportedName else name)
-    if (isClassOpen) fb.addModifiers(KModifier.OPEN)
+fun FunctionDescriptor.returnType(
+    import: Boolean,
+): TypeName {
     val returns = if (import) {
         returnType.concreteTypeName
     } else {
         returnType.exportedTypeName
     }
-    fb.returns(if (!import && isSuspend) returns.asCoroutinesPromise() else returns)
+    return if (!import && isSuspend) returns.asCoroutinesPromise() else returns
+}
 
-    if (forceOverride || isOverride) {
+fun FunSpec.Builder.addParameters(
+    params: List<ParameterDescriptor>,
+    import: Boolean,
+    isSuspend: Boolean
+): FunSpec.Builder {
+    params.forEach { param ->
+        if (import) {
+            addParameter(param.name, param.type.concreteTypeName)
+        } else {
+            addParameter(param.name, param.type.exportedTypeName)
+        }
+    }
+    if (!import && isSuspend) {
+        addParameter("abortSignal", abortSignal)
+    }
+    return this
+}
+
+//TODO: Rework and cut that spaghetti design (too much params / different use cases)
+fun FunctionDescriptor.buildWrappingFunction(
+    body: Boolean,
+    import: Boolean,
+    delegateName: String?,
+    mnd: MethodNameDisambiguation,
+    isClassOpen: Boolean,
+    overrideMode: OverrideMode = OverrideMode.AUTO, // TODO: rework that shortcut for testing...
+): FunSpec {
+    val funExportedName = mnd.getMethodName(this)
+
+    val fb = FunSpec.builder(if (!import) funExportedName else name)
+    if (isClassOpen) fb.addModifiers(KModifier.OPEN)
+    fb.returns(returnType(import))
+
+    if (overrideMode != OverrideMode.FORCE_NO_OVERRIDE &&
+        (overrideMode == OverrideMode.FORCE_OVERRIDE || isOverride)
+    ) {
         fb.addModifiers(KModifier.OVERRIDE)
     }
     if (import && isSuspend) {
         fb.addModifiers(KModifier.SUSPEND)
     }
 
-    parameters.forEach { param ->
-        if (import) {
-            fb.addParameter(param.name, param.type.concreteTypeName)
-        } else {
-            fb.addParameter(param.name, param.type.exportedTypeName)
-        }
-    }
-    if (!import && isSuspend) {
-        fb.addParameter("abortSignal", abortSignal)
-    }
+    fb.addParameters(parameters, import, isSuspend)
 
     if (body) {
-        if (!import && isSuspend) {
-            fb.addCode("return %T.%M·{\n", coroutinesGlobalScope, coroutinesPromiseFunc)
-        }
-        if (import && isSuspend) {
-            fb.addStatement("val abortController = %T()", abortController)
-            fb.addStatement("val abortSignal = abortController.signal")
-            fb.addStatement(
-                "%M.%M.invokeOnCompletion { abortController.abort() }",
-                coroutinesContext,
-                coroutinesContextJob
-            )
-        }
-        if (!import && isSuspend) {
-            fb.addStatement("abortSignal.onabort = { %M.%M.cancel() }", coroutinesContext, coroutinesContextJob)
-        }
-
-        val funcName = if (import) funExportedName else name
-        var params = parameters.fold(FormatString("")) { acc, item ->
-            acc + "$INDENTATION${item.name} = ".toFormatString() + item.portMethod(!import) + ",\n"
-        }
-        if (import && isSuspend) {
-            params += FormatString("${INDENTATION}abortSignal = abortSignal")
-        }
-
-        //TODO: Opti : could save the local "result" variable here
-        fb.addCode(
-            ("val result = $delegateName.$funcName(".toFormatString() +
-                (if (parameters.isNotEmpty()) "\n" else "") +
-                params +
-                (if (parameters.isNotEmpty()) ")\n" else ")\n")).asCode()
-        )
 
         fb.addCode(
-            ((if (import || !isSuspend) "return·" else "").toFormatString() +
-                returnType.portMethod(import, "result".toFormatString()) +
-                (if (import && isSuspend) ".%M()".toFormatString(coroutinesAwait) else "".toFormatString())).asCode()
+            buildWrappingFunctionBody(
+                import = import,
+                receiver = delegateName,
+                functionName = if (import) funExportedName else name
+            ).asCode()
         )
-
-        if (!import && isSuspend) fb.addCode("\n}")
     }
     return fb.build()
+}
+
+fun FunctionDescriptor.buildWrappingFunctionBody(
+    import: Boolean,
+    receiver: String?,
+    functionName: String
+): FormatString {
+    var body = "".toFormatString()
+    if (!import && isSuspend) {
+        body += "return %T.%M·{\n".toFormatString(coroutinesGlobalScope, coroutinesPromiseFunc)
+    }
+    if (import && isSuspend) {
+        body += "val abortController = %T()\n".toFormatString(abortController)
+        body += "val abortSignal = abortController.signal\n"
+        body += "%M.%M.invokeOnCompletion { abortController.abort() }\n".toFormatString(
+            coroutinesContext, coroutinesContextJob
+        )
+    }
+    if (!import && isSuspend) {
+        body += "abortSignal.onabort = { %M.%M.cancel() }\n".toFormatString(coroutinesContext, coroutinesContextJob)
+    }
+
+    var params = parameters.fold(FormatString("")) { acc, item ->
+        acc + "$INDENTATION${item.name} = ".toFormatString() + item.portMethod(!import) + ",\n"
+    }
+    if (import && isSuspend) {
+        params += FormatString("${INDENTATION}abortSignal = abortSignal")
+    }
+
+    //TODO: Opti : could save the local "result" variable here
+    val callStr = if (receiver == null) "$functionName" else "$receiver.$functionName"
+    body += "val result = $callStr("
+    body += if (parameters.isNotEmpty()) "\n" else ""
+    body += params
+    body += if (parameters.isNotEmpty()) ")\n" else ")\n"
+
+    body += if (import || !isSuspend) "return·" else ""
+    body += returnType.portMethod(import, "result".toFormatString())
+    body += if (import && isSuspend) ".%M()".toFormatString(coroutinesAwait) else "".toFormatString()
+
+    if (!import && isSuspend) body += "\n}"
+    return body
 }
 
 fun overrideGetterSetter(

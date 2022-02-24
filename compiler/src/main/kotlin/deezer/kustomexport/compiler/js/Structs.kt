@@ -42,6 +42,11 @@ data class ParameterDescriptor(
     inline fun portMethod(import: Boolean) = if (import) importedMethod else exportedMethod
 }
 
+data class TopLevelFunctionDescriptor(
+    val packageName: String,
+    val function: FunctionDescriptor,
+)
+
 data class FunctionDescriptor(
     val name: String,
     val isOverride: Boolean,

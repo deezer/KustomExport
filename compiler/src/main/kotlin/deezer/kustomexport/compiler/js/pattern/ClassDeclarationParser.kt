@@ -19,7 +19,6 @@
 
 package deezer.kustomexport.compiler.js.pattern
 
-import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
@@ -27,6 +26,9 @@ import com.google.devtools.ksp.isPrivate
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.google.devtools.ksp.symbol.KSName
+import com.google.devtools.ksp.symbol.KSTypeParameter
 import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
@@ -45,48 +47,36 @@ import deezer.kustomexport.compiler.js.PropertyDescriptor
 import deezer.kustomexport.compiler.js.SealedClassDescriptor
 import deezer.kustomexport.compiler.js.SealedSubClassDescriptor
 import deezer.kustomexport.compiler.js.SuperDescriptor
+import deezer.kustomexport.compiler.js.TopLevelFunctionDescriptor
 import deezer.kustomexport.compiler.js.TypeParameterDescriptor
 import deezer.kustomexport.compiler.js.ValueClassDescriptor
 import deezer.kustomexport.compiler.js.mapping.OriginTypeName
+
+fun parseFunction(
+    function: KSFunctionDeclaration,
+    forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null,
+): TopLevelFunctionDescriptor = TopLevelFunctionDescriptor(
+    packageName = function.packageName.asString(),
+    function = function.toDescriptor(
+        sequenceOf(),
+        function.typeParameters.toTypeParameterResolver(),
+        buildConcreteTypeParameters(forcedConcreteTypeParameters) { function.typeParameters[0] }
+    )
+)
 
 @KotlinPoetKspPreview
 fun parseClass(
     classDeclaration: KSClassDeclaration,
     forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null,
     exportedClassSimpleName: String
-): Descriptor? {
+): Descriptor {
     val typeParamResolver = classDeclaration.typeParameters.toTypeParameterResolver()
 
-    val concreteTypeParameters: MutableList<TypeParameterDescriptor> = mutableListOf()
-    (forcedConcreteTypeParameters ?: emptyList())/* ?: typeParamResolver.parametersMap.values*/
-        .forEach { (name, type) ->
-            val className = try {
-                type.asClassName()
-            } catch (t: Throwable) {
-                Logger.error(
-                    "Cannot use @KustomException on a not concrete generics class.",
-                    classDeclaration.typeParameters[0]
-                )
-                return null
-            }
-            concreteTypeParameters.add(
-                TypeParameterDescriptor(
-                    name = name,
-                    origin = className.cached(concreteTypeParameters),
-                )
-            )
-        }
+    val concreteTypeParameters: MutableList<TypeParameterDescriptor> =
+        buildConcreteTypeParameters(forcedConcreteTypeParameters) { classDeclaration.typeParameters[0] }
 
     val packageName = classDeclaration.packageName.asString()
     val classSimpleName = classDeclaration.simpleName.asString()
-
-    //val superTypes = classDeclaration.getAllSuperTypes()
-
-    Logger.warn(
-        "PARSING - ${classSimpleName} ${classDeclaration.superTypes.count()} ${
-            classDeclaration.getAllSuperTypes().count()
-        }"
-    )
 
     val superTypes = classDeclaration.superTypes
         .map { superType ->
@@ -187,6 +177,32 @@ fun parseClass(
     }
 }
 
+private fun buildConcreteTypeParameters(
+    forcedConcreteTypeParameters: List<Pair<String, TypeName>>?,
+    firstTypeParameterProvider: () -> KSTypeParameter
+): MutableList<TypeParameterDescriptor> {
+    val concreteTypeParameters: MutableList<TypeParameterDescriptor> = mutableListOf()
+    (forcedConcreteTypeParameters ?: emptyList())/* ?: typeParamResolver.parametersMap.values*/
+        .forEach { (name, type) ->
+            val className = try {
+                type.asClassName()
+            } catch (t: Throwable) {
+                Logger.error(
+                    "Cannot use @KustomException on a not concrete generics class.",
+                    firstTypeParameterProvider()
+                )
+                error(t)
+            }
+            concreteTypeParameters.add(
+                TypeParameterDescriptor(
+                    name = name,
+                    origin = className.cached(concreteTypeParameters),
+                )
+            )
+        }
+    return concreteTypeParameters
+}
+
 private val nonExportableFunctions = listOf(
     "<init>",
     "equals",
@@ -216,20 +232,27 @@ fun KSClassDeclaration.parseFunctions(
         .filter { it.simpleName.asString() !in nonExportableFunctions }
         .filter { it.isPublic() }
         .map { func ->
-            FunctionDescriptor(
-                name = func.simpleName.asString(),
-                isOverride = func.findOverridee() != null || !declaredNames.contains(func.simpleName),
-                isSuspend = func.modifiers.contains(Modifier.SUSPEND),
-                returnType = func.returnType!!.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
-                parameters = func.parameters.map { p ->
-                    ParameterDescriptor(
-                        name = p.name?.asString() ?: TODO("not sure what we want here"),
-                        type = p.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
-                    )
-                }
-            )
+            func.toDescriptor(declaredNames, typeParamResolver, concreteTypeParameters)
         }.toList()
 }
+
+private fun KSFunctionDeclaration.toDescriptor(
+    declaredNames: Sequence<KSName>,
+    typeParamResolver: TypeParameterResolver,
+    concreteTypeParameters: MutableList<TypeParameterDescriptor>
+) =
+    FunctionDescriptor(
+        name = simpleName.asString(),
+        isOverride = findOverridee() != null || !declaredNames.contains(simpleName),
+        isSuspend = modifiers.contains(Modifier.SUSPEND),
+        returnType = returnType!!.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
+        parameters = parameters.map { p ->
+            ParameterDescriptor(
+                name = p.name?.asString() ?: TODO("not sure what we want here"),
+                type = p.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
+            )
+        }
+    )
 
 @OptIn(KotlinPoetKspPreview::class)
 fun KSClassDeclaration.parseProperties(

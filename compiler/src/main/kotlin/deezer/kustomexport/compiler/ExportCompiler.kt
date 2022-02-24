@@ -27,6 +27,7 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSTypeAlias
 import com.google.devtools.ksp.symbol.KSTypeReference
@@ -41,11 +42,14 @@ import deezer.kustomexport.compiler.js.ClassDescriptor
 import deezer.kustomexport.compiler.js.EnumDescriptor
 import deezer.kustomexport.compiler.js.InterfaceDescriptor
 import deezer.kustomexport.compiler.js.SealedClassDescriptor
+import deezer.kustomexport.compiler.js.TopLevelFunctionDescriptor
 import deezer.kustomexport.compiler.js.ValueClassDescriptor
 import deezer.kustomexport.compiler.js.pattern.`class`.transform
 import deezer.kustomexport.compiler.js.pattern.`interface`.transform
 import deezer.kustomexport.compiler.js.pattern.enum.transform
+import deezer.kustomexport.compiler.js.pattern.function.transform
 import deezer.kustomexport.compiler.js.pattern.parseClass
+import deezer.kustomexport.compiler.js.pattern.parseFunction
 import deezer.kustomexport.compiler.js.pattern.value.transform
 
 // Trick to share the Logger everywhere without injecting the dependency everywhere
@@ -170,6 +174,14 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
             parseAndWrite(targetClassDeclaration, targetTypeNames)
         }
 
+        override fun visitFunctionDeclaration(function: KSFunctionDeclaration, data: Unit) {
+            super.visitFunctionDeclaration(function, data)
+            val descriptor: TopLevelFunctionDescriptor = parseFunction(function)
+            Logger.warn("FUNCTION: ${function.simpleName.asString()}")
+            descriptor.transform()
+                .writeCode(environment, function.containingFile!!)
+        }
+
         private fun parseAndWrite(
             classDeclaration: KSClassDeclaration,
             targetTypeNames: List<Pair<String, ClassName>>,
@@ -188,9 +200,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                     .writeCode(environment, *allSources)
                 is InterfaceDescriptor -> descriptor.transform()
                     .writeCode(environment, *allSources)
-                null -> {
-                    // Cannot parse this class, parsing error already reported on the parser
-                }
             }
         }
     }
