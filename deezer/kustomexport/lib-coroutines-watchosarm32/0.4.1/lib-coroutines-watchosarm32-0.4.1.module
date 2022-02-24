@@ -1,0 +1,107 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.4.1/lib-coroutines-0.4.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.4.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "watchosArm32ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_arm32",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.4.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-watchosarm32-0.4.1.klib",
+          "size": 7165,
+          "sha512": "6eff6cc8c8a614f14dd361bf2edc03e6e7f18b6275fbee5c49282468686c3320b172b3d53f0febd3d4e44b6acc5b82319fdbad26eec075f96e4ea9a97fb96e3a",
+          "sha256": "8640a05c44f14574b07729403cac4d62ad22dad7bdea3191c20e1dfb7a0c87a0",
+          "sha1": "635b300a5e24491b81111d47585ce302be30c545",
+          "md5": "708aeb439e1f018dee3ef2e91730776b"
+        }
+      ]
+    },
+    {
+      "name": "watchosArm32MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_arm32",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.4.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-watchosarm32-0.4.1-metadata.jar",
+          "url": "lib-coroutines-watchosarm32-0.4.1-metadata.jar",
+          "size": 261,
+          "sha512": "0db0ecf3f225ff1fc7ff8a6210c52c41157a18e94781827b762f2bdffdf234d1e40adfac3dbbad3bc75151039c5860bbae7fee3f242e0186bd5e4407967c3561",
+          "sha256": "1347440e167ed1e3e94ee534c6ff058742e4966ff2420fbf9f0eba92f838613e",
+          "sha1": "deff3849e3cabab4e6c4c348aa9ca3ab214ad7ba",
+          "md5": "ade011928aa55fa7cd866a5b8ef88246"
+        }
+      ]
+    }
+  ]
+}
