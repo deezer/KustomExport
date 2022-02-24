@@ -37,6 +37,9 @@ val CLASS_CAST_EXCEPTION = ClassName("kotlin", "ClassCastException")
 val ASSERTION_ERROR = ClassName("kotlin", "AssertionError")
 val NO_SUCH_ELEMENT_EXCEPTION = ClassName("kotlin", "NoSuchElementException")
 val ARITHMETIC_EXCEPTION = ClassName("kotlin", "ArithmeticException")
+// Coroutines
+val CANCELLATION_EXCEPTION = ClassName("kotlinx.coroutines", "CancellationException")
+val TIMEOUT_CANCELLATION_EXCEPTION = ClassName("kotlinx.coroutines", "TimeoutCancellationException")
 
 const val EXCEPTION_JS_PACKAGE = "deezer.kustomexport"
 fun TypeName.toJsException(): ClassName = ClassName(EXCEPTION_JS_PACKAGE, (this as ClassName).simpleName)
@@ -58,4 +61,6 @@ val ALL_KOTLIN_EXCEPTIONS = listOf(
     ASSERTION_ERROR,
     NO_SUCH_ELEMENT_EXCEPTION,
     ARITHMETIC_EXCEPTION,
+    CANCELLATION_EXCEPTION,
+    TIMEOUT_CANCELLATION_EXCEPTION
 )

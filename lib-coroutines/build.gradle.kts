@@ -17,6 +17,12 @@ kotlin {
             languageSettings.optIn("kotlin.RequiresOptIn")
             languageSettings.optIn("kotlin.js.ExperimentalJsExport")
         }
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":lib"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+            }
+        }
     }
 
     targets.all {

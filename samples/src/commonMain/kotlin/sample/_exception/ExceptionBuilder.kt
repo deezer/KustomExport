@@ -1,6 +1,7 @@
 package sample._exception
 
 import deezer.kustomexport.KustomExport
+import kotlinx.coroutines.CancellationException
 
 @KustomExport
 class ExceptionBuilder {
@@ -20,6 +21,9 @@ class ExceptionBuilder {
     fun buildNumberFormatException(msg: String) = NumberFormatException(msg)
     fun buildRuntimeException(msg: String) = RuntimeException(msg)
     fun buildUnsupportedOperationException(msg: String) = UnsupportedOperationException(msg)
+
+    // Coroutines
+    fun buildCancellationException(msg: String) = CancellationException(msg)
 }
 
 @KustomExport
@@ -36,6 +40,8 @@ class ExceptionConsumer {
     fun consume(e: Exception): String {
         @Suppress("USELESS_IS_CHECK") // Cause typescript can go crazy
         return when (e) {
+            is CancellationException -> "CancellationException=${e.message}"
+
             is MyEx1 -> "MyEx1=${e.message}"
             is MyEx2 -> "MyEx2=${e.message}"
             is ArithmeticException -> "ArithmeticException=${e.message}"

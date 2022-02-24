@@ -58,4 +58,6 @@ runTest("Exceptions", () : void => {
         Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.NoSuchElementException)
     assertException(builder.buildArithmeticException("ae"), "ae",
         Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.ArithmeticException)
+    assertException(builder.buildCancellationException("cancel"), "cancel",
+        Error, deezer.kustomexport.Exception, deezer.kustomexport.RuntimeException, deezer.kustomexport.IllegalStateException, deezer.kustomexport.CancellationException)
 })
