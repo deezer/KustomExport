@@ -126,6 +126,7 @@ fun FunctionDescriptor.buildWrappingFunctionBody(
     }
     if (!import && isSuspend) {
         body += "abortSignal.onabort = { %M.%M.cancel() }\n".toFormatString(coroutinesContext, coroutinesContextJob)
+        body += "if (abortSignal.aborted) { %M.%M.cancel() }\n".toFormatString(coroutinesContext, coroutinesContextJob)
     }
 
     var params = parameters.fold(FormatString("")) { acc, item ->

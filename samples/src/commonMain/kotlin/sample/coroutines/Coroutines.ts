@@ -45,7 +45,6 @@ runTest("Coroutines", async () : Promise<void> => {
     } catch(e) {
         assert(e instanceof Error, "reject throws an Error")
     }
-
     cancelTypescriptPromiseFromKotlin()
 
     cancelKotlinCoroutinesFromTypescript()
@@ -107,12 +106,9 @@ async function cancelKotlinCoroutinesFromTypescript() {
     var cancellationException = null
     promise.catch((e) => {
         cancellationException = e
-        //console.log("Catching the cancellation exception: " + e.name + " - " + e.message)
     })
 
-    setTimeout(() => {
-        abortController.abort()
-    }, 100);
+    abortController.abort()
 
     setTimeout(() => {
         assertEquals(false, computer.completed, "can cancel Kotlin coroutines from Typescript (work has been cancelled and will never complete)")
