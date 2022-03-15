@@ -66,3 +66,5 @@ If 90% of your library is exported for example, then the several generated class
 Anyway, we advise you to test your bundle size after installing the solution, and confirm the cost is OK for your project.
 
 Wrapping also means potentially more function calls or performance impact if it's on a critical path. Most wrapping are straightforward and could be optimized by your js packaging, but if it's critical for you, you should definitely make some benchmarks first. 
+
+[Go back to README](../README.md)

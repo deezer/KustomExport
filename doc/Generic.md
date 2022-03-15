@@ -112,3 +112,5 @@ typealias BExample = Example<B>
 ```
 
 Stay tuned, or create/vote on the related issue.
+
+[Go back to README](../README.md)

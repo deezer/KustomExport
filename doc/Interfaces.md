@@ -15,3 +15,5 @@ That's a bit tedious and very painful to update several files when changing the 
 Just mark the interface with `@KustomExport` and it's now available for typescript.
 
 Internally it's generating a wrapper + 2 import/export methods so that all input/outputs can be mapped from typescript to kotlin types.
+
+[Go back to README](../README.md)

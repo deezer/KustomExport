@@ -73,3 +73,5 @@ Additional notes:
 - An issue already exists to be able to export an enum as Int/String, please cast your vote if you're interested.
 - 2 additional methods values/valueOf are generated as helpers.
 - [KT-37916](https://youtrack.jetbrains.com/issue/KT-37916) should be delivered in Kotlin 1.6.20 and could provide a way better code by generating a typescript enum. (That's just not possible by generating Kotlin code with current Kotlin version.) 
+
+[Go back to README](../README.md)
