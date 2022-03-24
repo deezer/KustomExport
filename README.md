@@ -1,7 +1,11 @@
 # KustomExport: a KSP generator of JS facade
 
+![](doc/demo_kustom.png)
+
 ### Status: Experimental
-At Deezer, we're using this tool on the past months with multiple teams
+At Deezer, we develop KMP libraries, this tool help us provide nicer API for Typescript since November 2021.
+
+The generated code will change to support more features and/or stop supporting features provided by KotlinJS directly, so you may expect breaking changes when upgrading.
 
 ## Motivation
 Providing a nice Typescript API can sometimes be complex/verbose from a Kotlin Multiplatform Project.
@@ -39,13 +43,13 @@ export namespace sample.doc_examples {
 
 - `Long` will not produce a `number` but a `kotlin.Long` behing a `any` ([doc](https://kotlinlang.org/docs/js-to-kotlin-interop.html#kotlin-types-in-javascript)), but web developers usually use `number` to store timestamp.
 - `Enum`s are not handled yet ([KT-37916](https://youtrack.jetbrains.com/issue/KT-37916)) and so exported as `any`
-- `List` could be better in 99% of cases if it was exported in Arrays
-- Lots of Kotlin methods like componentX, copy, hashCode or equals are not really relevant or unusable (`copy()` should define all fields in typescript anyway)
-- comments in the Typescript generated code is only comment and doesn't fail build when type changes
+- `List` could be used in a majority of cases if it was exported in Arrays
+- Lots of Kotlin methods like componentX, copy, hashCode or equals coming from `data class` are not really relevant or unusable (`copy()` should define all fields in typescript anyway)
+- comments in the Typescript generated code is helpful but only comment and doesn't fail build when type changes
 
-There are good reasons why it's not supported by KotlinJs right now, but it's not practical to provide a clean Typescript API.
+There **are** some good reasons why it's not supported by KotlinJs right now, but it's not practical to provide a clean Typescript API.
 
-KustomExport wants to be the bridge to a good Typescript API until KotlinJS produces an equivalent export.
+KustomExport wants to be the bridge to provide a nice Typescript API until KotlinJS produces an equivalent export.
 
 ## Technical approach
 
@@ -63,8 +67,8 @@ fun StateEnum.export(): StateEnumJs = Encoding(this)
 // Object that exposes all possible values of the enum (note the 's')
 @JsExport
 object StateEnumsJs {
-    val IDLE: StateEnumJs = StateEnum.IDLE.exportEncoding()
-    val RUNNING: StateEnumJs = StateEnum.RUNNING.exportEncoding()
+    val IDLE: StateEnumJs = StateEnumJs(StateEnum.IDLE)
+    val RUNNING: StateEnumJs = StateEnumJs(StateEnum.RUNNING)
 }
 // And more methods like values(), valueOf()...
 ```
@@ -73,7 +77,7 @@ object StateEnumsJs {
 - New feature can be invisible when changes are non-breaking with the facade. A dangerous behaviour for library providers.
 - It requires calling import()/export() method in many places, leading to a "specific to web" code in your common code.
 
-If you write similar facades yourself, this generator could help you avoid writing them manually. Please open issues to discuss your needs!
+If you write similar facades yourself, this generator could help you avoid writing them manually. Please open issues with your needs!
 
 >####Note that it's adding code to your existing codebase so it will have an impact on the JS bundle size.
 

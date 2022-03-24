@@ -17,8 +17,12 @@
 
 package sample.doc_examples
 
+import deezer.kustomexport.KustomExport
+
+@KustomExport
 enum class StateEnum { IDLE, RUNNING }
-@JsExport
+
+@KustomExport
 data class SomeDataObject(
     val timestamp: Long,
     val state: StateEnum,
