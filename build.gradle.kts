@@ -38,21 +38,21 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJ
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().nodeVersion = "16.0.0"
 }
 
-subprojects {
-    apply(plugin = "maven-publish")
-
-    publishing {
-        repositories {
-            maven {
-                url = uri(localProperties.getProperty("REPOSITORY_URL"))
-                credentials {
-                    username = localProperties.getProperty("REPOSITORY_USERNAME")
-                    password = localProperties.getProperty("REPOSITORY_PASSWORD")
+if (localProperties.getProperty("REPOSITORY_URL") != null)
+    subprojects {
+        apply(plugin = "maven-publish")
+        publishing {
+            repositories {
+                maven {
+                    url = uri(localProperties.getProperty("REPOSITORY_URL"))
+                    credentials {
+                        username = localProperties.getProperty("REPOSITORY_USERNAME")
+                        password = localProperties.getProperty("REPOSITORY_PASSWORD")
+                    }
                 }
             }
         }
     }
-}
 
 val gitUser = System.getenv("GIT_USER")
 val gitPassword = System.getenv("GIT_PASSWORD")
