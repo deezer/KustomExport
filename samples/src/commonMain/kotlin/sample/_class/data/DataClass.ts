@@ -1,5 +1,5 @@
 import { runTest } from "../../shared_ts/RunTest"
-import { assert } from "../../shared_ts/Assert"
+import { assertEquals, assertEqualsQuiet } from "../../shared_ts/Assert"
 import { sample } from '@kustom/Samples'
 
 runTest("DataClass", () : void => {
@@ -7,5 +7,7 @@ runTest("DataClass", () : void => {
     var factory = new sample._class.data.js.DataClassFactory()
     var fromTs = new sample._class.data.js.DataClass("data", 2)
     var fromKotlin = factory.create()
-    assert(JSON.stringify(fromTs) == JSON.stringify(fromKotlin), "created from Kotlin and Typescript are equals")
+    assertEquals(JSON.stringify(fromTs), JSON.stringify(fromKotlin), "created from Kotlin and Typescript are equals")
+    assertEqualsQuiet(fromTs.data1, "data", "can read data1")
+    assertEqualsQuiet(fromTs.data2, 2, "can read data2")
 })
