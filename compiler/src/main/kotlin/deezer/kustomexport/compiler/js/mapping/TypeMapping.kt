@@ -40,17 +40,22 @@ import deezer.kustomexport.compiler.js.toFormatString
 
 class OriginTypeName(
     private val originTypeName: TypeName,
-    private val typeParameters: List<TypeParameterDescriptor>
+    private val typeParameters: List<TypeParameterDescriptor>,
+    private val isKustomExportAnnotated: Boolean,
 ) {
     val concreteTypeName: TypeName by lazy { originTypeName.resolvedType(typeParameters) }
-    fun importedMethod(name: FormatString) = TypeMapping.importMethod(name, concreteTypeName, typeParameters)
-    val exportedTypeName: TypeName by lazy {
-        val exportedType = TypeMapping.exportedType(concreteTypeName, typeParameters)
+    fun importedMethod(name: FormatString) =
+        TypeMapping.importMethod(name, concreteTypeName, typeParameters, isKustomExportAnnotated)
 
-        exportedType.removeTypeParameter()
+    val exportedTypeName: TypeName by lazy {
+        // Remove TypeParameter: because we can't export generic in a cool manner yet, so we produce concrete from generics.
+        // See @KustomExportGenerics
+        TypeMapping.exportedType(concreteTypeName, typeParameters, isKustomExportAnnotated).removeTypeParameter()
     }
 
-    fun exportedMethod(name: FormatString) = TypeMapping.exportMethod(name, concreteTypeName, typeParameters)
+    fun exportedMethod(name: FormatString) =
+        TypeMapping.exportMethod(name, concreteTypeName, typeParameters, isKustomExportAnnotated)
+
     fun portMethod(import: Boolean, name: FormatString) = if (import) importedMethod(name) else exportedMethod(name)
 
     override fun equals(other: Any?): Boolean {
@@ -118,14 +123,21 @@ object TypeMapping {
         }
     }
 
-    fun exportedType(origin: TypeName, concreteTypeParameters: List<TypeParameterDescriptor>): TypeName {
+    fun exportedType(
+        origin: TypeName,
+        concreteTypeParameters: List<TypeParameterDescriptor>,
+        isKustomExportAnnotated: Boolean,
+    ): TypeName {
         return getMapping(origin)?.exportType?.invoke(origin, concreteTypeParameters)
             ?.copy(nullable = origin.isNullable)
             ?: run {
-                // If no mapping, assume it's a project type, and it has a generated file.
+
+                // Assuming @JsExport, but it may also be a type without annotation or handled by KotlinJs directly
+                if (!isKustomExportAnnotated) return origin
 
                 if (origin is TypeVariableName) {
-                    val exportedBounds = origin.bounds.map { it.cached(concreteTypeParameters).exportedTypeName }
+                    // TODO: we may need to parse more info so that bounds don't get wrongly interpreted.
+                    val exportedBounds = origin.bounds.map { it.cached(concreteTypeParameters, true).exportedTypeName }
                     return TypeVariableName(
                         origin.name,
                         exportedBounds
@@ -146,11 +158,15 @@ object TypeMapping {
                     )
                         .parameterizedBy(
                             generics?.typeParameters?.map { it.cached(concreteTypeParameters).exportedTypeName }
-                                ?: origin.typeArguments.map { it.cached(concreteTypeParameters).exportedTypeName }
+                                ?: origin.typeArguments.map {
+                                    it.cached(
+                                        concreteTypeParameters,
+                                        false
+                                    ).exportedTypeName
+                                }
                         )
                         .copy(nullable = origin.isNullable)
                 }
-
                 error("$origin (${origin::class.java}) is not supported yet. Please open an issue on our github.")
             }
     }
@@ -158,11 +174,16 @@ object TypeMapping {
     fun exportMethod(
         targetName: FormatString,
         origin: TypeName,
-        concreteTypeParameters: List<TypeParameterDescriptor>
+        concreteTypeParameters: List<TypeParameterDescriptor>,
+        isKustomExportAnnotated: Boolean
     ): FormatString {
         return getMapping(origin)?.exportMethod?.invoke(targetName, origin, concreteTypeParameters) ?: run {
+            // Assuming @JsExport, but it may also be a type without annotation or handled by KotlinJs directly
+            if (!isKustomExportAnnotated) return targetName
+
+
             // If no mapping, assume it's a project class, and it has a generated file
-            val simpleName = origin.cached(concreteTypeParameters).exportedTypeName.simpleName()
+            val simpleName = origin.cached(concreteTypeParameters, true).exportedTypeName.simpleName()
             val exportMethodName = if (origin is TypeVariableName) {
                 "export$simpleName"
             } else {
@@ -181,11 +202,15 @@ object TypeMapping {
     fun importMethod(
         targetName: FormatString,
         origin: TypeName,
-        concreteTypeParameters: List<TypeParameterDescriptor>
+        concreteTypeParameters: List<TypeParameterDescriptor>,
+        isKustomExportAnnotated: Boolean
     ): FormatString {
         return getMapping(origin)?.importMethod?.invoke(targetName, origin, concreteTypeParameters) ?: run {
+            // Assuming @JsExport, but it may also be a type without annotation or handled by KotlinJs directly
+            if (!isKustomExportAnnotated) return targetName
+
             // If no mapping, assume it's a project class, and it has a generated file
-            val simpleName = origin.cached(concreteTypeParameters).exportedTypeName.simpleName()
+            val simpleName = origin.cached(concreteTypeParameters, true).exportedTypeName.simpleName()
             val importMethodName = if (origin is TypeVariableName) {
                 "import$simpleName"
             } else {

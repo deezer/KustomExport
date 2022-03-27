@@ -134,7 +134,8 @@ fun initCustomMapping() {
             },
             exportMethod = { targetName, typeName, concreteTypeParameters ->
                 val exportMethod = typeName.firstParameterizedType()
-                    .cached(concreteTypeParameters).exportedMethod("it".toFormatString())
+                    .cached(concreteTypeParameters)
+                    .exportedMethod("it".toFormatString())
                 if (exportMethod.eq("it")) {
                     targetName
                 } else {

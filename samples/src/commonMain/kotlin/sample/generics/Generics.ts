@@ -1,3 +1,8 @@
+// Disabling Generics support for now:
+// - more complex when dealing with @JsExport and @KustomExport mixed
+// - support is still not great enough, must be reworked
+
+/*
 import { runTest } from "../shared_ts/RunTest"
 import { assert, assertEquals, assertQuiet } from "../shared_ts/Assert"
 import { Nullable, sample } from '@kustom/Samples'
@@ -71,3 +76,4 @@ runTest("Generics", () : void => {
     var superImpl = new CustomSuperImplFloat()
 
 })
+*/
