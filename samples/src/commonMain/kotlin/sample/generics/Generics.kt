@@ -15,6 +15,10 @@
  * under the License.
  */
 
+// Disabling Generics support for now:
+// - more complex when dealing with @JsExport and @KustomExport mixed
+// - support is still not great enough, must be reworked
+/*
 @file:KustomExportGenerics(
     exportGenerics = [
         KustomGenerics(GenericsStuff::class, arrayOf(Long::class)),
@@ -81,3 +85,4 @@ class GenericsConsumer {
 //@KustomExport
 //typealias TypeAliasLong = TypeAliasInterface<Long>
 // Unfortunately, typealias are not properly handled by KotlinJs rn
+ */

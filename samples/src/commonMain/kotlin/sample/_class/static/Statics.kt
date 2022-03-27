@@ -25,7 +25,7 @@ package sample._class.static
 
 import deezer.kustomexport.KustomExport
 import deezer.kustomexport.KustomExportGenerics
-import sample.generics.GenericsImpl
+//import sample.generics.GenericsImpl
 
 fun createString() = "string from factory method"
 
@@ -34,8 +34,10 @@ object StaticFactory {
     fun create(stuff: Long) = "string from factory object stuff=$stuff"
 }
 
+/* See generic
 object StaticGenericFactory {
     fun <T> create(): GenericsImpl<T> {
         return GenericsImpl<T>()
     }
 }
+ */

@@ -32,14 +32,3 @@ val dynamicString = MemberName("deezer.kustomexport", "dynamicString")
 val dynamicNotString = MemberName("deezer.kustomexport", "dynamicNotString")
 
 fun String.jsPackage() = if (CompilerArgs.erasePackage) "" else "$this.js"
-
-fun TypeName.withJsPackage(): TypeName {
-    return when (this) {
-        is ClassName -> ClassName(packageName.jsPackage(), simpleName)
-        is ParameterizedTypeName -> {
-            ClassName(rawType.packageName.jsPackage(), rawType.simpleName)
-                .parameterizedBy(typeArguments)
-        }
-        else -> TODO()
-    }
-}
