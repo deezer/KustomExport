@@ -14,6 +14,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+@file:OptIn(KotlinPoetKspPreview::class)
+
 package deezer.kustomexport.compiler.js.mapping
 
 import com.squareup.kotlinpoet.ANY
@@ -44,6 +46,7 @@ import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.THROWABLE
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.UNIT
+import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustomexport.compiler.firstParameterizedType
 import deezer.kustomexport.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustomexport.compiler.js.FormatString
@@ -76,38 +79,40 @@ fun initCustomMapping() {
         UNIT, // => disappear?
     ) + ALL_KOTLIN_EXCEPTIONS).map { exportableType ->
         exportableType to MappingOutput(
-            exportType = { _, _ -> exportableType },
-            importMethod = { targetName, _, _ -> targetName },
-            exportMethod = { targetName, _, _ -> targetName },
+            exportType = { _, _, _ -> exportableType },
+            importMethod = { targetName, _, _, _ -> targetName },
+            exportMethod = { targetName, _, _, _ -> targetName },
         )
     }
 
     TypeMapping.mappings += THROWABLE to MappingOutput(
-        exportType = { _, _ -> THROWABLE },
-        importMethod = { targetName, _, _ -> targetName },
-        exportMethod = { targetName, _, _ -> targetName },
+        exportType = { _, _, _ -> THROWABLE },
+        importMethod = { targetName, _, _, _ -> targetName },
+        exportMethod = { targetName, _, _, _ -> targetName },
     )
 
     TypeMapping.mappings += mapOf<TypeName, MappingOutput>(
         // https://kotlinlang.org/docs/js-to-kotlin-interop.html#kotlin-types-in-javascript
         // doc: kotlin.Long is not mapped to any JavaScript object, as there is no 64-bit integer number type in JavaScript. It is emulated by a Kotlin class.
         LONG to MappingOutput(
-            exportType = { _, _ -> DOUBLE },
-            importMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}toLong()" },
-            exportMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}toDouble()" },
+            exportType = { _, _, _ -> DOUBLE },
+            importMethod = { targetName, typeName, _, _ -> targetName + "${typeName.qdot}toLong()" },
+            exportMethod = { targetName, typeName, _, _ -> targetName + "${typeName.qdot}toDouble()" },
         ),
 
         LONG_ARRAY to MappingOutput(
-            exportType = { _, concreteTypeParameters -> ARRAY.parameterizedBy(LONG.cached(concreteTypeParameters).exportedTypeName) },
+            exportType = { _, concreteTypeParameters, _ ->
+                ARRAY.parameterizedBy(LONG.cached(concreteTypeParameters).exportedTypeName)
+            },
             // TODO: improve perf by avoiding useless double transformation
-            importMethod = { targetName, typeName, concreteTypeParameters ->
+            importMethod = { targetName, typeName, concreteTypeParameters, _ ->
                 targetName +
                     "${typeName.qdot}map { " +
                     LONG.cached(concreteTypeParameters).importedMethod("it".toFormatString()) +
                     " }" +
                     "${typeName.qdot}%M()".toFormatString(toLongArray)
             },
-            exportMethod = { targetName, typeName, concreteTypeParameters ->
+            exportMethod = { targetName, typeName, concreteTypeParameters, _ ->
                 targetName +
                     "${typeName.qdot}map { " +
                     LONG.cached(concreteTypeParameters).exportedMethod("it".toFormatString()) +
@@ -117,10 +122,13 @@ fun initCustomMapping() {
         ),
 
         ARRAY to MappingOutput(
-            exportType = { typeName, concreteTypeParameters ->
-                ARRAY.parameterizedBy(typeName.firstParameterizedType().cached(concreteTypeParameters).exportedTypeName)
+            exportType = { typeName, concreteTypeParameters, _ ->
+                ARRAY.parameterizedBy(
+                    typeName.firstParameterizedType()
+                        .cached(concreteTypeParameters).exportedTypeName
+                )
             },
-            importMethod = { targetName, typeName, concreteTypeParameters ->
+            importMethod = { targetName, typeName, concreteTypeParameters, _ ->
                 val importMethod = typeName.firstParameterizedType().cached(concreteTypeParameters)
                     .importedMethod("it".toFormatString())
                 if (importMethod.eq("it")) {
@@ -132,7 +140,7 @@ fun initCustomMapping() {
                         " }${typeName.qdot}%M()".toFormatString(toTypedArray)
                 }
             },
-            exportMethod = { targetName, typeName, concreteTypeParameters ->
+            exportMethod = { targetName, typeName, concreteTypeParameters, _ ->
                 val exportMethod = typeName.firstParameterizedType()
                     .cached(concreteTypeParameters)
                     .exportedMethod("it".toFormatString())
@@ -146,18 +154,15 @@ fun initCustomMapping() {
         ),
 
         LIST to MappingOutput(
-            exportType = { typeName, concreteTypeParameters ->
-                ARRAY.parameterizedBy(typeName.firstParameterizedType().cached(concreteTypeParameters).exportedTypeName)
+            exportType = { _, _, typeArgs ->
+                ARRAY.parameterizedBy(typeArgs[0].exportedTypeName)
             },
-            importMethod = { targetName, typeName, concreteTypeParameters ->
-                val firstParameterizedType = typeName.firstParameterizedType()
-                val importedMethod =
-                    firstParameterizedType.cached(concreteTypeParameters).importedMethod("it".toFormatString())
+            importMethod = { targetName, typeName, _, typeArgs ->
+                val importedMethod = typeArgs[0].importedMethod("it".toFormatString())
                 targetName + "${typeName.qdot}map { " + importedMethod + " }"
             },
-            exportMethod = { targetName, typeName, concreteTypeParameters ->
-                val exportedMethod = typeName.firstParameterizedType()
-                    .cached(concreteTypeParameters).exportedMethod("it".toFormatString())
+            exportMethod = { targetName, typeName, _, typeArgs ->
+                val exportedMethod = typeArgs[0].exportedMethod("it".toFormatString())
                 targetName +
                     "${typeName.qdot}map { " +
                     exportedMethod +
@@ -169,74 +174,68 @@ fun initCustomMapping() {
 
     TypeMapping.advancedMappings += mapOf<(TypeName) -> Boolean, MappingOutput>(
         { type: TypeName -> type.isKotlinFunction() } to MappingOutput(
-            exportType = { typeName, concreteTypeParameters ->
-                val lambda = typeName as ParameterizedTypeName
-                val args = lambda.typeArguments.dropLast(1).map { it.cached(concreteTypeParameters) }
-                val returnType = lambda.typeArguments.last()
+            exportType = { _, _, typeArgs ->
+                val returnType = typeArgs.last().exportedTypeName
                 LambdaTypeName.get(
-                    parameters = args.map { arg ->
+                    parameters = typeArgs.dropLast(1).map { arg ->
                         ParameterSpec.builder("", arg.exportedTypeName).build()
                     },
                     returnType = returnType
                 )
             },
-            importMethod = { targetName, typeName, concreteTypeParameters ->
-                val lambda = typeName as ParameterizedTypeName
-                val returnType = lambda.typeArguments.last()
+            importMethod = { targetName, _, _, typeArgs ->
+                val returnType = typeArgs.last()
 
-                if (lambda.typeArguments.size == 1) {
+                if (typeArgs.size == 1) {
                     return@MappingOutput "{ ".toFormatString() +
-                        returnType.cached(concreteTypeParameters).importedMethod(targetName + "()") +
+                        returnType.importedMethod(targetName + "()") +
                         "}"
                 }
 
-                val namedArgs = lambda.typeArguments.dropLast(1)
+                val namedArgs = typeArgs.dropLast(1)
                     .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
 
                 val (lastNamedArgsType, lastNamedArgsName) = namedArgs.last()
                 val signature = namedArgs.fold(FormatString("")) { acc, (type, name) ->
                     val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ", "
-                    acc + "$name: %T$separator".toFormatString(type)
+                    acc + "$name: %T$separator".toFormatString(type.concreteTypeName)
                 }
                 val importedArgs =
                     namedArgs.fold(FormatString(if (namedArgs.size <= 1) "" else "\n")) { acc, (type, name) ->
                         val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ",\n"
                         val indentation = if (namedArgs.size <= 1) "" else INDENTATION + INDENTATION
-                        acc + indentation + type.cached(concreteTypeParameters)
-                            .exportedMethod(name.toFormatString()) + separator
+                        acc + indentation + type.exportedMethod(name.toFormatString()) + separator
                     }
                 "{ ".toFormatString() + signature + " -> \n$INDENTATION" +
-                    returnType.cached(concreteTypeParameters).importedMethod(targetName + "(" + importedArgs + ")") +
+                    returnType.importedMethod(targetName + "(" + importedArgs + ")") +
                     "\n}"
             },
-            exportMethod = { targetName, typeName, concreteTypeParameters ->
-                val lambda = typeName as ParameterizedTypeName
-                val returnType = lambda.typeArguments.last()
+            exportMethod = { targetName, typeName, _, typeArgs ->
+                val returnType = typeArgs.last()
 
-                if (lambda.typeArguments.size == 1) {
+                if (typeArgs.size == 1) {
                     return@MappingOutput "{ ".toFormatString() +
-                        returnType.cached(concreteTypeParameters).exportedMethod(targetName + "()") +
+                        returnType.exportedMethod(targetName + "()") +
                         "}"
                 }
-                val namedArgs = lambda.typeArguments.dropLast(1)
+                val namedArgs = typeArgs.dropLast(1)
                     .mapIndexed { index, tn -> tn to shortNamesForIndex(index) }
 
                 val (lastNamedArgsType, lastNamedArgsName) = namedArgs.last()
                 val signature = namedArgs.fold(FormatString("")) { acc, (type, name) ->
                     val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ", "
-                    acc + "$name: %T$separator".toFormatString(type.cached(concreteTypeParameters).exportedTypeName)
+                    acc + "$name: %T$separator".toFormatString(type.exportedTypeName)
                 }
 
                 val importedArgs =
                     namedArgs.fold(FormatString(if (namedArgs.size <= 1) "" else "\n")) { acc, (type, name) ->
                         val separator = if (lastNamedArgsType == type && lastNamedArgsName == name) "" else ",\n"
                         val indentation = if (namedArgs.size <= 1) "" else INDENTATION + INDENTATION
-                        acc + indentation + type.cached(concreteTypeParameters)
-                            .importedMethod(name.toFormatString()) + separator
+                        acc + indentation + type.importedMethod(name.toFormatString()) + separator
                     }
 
                 "{ ".toFormatString() + signature + " -> \n" + INDENTATION +
-                    returnType.cached(concreteTypeParameters).exportedMethod(targetName + "(" + importedArgs + ")") +
+                    returnType.exportedMethod(targetName + "(" + importedArgs + ")") +
                     "\n}"
             },
         )

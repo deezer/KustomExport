@@ -90,19 +90,20 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
 
         genericsAnnotated.forEach { it.accept(exportVisitor, Unit) }
 
-        /*return symbols.filter { !it.validate() }.toList()
-            .also { list ->
-                list.forEach {
-                    devLog("Cannot handle $it $it.")
-                }
-            }*/
         return emptyList()
     }
 
     @KotlinPoetKspPreview
     inner class ExportVisitor(val resolver: Resolver) : KSVisitorVoid() {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-            //devLog("----- visitClassDeclaration $classDeclaration - classKind = ${classDeclaration.classKind}")
+            // Skip classes handled by KustomExportGenerics
+            classDeclaration.annotations
+                .filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == KustomExport::class.qualifiedName }
+                .forEach {
+                    // Nothing to do here if it's already handled by @KustomExportGeneric
+                    if (it.getArg<Boolean?>(KustomExport::usedByKustomExportGeneric) == true) return
+                }
+
             parseAndWrite(classDeclaration, emptyList())
         }
 
@@ -138,24 +139,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                         overrideClassSimpleName = if (name?.isNotBlank() == true) name else targetClassDeclaration.simpleName.asString(),
                         sources = sources
                     )
-
-                    /*
-                    val qualifiedName = gen.kClass.qualifiedName
-                    Logger.warn("qualifiedName $qualifiedName")
-                    requireNotNull(qualifiedName)
-                    val classDecl = resolver.getClassDeclarationByName(KSNameImpl.getCached(qualifiedName))
-                    requireNotNull(classDecl)
-                    Logger.warn("classDecl ${classDecl.qualifiedName?.asString() ?: classDecl.simpleName.asString()}")
-
-                    val targetTypeNames: List<Pair<String, TypeName>> =
-                        gen.typeParameters.mapIndexed { index, kClass ->
-                            classDecl.typeParameters[index].name.asString() to
-                                resolver.getClassDeclarationByName(KSNameImpl.getCached(kClass.qualifiedName!!))!!
-                                    .toClassName()
-                        }
-                    Logger.warn("targetTypeNames $targetTypeNames")
-                    parseClass(classDecl, targetTypeNames)
-*/
                 }
         }
 
@@ -177,7 +160,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         override fun visitFunctionDeclaration(function: KSFunctionDeclaration, data: Unit) {
             super.visitFunctionDeclaration(function, data)
             val descriptor: TopLevelFunctionDescriptor = parseFunction(function)
-            Logger.warn("FUNCTION: ${function.simpleName.asString()}")
             descriptor.transform()
                 .writeCode(environment, function.containingFile!!)
         }
@@ -202,11 +184,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
                     .writeCode(environment, *allSources)
             }
         }
-    }
-
-    fun devLog(msg: String) {
-        println(msg) // for unit tests
-        environment.logger.warn(msg) // when compiling other modules
     }
 }
 
