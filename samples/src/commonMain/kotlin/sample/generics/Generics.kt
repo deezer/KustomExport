@@ -15,10 +15,6 @@
  * under the License.
  */
 
-// Disabling Generics support for now:
-// - more complex when dealing with @JsExport and @KustomExport mixed
-// - support is still not great enough, must be reworked
-/*
 @file:KustomExportGenerics(
     exportGenerics = [
         KustomGenerics(GenericsStuff::class, arrayOf(Long::class)),
@@ -38,9 +34,11 @@ import deezer.kustomexport.KustomExportGenerics
 import deezer.kustomexport.KustomGenerics
 import sample._class.data.DataClass
 
+@KustomExport(usedByKustomExportGeneric = true)
 interface GenericsStuff<Template>
 
 // Not exportable due to generics unresolvable
+@KustomExport(usedByKustomExportGeneric = true)
 interface GenericsInterface<Template> {
     var bar: GenericsStuff<Template>?
     fun fooBar(input: Template?) = "fooBar $input"
@@ -53,10 +51,12 @@ interface GenericsInterface<Template> {
     fun baz() = DataClass("baz data")
 }
 
+@KustomExport(usedByKustomExportGeneric = true)
 interface SuperGenericsInterface<Template, SomethingElse> : GenericsInterface<Template> {
     val superFoo: Template
 }
 
+@KustomExport(usedByKustomExportGeneric = true)
 class GenericsImpl<Template> {
     var bar: Template? = null
 }
@@ -85,4 +85,3 @@ class GenericsConsumer {
 //@KustomExport
 //typealias TypeAliasLong = TypeAliasInterface<Long>
 // Unfortunately, typealias are not properly handled by KotlinJs rn
- */

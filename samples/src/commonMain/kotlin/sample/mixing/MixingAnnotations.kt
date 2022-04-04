@@ -16,6 +16,6 @@ open class KustomExported {
 data class MixingAnnotations(val jsExported: JsExported, val kustomExported: KustomExported) {
     fun makeJ(): JsExported = JsExported()
     fun makeK(): KustomExported = KustomExported()
-    fun consumeJ(j: JsExported) = println("Consumed $j")
-    fun consumeK(k: KustomExported) = println("Consumed $k")
+    fun consumeJ(j: JsExported) = "Consumed ${j::class} - ${j.data}"
+    fun consumeK(k: KustomExported) = "Consumed ${k::class} - ${k.data}"
 }

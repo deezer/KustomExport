@@ -49,4 +49,4 @@ fun TypeName.secondParameterizedType() = (this as ParameterizedTypeName).typeArg
 
 @Suppress("UNCHECKED")
 fun <T> KSAnnotation.getArg(kProp: KProperty1<*, *>) =
-    arguments.first { it.name?.asString() == kProp.name }.value as T
+    arguments.firstOrNull { it.name?.asString() == kProp.name }?.value as T

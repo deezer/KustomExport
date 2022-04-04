@@ -19,21 +19,21 @@ package deezer.kustomexport
 
 import kotlin.reflect.KClass
 
-/**
- * As of today (2021/20/18) the KSP + KotlinJsIr compiler has some issues with JS sourceSets.
- * https://docs.google.com/spreadsheets/d/13lXyEHu1GzwgicWvTqnJf_qCcxOY2vwM04gSfx_f1fk/edit#gid=0
- * As a workaround, we're declaring a new annotation in each module and pass the annotation full name in args to ksp.
- * When KSP/Kotlin is more stable with source sets, this could be used to define once and for all the annotation.
- */
-
-enum class ExportMode {
-    ONLY_IMPORT, ONLY_EXPORT, IMPORT_EXPORT
-}
-
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.FUNCTION)
 public annotation class KustomExport(
-    public val mode: ExportMode = ExportMode.IMPORT_EXPORT,
+    /**
+     * [usedByKustomExportGeneric]==true means the class will be used by a KustomExportGeneric:
+     * - it's ignored by the @KustomExport generation (will not generate the wrapper classes),
+     * - but it's used to know if the class is handled by the compiler or by KotlinJs directly.
+     * It's required when mixing JsExport and KustomExport (and possibly no annotation),
+     * on multi-module projects. Multi-module means that a low-level module can
+     * expose a generic class that a higher level module will use to generate some
+     * derived classes with [KustomExportGenerics].
+     * In this setup, if a middle-level module expose the generic class, it will
+     * require knowing the class is mapped or not by the compiler at some point.
+     */
+    val usedByKustomExportGeneric: Boolean = false
 )
 
 @Target(AnnotationTarget.FILE)

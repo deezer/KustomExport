@@ -70,8 +70,6 @@ public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterReso
     return try {
         toTypeName(typeParamResolver)
     } catch (e: Exception) {
-        Logger.warn("cannot toTypeName = ${e.message} - $this")
-
         return guessClassFromImports(this.containingFile, classSimpleName = this.toString())
             ?: guessFromStdlib(
                 this.toString(),

@@ -15,7 +15,7 @@
  * under the License.
  */
 
-@file:OptIn(KotlinPoetKspPreview::class)
+@file:OptIn(KotlinPoetKspPreview::class, KotlinPoetKspPreview::class)
 
 package deezer.kustomexport.compiler.js.pattern
 
@@ -38,6 +38,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
 import com.squareup.kotlinpoet.ksp.toClassName
+import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
 import deezer.kustomexport.KustomExport
 import deezer.kustomexport.compiler.Logger
@@ -88,7 +89,12 @@ fun parseClass(
         .map { superType ->
             superType.resolve().declaration.annotations
             val isKustomExportAnnotated = superType.isKustomExportAnnotated()
-            val superTypeName = superType.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters, isKustomExportAnnotated)
+            val superTypeName =
+                superType.toTypeNamePatch(typeParamResolver).cached(
+                    concreteTypeParameters,
+                    isKustomExportAnnotated
+                )
+
             val declaration = superType.resolve().declaration
             if (declaration is KSClassDeclaration) {
                 val ctors = declaration.getConstructors().toList()
@@ -104,9 +110,17 @@ fun parseClass(
     val constructorParams = classDeclaration.primaryConstructor?.parameters?.map {
         it.type.assertNotThrowable(it)
         val isKustomExportAnnotated = it.type.isKustomExportAnnotated()
+        val typeArgs = it.type.resolve().arguments.map {
+            it.toTypeName(typeParamResolver)
+                .cached(concreteTypeParameters, it.type?.isKustomExportAnnotated() ?: false)
+        }
         ParameterDescriptor(
             name = it.name!!.asString(),
-            type = it.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters, isKustomExportAnnotated)
+            type = it.type.toTypeNamePatch(typeParamResolver).cached(
+                concreteTypeParameters,
+                isKustomExportAnnotated,
+                typeArgs,
+            )
         )
     } ?: emptyList()
 
@@ -241,12 +255,23 @@ private fun KSFunctionDeclaration.toDescriptor(
         name = simpleName.asString(),
         isOverride = findOverridee() != null || !declaredNames.contains(simpleName),
         isSuspend = modifiers.contains(Modifier.SUSPEND),
-        returnType = returnType!!.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters, isReturnKustomExportAnnotated),
+        returnType = returnType!!.toTypeNamePatch(typeParamResolver)
+            .cached(concreteTypeParameters, isReturnKustomExportAnnotated),
         parameters = parameters.map { p ->
             p.type.assertNotThrowable(p)
+
+            val isKustomExportAnnotated = p.type.isKustomExportAnnotated()
+            val typeResolved = p.type.resolve()
+
+            val typeArgs = typeResolved.arguments.map {
+                it.toTypeName(typeParamResolver)
+                    .cached(concreteTypeParameters, it.type?.isKustomExportAnnotated() ?: false)
+            }
+
             ParameterDescriptor(
                 name = p.name?.asString() ?: TODO("not sure what we want here"),
-                type = p.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
+                type = p.type.toTypeNamePatch(typeParamResolver)
+                    .cached(concreteTypeParameters, isKustomExportAnnotated, typeArgs),
             )
         }
     )
@@ -275,9 +300,14 @@ fun KSClassDeclaration.parseProperties(
             } else emptyList()
             */
             val isKustomExportAnnotated = prop.type.isKustomExportAnnotated()
+            val typeResolved = prop.type.resolve()
+            val typeArgs = typeResolved.arguments.map {
+                it.toTypeName(typeParamResolver)
+                    .cached(concreteTypeParameters, it.type?.isKustomExportAnnotated() ?: false)
+            }
             PropertyDescriptor(
                 name = prop.simpleName.asString(),
-                type = type.cached(concreteTypeParameters, isKustomExportAnnotated),
+                type = type.cached(concreteTypeParameters, isKustomExportAnnotated, typeArgs),
                 isMutable = prop.isMutable,
                 isOverride = prop.findOverridee() != null || !declaredNames.contains(prop.simpleName),
                 // namedArgs = namedArgs
@@ -303,6 +333,13 @@ fun KSClassDeclaration.assertNotThrowable(symbol: KSNode) {
     }
 }
 
+fun KSTypeReference.isKustomExportAnnotated(): Boolean {
+    return resolve().declaration.annotations.any { a ->
+        val ksDeclaration = a.annotationType.resolve().declaration
+        ksDeclaration.qualifiedName?.asString() == KustomExport::class.qualifiedName
+    }
+}
+
 fun KSClassDeclaration.isThrowable(): Boolean {
     if (toClassName() in ALL_KOTLIN_EXCEPTIONS) {
         return true
@@ -322,11 +359,9 @@ fun KSClassDeclaration.isThrowable(): Boolean {
     return false
 }
 
-fun KSTypeReference.isKustomExportAnnotated(): Boolean =
-    resolve().declaration.annotations.any { a ->
-        val ksDeclaration = a.annotationType.resolve().declaration
-        ksDeclaration.qualifiedName?.asString() == KustomExport::class.qualifiedName
-    }
 
-fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>, isKustomExportAnnotated: Boolean = false) =
-    OriginTypeName(this, concreteTypeParameters, isKustomExportAnnotated)
+fun TypeName.cached(
+    concreteTypeParameters: List<TypeParameterDescriptor>,
+    isKustomExportAnnotated: Boolean = false,
+    typeArgs: List<OriginTypeName> = emptyList()
+) = OriginTypeName.invoke(this, concreteTypeParameters, isKustomExportAnnotated, typeArgs)
