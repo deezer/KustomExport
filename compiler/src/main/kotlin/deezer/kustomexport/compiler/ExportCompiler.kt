@@ -96,6 +96,7 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
     @KotlinPoetKspPreview
     inner class ExportVisitor(val resolver: Resolver) : KSVisitorVoid() {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
+            Logger.warn("PARSING class ${classDeclaration.simpleName.asString()}")
             // Skip classes handled by KustomExportGenerics
             classDeclaration.annotations
                 .filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == KustomExport::class.qualifiedName }
@@ -108,6 +109,7 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         }
 
         override fun visitFile(file: KSFile, data: Unit) {
+            Logger.warn("PARSING file ${file.filePath}")
             file.annotations// All file annotations
                 // Get only the KustomExportGenerics one
                 .filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == KustomExportGenerics::class.qualifiedName }
@@ -143,6 +145,7 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         }
 
         override fun visitTypeAlias(typeAlias: KSTypeAlias, data: Unit) {
+            Logger.warn("PARSING typealias ${typeAlias.simpleName.asString()}")
             val target = (typeAlias.type.element?.parent as? KSTypeReference)?.resolve() ?: return
             // targetClassDeclaration is templated
             val targetClassDeclaration = target.declaration as? KSClassDeclaration ?: return
