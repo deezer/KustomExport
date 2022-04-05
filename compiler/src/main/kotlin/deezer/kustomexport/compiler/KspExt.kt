@@ -36,6 +36,8 @@ fun FileSpec.writeCode(environment: SymbolProcessorEnvironment, vararg sources: 
         outputStream.writer()
             .use {
                 writeTo(it)
+            }.also {
+                Logger.warn("WROTE FILE $name")
             }
     }
 }

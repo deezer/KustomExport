@@ -42,6 +42,7 @@ public annotation class KustomExportGenerics(
 )
 
 @Target() // No target, only there for data container
+@Retention(AnnotationRetention.RUNTIME) // TODO: to be reduced!
 public annotation class KustomGenerics(
     public val kClass: KClass<*>,
     public val typeParameters: Array<KClass<*>>,

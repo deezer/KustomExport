@@ -1,6 +1,7 @@
 package sample.mixing
 
 import deezer.kustomexport.KustomExport
+import kotlin.js.JsExport
 
 @JsExport
 open class JsExported {

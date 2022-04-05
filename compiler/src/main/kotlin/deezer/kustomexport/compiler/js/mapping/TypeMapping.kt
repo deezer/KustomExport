@@ -42,7 +42,7 @@ import deezer.kustomexport.compiler.js.toFormatString
 class OriginTypeName(
     private val originTypeName: TypeName,
     private val concreteTypeParameters: List<TypeParameterDescriptor>,
-    private val isKustomExportAnnotated: Boolean,
+     val isKustomExportAnnotated: Boolean,
     private val typeArgs: List<OriginTypeName>,
 ) {
     val concreteTypeName: TypeName by lazy { originTypeName.resolvedType(concreteTypeParameters) }

@@ -38,6 +38,9 @@ value class PositiveLong(internal val value: Long) {
 
 @KustomExport
 class ValueClassConsumer {
+
+    var nes: NotEmptyString = NotEmptyString("default")
+
     fun consume(nes: NotEmptyString): String {
         return nes.str
     }

@@ -251,12 +251,17 @@ private fun KSFunctionDeclaration.toDescriptor(
 ): FunctionDescriptor {
     returnType?.assertNotThrowable(this)
     val isReturnKustomExportAnnotated = returnType!!.isKustomExportAnnotated()
+
+    val returnTypeArgs = returnType!!.resolve().arguments.map {
+        it.toTypeName(typeParamResolver)
+            .cached(concreteTypeParameters, it.type?.isKustomExportAnnotated() ?: false)
+    }
     return FunctionDescriptor(
         name = simpleName.asString(),
         isOverride = findOverridee() != null || !declaredNames.contains(simpleName),
         isSuspend = modifiers.contains(Modifier.SUSPEND),
         returnType = returnType!!.toTypeNamePatch(typeParamResolver)
-            .cached(concreteTypeParameters, isReturnKustomExportAnnotated),
+            .cached(concreteTypeParameters, isReturnKustomExportAnnotated, returnTypeArgs),
         parameters = parameters.map { p ->
             p.type.assertNotThrowable(p)
 
@@ -264,6 +269,14 @@ private fun KSFunctionDeclaration.toDescriptor(
             val typeResolved = p.type.resolve()
 
             val typeArgs = typeResolved.arguments.map {
+                // Just logging here
+                it.type?.let { t ->
+                    t.resolve().declaration.annotations.forEach { a ->
+                        val ksDeclaration = a.annotationType.resolve().declaration
+                        Logger.warn("FUNCTION - param ${p.name?.asString()} arg=${it.type} has annotations=${ksDeclaration.qualifiedName?.asString()}")
+                    }
+                }
+
                 it.toTypeName(typeParamResolver)
                     .cached(concreteTypeParameters, it.type?.isKustomExportAnnotated() ?: false)
             }
@@ -334,6 +347,8 @@ fun KSClassDeclaration.assertNotThrowable(symbol: KSNode) {
 }
 
 fun KSTypeReference.isKustomExportAnnotated(): Boolean {
+    Logger.warn("isKustomExportAnnotated: ${resolve().declaration.annotations.joinToString { it.shortName.asString() }}")
+    Logger.warn("isKustomExportAnnotated qualified names: ${resolve().declaration.annotations.joinToString { it.annotationType.resolve().declaration.qualifiedName?.asString() ?: "null" }}")
     return resolve().declaration.annotations.any { a ->
         val ksDeclaration = a.annotationType.resolve().declaration
         ksDeclaration.qualifiedName?.asString() == KustomExport::class.qualifiedName
