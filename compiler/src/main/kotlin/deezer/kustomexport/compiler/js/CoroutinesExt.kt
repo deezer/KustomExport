@@ -31,6 +31,8 @@ val coroutinesJob = ClassName("kotlinx.coroutines", "Job")
 val coroutinesContext = MemberName("kotlin.coroutines", "coroutineContext")
 val coroutinesContextJob = MemberName("kotlinx.coroutines", "job")
 val coroutinesCancellationException = ClassName("kotlinx.coroutines", "CancellationException")
+// Warning, the d.ts code generated will contain 'kotlin.js.Promise' instead of just 'Promise'.
+// https://youtrack.jetbrains.com/issue/KT-41096
 val coroutinesPromise = ClassName("kotlin.js", "Promise")
 val abortController = ClassName("", "AbortController")
 val abortSignal = ClassName("", "AbortSignal")
