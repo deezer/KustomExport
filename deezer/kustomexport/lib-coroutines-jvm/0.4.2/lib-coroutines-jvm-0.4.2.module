@@ -1,0 +1,105 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.4.2/lib-coroutines-0.4.2.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.4.2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-jvm-0.4.2.jar",
+          "url": "lib-coroutines-jvm-0.4.2.jar",
+          "size": 3894,
+          "sha512": "8c21e1a46e761c300a35624c18e820b1e4b68e10f98505b95151555dcfb6822a363a349dd41ca3118ae47c780f2faac3c8b6f9e4c786c02b32b4b3fca321835e",
+          "sha256": "874bc2c89785a0572bd4d87849b69627f386e072112062bc3ca4a788ecb15e06",
+          "sha1": "a8137a59df3d409bb9a704e5fe337b9e35d0465b",
+          "md5": "778e28e78dcd14f356c48aa964e2651b"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.4.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-jvm-0.4.2.jar",
+          "url": "lib-coroutines-jvm-0.4.2.jar",
+          "size": 3894,
+          "sha512": "8c21e1a46e761c300a35624c18e820b1e4b68e10f98505b95151555dcfb6822a363a349dd41ca3118ae47c780f2faac3c8b6f9e4c786c02b32b4b3fca321835e",
+          "sha256": "874bc2c89785a0572bd4d87849b69627f386e072112062bc3ca4a788ecb15e06",
+          "sha1": "a8137a59df3d409bb9a704e5fe337b9e35d0465b",
+          "md5": "778e28e78dcd14f356c48aa964e2651b"
+        }
+      ]
+    }
+  ]
+}
