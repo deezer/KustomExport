@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "strict": true,
+        "noEmitOnError": true
     }
 }

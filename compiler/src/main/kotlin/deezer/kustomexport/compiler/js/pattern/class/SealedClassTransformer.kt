@@ -30,6 +30,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import deezer.kustomexport.compiler.js.SealedClassDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
+import deezer.kustomexport.compiler.js.mapping.INDENTATION
 
 fun SealedClassDescriptor.transform() = transformSealedClass(this)
 
@@ -85,8 +86,9 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
         .beginControlFlow("return·when·(this)")
         .also {
             origin.subClasses.forEach { subClass ->
-                it.addStatement("is %T -> export${subClass.classSimpleName}()", subClass.asClassName)
+                it.addStatement("$INDENTATION${INDENTATION}is %T -> export${subClass.classSimpleName}()", subClass.asClassName)
             }
+            it.addStatement("$INDENTATION${INDENTATION}else -> error(\"Cannot export \$this\")")
             if (origin.subClasses.isEmpty()) {
                 it.addComment("TODO: no subclasses found, bad configuration?")
             }
@@ -101,8 +103,9 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
         .also {
             origin.subClasses.forEach { subClass ->
                 val exportedSubClass = ClassName(subClass.packageName.jsPackage(), subClass.classSimpleName)
-                it.addStatement("is %T -> import${subClass.classSimpleName}()", exportedSubClass)
+                it.addStatement("$INDENTATION${INDENTATION}is %T -> import${subClass.classSimpleName}()", exportedSubClass)
             }
+            it.addStatement("$INDENTATION${INDENTATION}else -> error(\"Cannot export \$this\")")
             if (origin.subClasses.isEmpty()) {
                 it.addComment("TODO: no subclasses found, bad configuration?")
             }
@@ -120,7 +123,7 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
         .addType(
             TypeSpec.classBuilder(origin.classSimpleName)
                 .addAnnotation(jsExport)
-                .addModifiers(KModifier.SEALED)
+                .addModifiers(KModifier.ABSTRACT) // Not SEALED, because https://youtrack.jetbrains.com/issue/KT-39193
                 .also { b ->
                     origin.supers.forEach { supr ->
                         if (supr.parameters == null) {
