@@ -3,7 +3,7 @@ package sample._exception
 import deezer.kustomexport.KustomExport
 
 @KustomExport
-class MyEx(val cause: IllegalStateException = IllegalStateException("hello"))
+class MyEx(val cause: Throwable = IllegalStateException("hello"))
 
 @KustomExport
 class ExceptionConsumer {
