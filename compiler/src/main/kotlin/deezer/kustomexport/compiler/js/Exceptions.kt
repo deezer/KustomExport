@@ -18,16 +18,15 @@
 package deezer.kustomexport.compiler.js
 
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.TypeName
 
 //https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/js-ir/src/kotlin/exceptions.kt
 
-val ERROR = ClassName("kotlin", "Error")//Error::class.asClassName()
-val EXCEPTION = ClassName("kotlin", "Exception")//Exception::class.asClassName()// ClassName("kotlin", "Exception")
+val THROWABLE = ClassName("kotlin", "Throwable")
+val ERROR = ClassName("kotlin", "Error")
+val EXCEPTION = ClassName("kotlin", "Exception")
 val RUNTIME_EXCEPTION = ClassName("kotlin", "RuntimeException")
 val ILLEGAL_ARGUMENT_EXCEPTION = ClassName("kotlin", "IllegalArgumentException")
-val ILLEGAL_STATE_EXCEPTION = ClassName("kotlin", "IllegalStateException")//IllegalStateException::class.asClassName()// ClassName("kotlin", "IllegalStateException")
+val ILLEGAL_STATE_EXCEPTION = ClassName("kotlin", "IllegalStateException")
 val INDEX_OUT_OF_BOUNDS_EXCEPTION = ClassName("kotlin", "IndexOutOfBoundsException")
 val CONCURRENT_MODIFICATION_EXCEPTION = ClassName("kotlin", "ConcurrentModificationException")
 val UNSUPPORTED_OPERATION_EXCEPTION = ClassName("kotlin", "UnsupportedOperationException")
@@ -37,16 +36,13 @@ val CLASS_CAST_EXCEPTION = ClassName("kotlin", "ClassCastException")
 val ASSERTION_ERROR = ClassName("kotlin", "AssertionError")
 val NO_SUCH_ELEMENT_EXCEPTION = ClassName("kotlin", "NoSuchElementException")
 val ARITHMETIC_EXCEPTION = ClassName("kotlin", "ArithmeticException")
+
 // Coroutines
 val CANCELLATION_EXCEPTION = ClassName("kotlinx.coroutines", "CancellationException")
 val TIMEOUT_CANCELLATION_EXCEPTION = ClassName("kotlinx.coroutines", "TimeoutCancellationException")
 
-const val EXCEPTION_JS_PACKAGE = "deezer.kustomexport"
-fun TypeName.toJsException(): ClassName = ClassName(EXCEPTION_JS_PACKAGE, (this as ClassName).simpleName)
-val exceptionExport = MemberName(EXCEPTION_JS_PACKAGE, "export")
-
 val ALL_KOTLIN_EXCEPTIONS = listOf(
-    //THROWABLE,
+    THROWABLE,
     ERROR,
     EXCEPTION,
     RUNTIME_EXCEPTION,

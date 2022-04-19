@@ -47,13 +47,11 @@ import com.squareup.kotlinpoet.UNIT
 import deezer.kustomexport.compiler.firstParameterizedType
 import deezer.kustomexport.compiler.js.ALL_KOTLIN_EXCEPTIONS
 import deezer.kustomexport.compiler.js.FormatString
-import deezer.kustomexport.compiler.js.exceptionExport
 import deezer.kustomexport.compiler.js.mapping.TypeMapping.MappingOutput
 import deezer.kustomexport.compiler.js.pattern.cached
 import deezer.kustomexport.compiler.js.pattern.isKotlinFunction
 import deezer.kustomexport.compiler.js.pattern.qdot
 import deezer.kustomexport.compiler.js.toFormatString
-import deezer.kustomexport.compiler.js.toJsException
 import deezer.kustomexport.compiler.shortNamesForIndex
 
 const val INDENTATION = "    "
@@ -64,7 +62,7 @@ val toTypedArray = MemberName("kotlin.collections", "toTypedArray")
 fun initCustomMapping() {
     // Doc interop: https://kotlinlang.org/docs/js-to-kotlin-interop.html#primitive-arrays
     // No special mappings
-    TypeMapping.mappings += listOf(
+    TypeMapping.mappings += (listOf(
         // TODO: Check that 'char' is properly re-interpreted
         BOOLEAN, BYTE, CHAR, SHORT, INT, FLOAT, DOUBLE, // => Js "number"
         STRING, // => Js "string"
@@ -76,7 +74,7 @@ fun initCustomMapping() {
         CHAR_ARRAY, // => Js "UInt16Array"
         ANY, // => Js "Object"
         UNIT, // => disappear?
-    ).map { exportableType ->
+    ) + ALL_KOTLIN_EXCEPTIONS).map { exportableType ->
         exportableType to MappingOutput(
             exportType = { _, _ -> exportableType },
             importMethod = { targetName, _, _ -> targetName },
@@ -89,21 +87,6 @@ fun initCustomMapping() {
         importMethod = { targetName, _, _ -> targetName },
         exportMethod = { targetName, _, _ -> targetName },
     )
-
-    TypeMapping.mappings += ALL_KOTLIN_EXCEPTIONS.map { exportableType ->
-        exportableType to MappingOutput(
-            exportType = { typeName, _ -> typeName.toJsException() },
-            //importMethod = { targetName, _, _ -> targetName },
-            //exportMethod = { targetName, _, _ -> targetName },
-            //exportType = { typeName, _ -> typeName.toJsException() },
-            importMethod = { targetName, typeName, _ -> targetName + "${typeName.qdot}import()" },
-            exportMethod = { targetName, typeName, _ ->
-                targetName + "${typeName.qdot}%M()".toFormatString(
-                    exceptionExport
-                )
-            },
-        )
-    }
 
     TypeMapping.mappings += mapOf<TypeName, MappingOutput>(
         // https://kotlinlang.org/docs/js-to-kotlin-interop.html#kotlin-types-in-javascript

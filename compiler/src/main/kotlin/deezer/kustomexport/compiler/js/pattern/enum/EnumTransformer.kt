@@ -69,7 +69,6 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
                                 import = false,
                                 forceOverride = false,
                                 isClassOpen = false,
-                                isClassThrowable = false
                             )
                         )
                     }

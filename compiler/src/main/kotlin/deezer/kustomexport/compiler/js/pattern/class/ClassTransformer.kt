@@ -208,7 +208,6 @@ private fun buildExportedClass(
                     import = false,
                     forceOverride = false,
                     isClassOpen = origin.isOpen,
-                    isClassThrowable = origin.isThrowable
                 )
             )
         }
@@ -223,18 +222,6 @@ private fun buildExportedClass(
                 mnd = mnd,
                 isClassOpen = origin.isOpen
             )
-        )
-    }
-
-    if (origin.isThrowable) {
-        builder.addFunction(
-            FunSpec.builder("import")
-                .suppress("NON_EXPORTABLE_TYPE")
-                .also { if (origin.isOpen) it.addModifiers(KModifier.OPEN) }
-                .addModifiers(KModifier.OVERRIDE)
-                .returns(originalClass)
-                .addStatement("return·this.$commonFieldName")
-                .build()
         )
     }
 
