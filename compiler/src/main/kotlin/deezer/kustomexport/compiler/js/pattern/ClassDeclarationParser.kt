@@ -70,6 +70,12 @@ fun parseClass(
     forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null,
     exportedClassSimpleName: String
 ): Descriptor {
+    if (classDeclaration.isThrowable()) {
+        error(
+            "Cannot parse a class that is Throwable: " +
+                (classDeclaration.qualifiedName?.asString() ?: classDeclaration.simpleName.asString())
+        )
+    }
     val typeParamResolver = classDeclaration.typeParameters.toTypeParameterResolver()
 
     val concreteTypeParameters: MutableList<TypeParameterDescriptor> =
@@ -144,7 +150,6 @@ fun parseClass(
                 packageName = packageName,
                 classSimpleName = classSimpleName,
                 supers = superTypes,
-                isThrowable = classDeclaration.isThrowable(),
                 constructorParams = constructorParams,
                 properties = properties,
                 functions = functions,
@@ -157,7 +162,6 @@ fun parseClass(
             exportedClassSimpleName = exportedClassSimpleName,
             isOpen = isOpen,
             isObject = classKind == ClassKind.OBJECT,
-            isThrowable = classDeclaration.isThrowable(),
             concreteTypeParameters = concreteTypeParameters,
             supers = superTypes,
             constructorParams = constructorParams,

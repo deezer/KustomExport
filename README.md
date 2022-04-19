@@ -98,9 +98,8 @@ What is supported today:
 
 What is not supported yet:
 - generics (partially supported, you can generate a list of facades from a single generic class)
-- KotlinJS 1.6.20 enums
-- mixing `@JsExport` with `@KustomExport`
-- Exception (additional classes allow for inheritance but usage is clunky and doesn't cover `throw` mechanism)
+- KotlinJS 1.6.20 enums ([issue #19](https://github.com/deezer/KustomExport/issues/19))
+- mixing `@JsExport` with `@KustomExport` ([issue #17](https://github.com/deezer/KustomExport/issues/17))
 
 Feel free to open issues for more features!
 

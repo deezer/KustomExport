@@ -157,12 +157,9 @@ fun overrideGetterSetter(
     import: Boolean,
     isClassOpen: Boolean,
     forceOverride: Boolean, // true for interface
-    isClassThrowable: Boolean = false,
 ): PropertySpec {
     val fieldName = prop.name
-    val isExceptionMessage = isClassThrowable && fieldName == "message"
     val fieldClass = when {
-        isExceptionMessage -> STRING // Not nullable
         import -> prop.type.concreteTypeName
         else -> prop.type.exportedTypeName
     }
@@ -177,7 +174,7 @@ fun overrideGetterSetter(
     builder.getter(
         FunSpec.getterBuilder()
             .addCode(
-                ("return·".toFormatString() + getterMappingMethod + if (isExceptionMessage) " ?: \"\"" else "").asCode()
+                ("return·".toFormatString() + getterMappingMethod).asCode()
             )
             .build()
     )
