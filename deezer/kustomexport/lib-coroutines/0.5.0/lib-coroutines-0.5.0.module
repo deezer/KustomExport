@@ -1,0 +1,404 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.5.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadataApiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.5.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-metadata-0.5.0-all.jar",
+          "url": "lib-coroutines-0.5.0-all.jar",
+          "size": 2162,
+          "sha512": "df9022567c7028e9a78c635d38ab43a56a76cbd815f81d92342e2e4cd62ba0e0e06d1c57f40ee4cb1b2afbcb3c9d194574a2bc03d2edeb74cdf9cfb8941c9fa2",
+          "sha256": "5a6e39654c7c9736166cffa7e62a0f2e0494098fe486a0b574f72f65d0947965",
+          "sha1": "a51cad23c7d51d561ebf53b439e50563a8f1d81d",
+          "md5": "0a8253feabc837e196ef8d6c0e1fc571"
+        }
+      ]
+    },
+    {
+      "name": "commonMainMetadataElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-0.5.0.jar",
+          "url": "lib-coroutines-0.5.0.jar",
+          "size": 679,
+          "sha512": "592f2583d04e458bcbcda9991a7057802fb341e54fbd62a33f826a6e392a5b884122490c69ed04e18cd153f01e65c4b5eb0f6afec3a706942973c1d95a710f46",
+          "sha256": "37a00e5746533f014874d4f86e6c3c2eb47276496684d2f5c991d70fbbd994c5",
+          "sha1": "240ae5848d81ac0dcfc84c851e234be190e3df86",
+          "md5": "e52100292ad1435881ad997d00046a0f"
+        }
+      ]
+    },
+    {
+      "name": "iosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-iosarm64/0.5.0/lib-coroutines-iosarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-iosarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "iosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-iosarm64/0.5.0/lib-coroutines-iosarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-iosarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "iosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-iossimulatorarm64/0.5.0/lib-coroutines-iossimulatorarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-iossimulatorarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "iosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-iossimulatorarm64/0.5.0/lib-coroutines-iossimulatorarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-iossimulatorarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "iosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-iosx64/0.5.0/lib-coroutines-iosx64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-iosx64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "iosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-iosx64/0.5.0/lib-coroutines-iosx64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-iosx64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "jsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-js/0.5.0/lib-coroutines-js-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-js",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "jsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-js/0.5.0/lib-coroutines-js-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-js",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-jvm/0.5.0/lib-coroutines-jvm-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-jvm",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-jvm/0.5.0/lib-coroutines-jvm-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-jvm",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "tvosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "tvos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-tvosarm64/0.5.0/lib-coroutines-tvosarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-tvosarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "tvosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "tvos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-tvosarm64/0.5.0/lib-coroutines-tvosarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-tvosarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "tvosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "tvos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-tvosx64/0.5.0/lib-coroutines-tvosx64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-tvosx64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "tvosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "tvos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-tvosx64/0.5.0/lib-coroutines-tvosx64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-tvosx64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "watchosArm32ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_arm32",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-watchosarm32/0.5.0/lib-coroutines-watchosarm32-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-watchosarm32",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "watchosArm32MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_arm32",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-watchosarm32/0.5.0/lib-coroutines-watchosarm32-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-watchosarm32",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "watchosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-watchosarm64/0.5.0/lib-coroutines-watchosarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-watchosarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "watchosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-watchosarm64/0.5.0/lib-coroutines-watchosarm64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-watchosarm64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "watchosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-watchosx64/0.5.0/lib-coroutines-watchosx64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-watchosx64",
+        "version": "0.5.0"
+      }
+    },
+    {
+      "name": "watchosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../lib-coroutines-watchosx64/0.5.0/lib-coroutines-watchosx64-0.5.0.module",
+        "group": "deezer.kustomexport",
+        "module": "lib-coroutines-watchosx64",
+        "version": "0.5.0"
+      }
+    }
+  ]
+}

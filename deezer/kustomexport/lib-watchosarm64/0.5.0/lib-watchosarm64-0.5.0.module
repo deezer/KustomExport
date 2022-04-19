@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.5.0/lib-0.5.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.5.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "watchosArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-watchosarm64-0.5.0.klib",
+          "size": 8506,
+          "sha512": "842afd0ca20de223b8c0649271ad974b50a90b42fafa4067d27f619d514a2924100ce9291fedcd034b8d775eb8fa15b6af3e2d6fbae4d6ad2a98fc13e1b91df5",
+          "sha256": "06a0bacec602b8829865fc2c47abb009a0ff6b28f5a81e7c962aef42e539498b",
+          "sha1": "9aae0d2ce7e79c115b6e1787c3ddfef28a1b6ec8",
+          "md5": "b9d80e58a68e25fac09c5543da13a6bf"
+        }
+      ]
+    },
+    {
+      "name": "watchosArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-watchosarm64-0.5.0-metadata.jar",
+          "url": "lib-watchosarm64-0.5.0-metadata.jar",
+          "size": 3785,
+          "sha512": "5fb607aa83fd20693d90f4babeb665e69096ae3f5cf7dc65ab188bcd6f9f63ebb439b76c327c250e4a980255c23a48baa2780ea096088ffb558577c69cc7c2b7",
+          "sha256": "35e048b262b2e548303ad66ed9cf5d20eabc8f55f648ce3bf7a4430625f1bb82",
+          "sha1": "b2128b57d0e0624ff15b8f49b3aac6d6cd253a90",
+          "md5": "668d1f7a271fcebab5e268053139d968"
+        }
+      ]
+    }
+  ]
+}
