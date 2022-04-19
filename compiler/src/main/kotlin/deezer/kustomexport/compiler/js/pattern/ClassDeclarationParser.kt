@@ -19,6 +19,8 @@
 
 package deezer.kustomexport.compiler.js.pattern
 
+import com.google.devtools.ksp.containingFile
+import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
@@ -28,8 +30,11 @@ import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSName
+import com.google.devtools.ksp.symbol.KSNode
 import com.google.devtools.ksp.symbol.KSTypeParameter
+import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.Modifier
+import com.squareup.kotlinpoet.THROWABLE
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
@@ -70,12 +75,7 @@ fun parseClass(
     forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null,
     exportedClassSimpleName: String
 ): Descriptor {
-    if (classDeclaration.isThrowable()) {
-        error(
-            "Cannot parse a class that is Throwable: " +
-                (classDeclaration.qualifiedName?.asString() ?: classDeclaration.simpleName.asString())
-        )
-    }
+    classDeclaration.assertNotThrowable(classDeclaration)
     val typeParamResolver = classDeclaration.typeParameters.toTypeParameterResolver()
 
     val concreteTypeParameters: MutableList<TypeParameterDescriptor> =
@@ -87,11 +87,7 @@ fun parseClass(
     val superTypes = classDeclaration.superTypes
         .map { superType ->
             val superTypeName = superType.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters)
-
             val declaration = superType.resolve().declaration
-            //val qualifiedName = (declaration as? KSClassDeclaration)?.qualifiedName
-            //val isKotlinException = ALL_KOTLIN_EXCEPTIONS.any { it.canonicalName == qualifiedName }
-
             if (declaration is KSClassDeclaration) {
                 val ctors = declaration.getConstructors().toList()
                 val superParams = if (ctors.isNotEmpty()) emptyList<ParameterDescriptor>() else null
@@ -104,6 +100,7 @@ fun parseClass(
         .toList()
 
     val constructorParams = classDeclaration.primaryConstructor?.parameters?.map {
+        it.type.assertNotThrowable(it)
         ParameterDescriptor(
             name = it.name!!.asString(),
             type = it.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters)
@@ -192,8 +189,8 @@ private fun buildConcreteTypeParameters(
                 type.asClassName()
             } catch (t: Throwable) {
                 Logger.error(
-                    "Cannot use @KustomException on a not concrete generics class.",
-                    firstTypeParameterProvider()
+                    message = "Cannot use @KustomExport on a not concrete generics class.",
+                    symbol = firstTypeParameterProvider()
                 )
                 error(t)
             }
@@ -213,16 +210,6 @@ private val nonExportableFunctions = listOf(
     "hashCode",
     "toString",
     "copy",
-
-    // For exceptions :
-    "getLocalizedMessage",
-    "initCause",
-    "printStackTrace",
-    "fillInStackTrace",
-    "getStackTrace",
-    "setStackTrace",
-    "addSuppressed",
-    "getSuppressed",
 
     ) + (1..30).map { "component$it" }
 
@@ -244,19 +231,22 @@ private fun KSFunctionDeclaration.toDescriptor(
     declaredNames: Sequence<KSName>,
     typeParamResolver: TypeParameterResolver,
     concreteTypeParameters: MutableList<TypeParameterDescriptor>
-) =
-    FunctionDescriptor(
+): FunctionDescriptor {
+    returnType?.assertNotThrowable(this)
+    return FunctionDescriptor(
         name = simpleName.asString(),
         isOverride = findOverridee() != null || !declaredNames.contains(simpleName),
         isSuspend = modifiers.contains(Modifier.SUSPEND),
         returnType = returnType!!.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
         parameters = parameters.map { p ->
+            p.type.assertNotThrowable(p)
             ParameterDescriptor(
                 name = p.name?.asString() ?: TODO("not sure what we want here"),
                 type = p.type.toTypeNamePatch(typeParamResolver).cached(concreteTypeParameters),
             )
         }
     )
+}
 
 @OptIn(KotlinPoetKspPreview::class)
 fun KSClassDeclaration.parseProperties(
@@ -266,10 +256,11 @@ fun KSClassDeclaration.parseProperties(
     val declaredNames = getDeclaredProperties().mapNotNull { it.simpleName }
     return getAllProperties().mapNotNull { prop ->
         // TODO: rework configuration by naming
-        val classExtendsException = this.simpleName.asString().endsWith("Exception")
         if (prop.isPrivate()) {
             null // Cannot be accessed
         } else {
+            prop.type.assertNotThrowable(prop)
+
             val type = prop.type.toTypeNamePatch(typeParamResolver)
             // Retrieve the names of function arguments, like: (*MyName*: String) -> Unit
             // Problem: we use KotlinPoet TypeName for the mapping, and it doesn't have the value available.
@@ -279,7 +270,6 @@ fun KSClassDeclaration.parseProperties(
                 }
             } else emptyList()
             */
-
             PropertyDescriptor(
                 name = prop.simpleName.asString(),
                 type = type.cached(concreteTypeParameters),
@@ -291,15 +281,35 @@ fun KSClassDeclaration.parseProperties(
     }.toList()
 }
 
+fun KSTypeReference.assertNotThrowable(symbol: KSNode) {
+    val decl = resolve().declaration
+    if (decl is KSClassDeclaration) {
+        decl.assertNotThrowable(symbol)
+    }
+}
+
+fun KSClassDeclaration.assertNotThrowable(symbol: KSNode) {
+    if (isThrowable() && qualifiedName?.asString() != THROWABLE.canonicalName) {
+        Logger.error(
+            message = "Cannot export ${this.qualifiedName?.asString() ?: simpleName.asString()}.\n" +
+                "You cannot export an Exception or subclasses of Exception but you can export a Throwable instead.",
+            symbol = symbol
+        )
+    }
+}
+
 fun KSClassDeclaration.isThrowable(): Boolean {
-    superTypes
+    if (toClassName() in ALL_KOTLIN_EXCEPTIONS) {
+        return true
+    }
+
+    getAllSuperTypes()
         .forEach { superType ->
-            val superTypeResolved = superType.resolve()
-            if (superTypeResolved.toClassName() in ALL_KOTLIN_EXCEPTIONS) {
+            if (superType.toClassName() in ALL_KOTLIN_EXCEPTIONS) {
                 return true
             }
 
-            val declaration = superTypeResolved.declaration
+            val declaration = superType.declaration
             if (declaration is KSClassDeclaration && declaration.isThrowable()) {
                 return true
             }
@@ -307,5 +317,6 @@ fun KSClassDeclaration.isThrowable(): Boolean {
     return false
 }
 
-fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>) =
-    OriginTypeName(this, concreteTypeParameters)
+fun TypeName.cached(concreteTypeParameters: List<TypeParameterDescriptor>): OriginTypeName {
+    return OriginTypeName(this, concreteTypeParameters)
+}
