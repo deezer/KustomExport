@@ -19,7 +19,7 @@ package deezer.kustomexport
 
 import kotlin.reflect.KClass
 
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.FUNCTION)
 public annotation class KustomExport(
     /**
@@ -36,13 +36,14 @@ public annotation class KustomExport(
     val usedByKustomExportGeneric: Boolean = false
 )
 
+@Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FILE)
 public annotation class KustomExportGenerics(
     public val exportGenerics: Array<KustomGenerics> = []
 )
 
+@Retention(AnnotationRetention.BINARY)
 @Target() // No target, only there for data container
-@Retention(AnnotationRetention.RUNTIME) // TODO: to be reduced!
 public annotation class KustomGenerics(
     public val kClass: KClass<*>,
     public val typeParameters: Array<KClass<*>>,
