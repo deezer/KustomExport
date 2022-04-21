@@ -28,7 +28,7 @@ kotlin {
             dependencies {
                 implementation(project(":lib"))
                 implementation(project(":lib-coroutines"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
             }
         }
         val jsMain by getting {
@@ -38,7 +38,7 @@ kotlin {
             // Eventually we should go with:
             // kotlin.srcDir("build/generated/ksp/jsMain/kotlin")
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.1")
             }
         }
     }
