@@ -27,7 +27,6 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustomexport.compiler.GenericsVisitor
-import deezer.kustomexport.compiler.Logger
 import deezer.kustomexport.compiler.js.FormatString
 import deezer.kustomexport.compiler.js.TypeParameterDescriptor
 import deezer.kustomexport.compiler.js.jsPackage
@@ -42,7 +41,7 @@ import deezer.kustomexport.compiler.js.toFormatString
 class OriginTypeName(
     private val originTypeName: TypeName,
     private val concreteTypeParameters: List<TypeParameterDescriptor>,
-     val isKustomExportAnnotated: Boolean,
+    val isKustomExportAnnotated: Boolean,
     private val typeArgs: List<OriginTypeName>,
 ) {
     val concreteTypeName: TypeName by lazy { originTypeName.resolvedType(concreteTypeParameters) }

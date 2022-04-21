@@ -88,13 +88,12 @@ fun parseClass(
 
     val superTypes = classDeclaration.superTypes
         .mapNotNull { superType ->
+            val typeName = superType.toTypeNamePatch(typeParamResolver)
             // KSP 1.6.20-1.0.5 now returns kotlin.Any even if we're parsing an interface.
             // That doesn't make sense for us, so we're just ignoring them
             // https://github.com/google/ksp/issues/815#issuecomment-1105676539
-            val typeName = superType.toTypeNamePatch(typeParamResolver)
             if (typeName == ANY) return@mapNotNull null
             // End of trick
-
 
             val isKustomExportAnnotated = superType.isKustomExportAnnotated()
             val superTypeName = typeName.cached(concreteTypeParameters, isKustomExportAnnotated)
@@ -273,13 +272,6 @@ private fun KSFunctionDeclaration.toDescriptor(
             val typeResolved = p.type.resolve()
 
             val typeArgs = typeResolved.arguments.map {
-                // Just logging here
-                it.type?.let { t ->
-                    t.resolve().declaration.annotations.forEach { a ->
-                        val ksDeclaration = a.annotationType.resolve().declaration
-                    }
-                }
-
                 it.toTypeName(typeParamResolver)
                     .cached(concreteTypeParameters, it.type?.isKustomExportAnnotated() ?: false)
             }

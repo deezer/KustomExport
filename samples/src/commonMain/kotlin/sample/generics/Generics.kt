@@ -85,3 +85,24 @@ class GenericsConsumer {
 //@KustomExport
 //typealias TypeAliasLong = TypeAliasInterface<Long>
 // Unfortunately, typealias are not properly handled by KotlinJs rn
+
+
+/**
+ * NOT SUPPORTED: Currently KustomExport cannot handle generics functions.
+ *
+ * When an annotation like `KustomGenerics(GenericsStuff::class, arrayOf(Long::class))` is found,
+ * it resolves the class type parameters with the given parameter (here [Long]), but the class doesn't need it.
+ * The generic functions can actually be used with multiple types so if we want to support it, we should handle
+ * multiple custom types for each method, generating as many functions as needed, on the wrappers.
+ * Also be able to split generics from the typed class and from the typed methods.
+ *
+ * ```kotlin
+ * class Foo<T : Any> {
+ *   fun <T, V> bar(t: T, v: V) { // T from here is not the T from the class
+ *   }
+ * }
+ * Foo<Int>().bar("a", "b") // Here "T" is a Int at the class level, and a String at the method level.
+ * ```
+ * So it can be tedious to provide a good solution for that (waiting for more adopters, not sure if we need
+ * this level of tooling right now...)
+ */
