@@ -33,6 +33,7 @@ import com.google.devtools.ksp.symbol.KSNode
 import com.google.devtools.ksp.symbol.KSTypeParameter
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.Modifier
+import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.THROWABLE
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
@@ -86,14 +87,17 @@ fun parseClass(
     val classSimpleName = classDeclaration.simpleName.asString()
 
     val superTypes = classDeclaration.superTypes
-        .map { superType ->
-            superType.resolve().declaration.annotations
+        .mapNotNull { superType ->
+            // KSP 1.6.20-1.0.5 now returns kotlin.Any even if we're parsing an interface.
+            // That doesn't make sense for us, so we're just ignoring them
+            // https://github.com/google/ksp/issues/815#issuecomment-1105676539
+            val typeName = superType.toTypeNamePatch(typeParamResolver)
+            if (typeName == ANY) return@mapNotNull null
+            // End of trick
+
+
             val isKustomExportAnnotated = superType.isKustomExportAnnotated()
-            val superTypeName =
-                superType.toTypeNamePatch(typeParamResolver).cached(
-                    concreteTypeParameters,
-                    isKustomExportAnnotated
-                )
+            val superTypeName = typeName.cached(concreteTypeParameters, isKustomExportAnnotated)
 
             val declaration = superType.resolve().declaration
             if (declaration is KSClassDeclaration) {
@@ -273,7 +277,6 @@ private fun KSFunctionDeclaration.toDescriptor(
                 it.type?.let { t ->
                     t.resolve().declaration.annotations.forEach { a ->
                         val ksDeclaration = a.annotationType.resolve().declaration
-                        Logger.warn("FUNCTION - param ${p.name?.asString()} arg=${it.type} has annotations=${ksDeclaration.qualifiedName?.asString()}")
                     }
                 }
 
@@ -347,8 +350,6 @@ fun KSClassDeclaration.assertNotThrowable(symbol: KSNode) {
 }
 
 fun KSTypeReference.isKustomExportAnnotated(): Boolean {
-    Logger.warn("isKustomExportAnnotated: ${resolve().declaration.annotations.joinToString { it.shortName.asString() }}")
-    Logger.warn("isKustomExportAnnotated qualified names: ${resolve().declaration.annotations.joinToString { it.annotationType.resolve().declaration.qualifiedName?.asString() ?: "null" }}")
     return resolve().declaration.annotations.any { a ->
         val ksDeclaration = a.annotationType.resolve().declaration
         ksDeclaration.qualifiedName?.asString() == KustomExport::class.qualifiedName
@@ -373,7 +374,6 @@ fun KSClassDeclaration.isThrowable(): Boolean {
         }
     return false
 }
-
 
 fun TypeName.cached(
     concreteTypeParameters: List<TypeParameterDescriptor>,
