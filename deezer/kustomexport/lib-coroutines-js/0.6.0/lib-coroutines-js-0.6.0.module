@@ -1,0 +1,119 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.6.0/lib-coroutines-0.6.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.6.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-js-0.6.0.klib",
+          "url": "lib-coroutines-js-0.6.0.klib",
+          "size": 4528,
+          "sha512": "7f209e62c17a75cf816f077593d0b5658dc2b47eefbd869af6d36e466538ae2f05bbf25cb8acecfddd9a98858ef7690f0b187385040c41dcd5c96d24c3f2bc2c",
+          "sha256": "47e5373d397e7a0c1cc885e6be47e80d1d70acdd1c2aaf9caee454cdc42f64d2",
+          "sha1": "2cf6cad364bce6377c41a273c0e05b1c69f81917",
+          "md5": "a8fcdbd0f455753b514c13ffc8c2fb61"
+        }
+      ]
+    },
+    {
+      "name": "jsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-js-0.6.0.klib",
+          "url": "lib-coroutines-js-0.6.0.klib",
+          "size": 4528,
+          "sha512": "7f209e62c17a75cf816f077593d0b5658dc2b47eefbd869af6d36e466538ae2f05bbf25cb8acecfddd9a98858ef7690f0b187385040c41dcd5c96d24c3f2bc2c",
+          "sha256": "47e5373d397e7a0c1cc885e6be47e80d1d70acdd1c2aaf9caee454cdc42f64d2",
+          "sha1": "2cf6cad364bce6377c41a273c0e05b1c69f81917",
+          "md5": "a8fcdbd0f455753b514c13ffc8c2fb61"
+        }
+      ]
+    }
+  ]
+}

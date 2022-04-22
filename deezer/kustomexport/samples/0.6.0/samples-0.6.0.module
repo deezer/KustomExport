@@ -1,0 +1,76 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "deezer.kustomexport",
+    "module": "samples",
+    "version": "0.6.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadataApiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.6.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "samples-metadata-0.6.0.jar",
+          "url": "samples-0.6.0.jar",
+          "size": 672,
+          "sha512": "6a515fdf0af06bc4da81099a2b48f2870d2095e3aaf19816437517e91a15cda01b2a7e3764e0ce36d4f564ce5257a5611b65a26c02dde92c47d345a621b76c7c",
+          "sha256": "4c351b9c73141bb0b949bebc87dfc7916f17385cadc0edd5f7d2f07036240c83",
+          "sha1": "5e1ae82cee8329e9e7cc707aed5bcb0c3eb7814d",
+          "md5": "cfcad2a3d0743c780dfc22775f0b4c24"
+        }
+      ]
+    },
+    {
+      "name": "jsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../samples-js/0.6.0/samples-js-0.6.0.module",
+        "group": "deezer.kustomexport",
+        "module": "samples-js",
+        "version": "0.6.0"
+      }
+    },
+    {
+      "name": "jsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../samples-js/0.6.0/samples-js-0.6.0.module",
+        "group": "deezer.kustomexport",
+        "module": "samples-js",
+        "version": "0.6.0"
+      }
+    }
+  ]
+}

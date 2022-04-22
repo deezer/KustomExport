@@ -1,0 +1,133 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../samples/0.6.0/samples-0.6.0.module",
+    "group": "deezer.kustomexport",
+    "module": "samples",
+    "version": "0.6.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core-js",
+          "version": {
+            "requires": "1.6.1"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib-coroutines",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "samples-js-0.6.0.klib",
+          "url": "samples-js-0.6.0.klib",
+          "size": 138786,
+          "sha512": "e4a4523020a17347e372fbe670689fe0a8bf277d900cc316d13ee5cb81c0a23e3d4f19b3c184636c4eb2c724e7b9c801c01affa6db41d53f7df8b657fae2139b",
+          "sha256": "2b45ba05c21689485c4fa8c7ba57d13f168f2900efd2b565f2002e34a219c1d3",
+          "sha1": "72b15a1a69c11d683be9a768aba5535f14d476e6",
+          "md5": "09b4b7b7e13a7ca6812ba356930cd399"
+        }
+      ]
+    },
+    {
+      "name": "jsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core-js",
+          "version": {
+            "requires": "1.6.1"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib-coroutines",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "samples-js-0.6.0.klib",
+          "url": "samples-js-0.6.0.klib",
+          "size": 138786,
+          "sha512": "e4a4523020a17347e372fbe670689fe0a8bf277d900cc316d13ee5cb81c0a23e3d4f19b3c184636c4eb2c724e7b9c801c01affa6db41d53f7df8b657fae2139b",
+          "sha256": "2b45ba05c21689485c4fa8c7ba57d13f168f2900efd2b565f2002e34a219c1d3",
+          "sha1": "72b15a1a69c11d683be9a768aba5535f14d476e6",
+          "md5": "09b4b7b7e13a7ca6812ba356930cd399"
+        }
+      ]
+    }
+  ]
+}
