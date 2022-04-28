@@ -79,7 +79,7 @@ object StateEnumsJs {
 
 If you write similar facades yourself, this generator could help you avoid writing them manually. Please open issues with your needs!
 
->####Note that it's adding code to your existing codebase so it will have an impact on the JS bundle size.
+>>>Note that it's adding code to your existing codebase, so it will increase your JS bundle size.
 
 ## Current status
 
@@ -95,11 +95,10 @@ What is supported today:
 - sealed class
 - suspend methods with cooperative cancellation (via AbortController)
 - removing the namespace (optional) ([doc](doc/Namespace.md))
+- mixing `@JsExport` with `@KustomExport` (experimental)
 
 What is not supported yet:
 - generics (partially supported, you can generate a list of facades from a single generic class)
-- KotlinJS 1.6.20 enums ([issue #19](https://github.com/deezer/KustomExport/issues/19))
-- mixing `@JsExport` with `@KustomExport` ([issue #17](https://github.com/deezer/KustomExport/issues/17))
 
 Feel free to open issues for more features!
 
@@ -112,7 +111,7 @@ KustomExport use [KSP](https://github.com/google/ksp) (Kotlin Symbol Processor),
 ```kotlin
 plugins {
     kotlin("multiplatform")
-    id("com.google.devtools.ksp") version "1.6.0-1.0.2"
+    id("com.google.devtools.ksp") version "1.6.21-1.0.5"
 }
 ```
 
@@ -144,7 +143,7 @@ kotlin {
     // KMP configuration
 }
 dependencies {
-    add("kspJs", "deezer.kustomexport:compiler:0.1.0")
+    add("kspJs", "deezer.kustomexport:compiler:0.6.0")
 }
 ```
 

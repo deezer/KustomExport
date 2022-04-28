@@ -1,6 +1,6 @@
 # Enum
 
-## Problem
+## Problem with Kotlin before 1.6.20
 
 KMP just doesn't support enum export yet, and this example does not compile. [KT-37916](https://youtrack.jetbrains.com/issue/KT-37916)
 
@@ -41,6 +41,16 @@ class ExampleConsumer {
 
 Pretty unusable. And yes typescript dev could deal with `any` by copy-pasting some magic casting code, but then it could create issues if signature changes in the future, it's just not great. 
 
+
+## Limitation with Kotlin after 1.6.20
+
+Since 1.6.20, KotlinJs exports handle the enums ([KT-37916](https://youtrack.jetbrains.com/issue/KT-37916)). 
+But if your enum has methods or properties that deal with non-exportable types (Long, List, ...) it may be interesting to use the `@KustomExport` instead of the more limited `@JsExport`.
+
+Knowing that `@KustomExport` adds code, it's better for your bundle size to use `@JsExport` as much as possible.
+
+> As it's only recently supported by Kotlin, and the Kotlin generated Ts code is not so far from our code generation, we may want to align generated code to have a similar look.
+
 ## Solution
 
 Annotating your enum with `@KustomExport` will generate a class with a private constructor to mimic the enum behaviour, along with a list of constants for each enum entries.
@@ -72,6 +82,5 @@ If it's choice is not right for you, please don't hesitate to create an issue, i
 Additional notes:
 - An issue already exists to be able to export an enum as Int/String, please cast your vote if you're interested.
 - 2 additional methods values/valueOf are generated as helpers.
-- [KT-37916](https://youtrack.jetbrains.com/issue/KT-37916) should be delivered in Kotlin 1.6.20 and could provide a way better code by generating a typescript enum. (That's just not possible by generating Kotlin code with current Kotlin version.) 
 
 [Go back to README](../README.md)

@@ -21,5 +21,6 @@ import deezer.kustomexport.KustomExport
 
 @KustomExport
 class FunctionTypes {
-    fun reduce(compute: (Long, Long) -> Long): (startValue: Long) -> Long = { it + compute(12, 34) }
+    fun reduce(compute: (Long, Long) -> Long): (startValue: Long) -> Long =
+        { startValue -> startValue + compute(12, 34) }
 }
