@@ -10,7 +10,9 @@ kotlin {
     ios()
     iosSimulatorArm64()
     tvos()
+    tvosSimulatorArm64()
     watchos()
+    watchosSimulatorArm64()
 
     sourceSets {
         all {
@@ -23,6 +25,10 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
             }
         }
+        val tvosMain by getting
+        val tvosSimulatorArm64Main by getting { dependsOn(tvosMain)}
+        val watchosMain by getting
+        val watchosSimulatorArm64Main by getting { dependsOn(watchosMain)}
     }
 
     targets.all {
