@@ -1,0 +1,107 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.6.1/lib-coroutines-0.6.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.6.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "tvosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "tvos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.6.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-tvosx64-0.6.1.klib",
+          "size": 4180,
+          "sha512": "9724a5e398a02493b59155230e90ef6714d9bbc906fe1ae1c181e2ba146fdd911b8ecc8c288c877c71f0596c13951391531d675dd2ee9d948053b4839a7a3ed2",
+          "sha256": "7abefde87023e580bc6c3760217c5e9510f0a70f45abbd35b60467ea3666ebad",
+          "sha1": "45410a6195810f6eff079bae72f6900cac1ad7ec",
+          "md5": "fb6339d0c28f290fe81f9f88f541a817"
+        }
+      ]
+    },
+    {
+      "name": "tvosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "tvos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.6.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-tvosx64-0.6.1-metadata.jar",
+          "url": "lib-coroutines-tvosx64-0.6.1-metadata.jar",
+          "size": 261,
+          "sha512": "d8f248456d262a16dfc73060c1bc481c222c86e64a809576674a076680ada148d98e864a55dee995806ddfd93291972552180196643d0ebcabd2233d9e63a6c9",
+          "sha256": "add57116fbb87747da80ec5afa17963ef2a29999fe5920d6a511a5c2df5c3782",
+          "sha1": "cb65d6f2fb0928dc23ea2fddf90aca0582791cfc",
+          "md5": "dd3b40f887040b9f2b30f590c35874e0"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.6.1/lib-0.6.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.6.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "watchosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-watchossimulatorarm64-0.6.1.klib",
+          "size": 8265,
+          "sha512": "fe5470f4f443bf2f3aee8a2eac2200f30223fb785ae221b76cc6308686ed67f8cfeaaeeee85b2cd6b11c30d2eba24f349afdeb7de1f5a5c7331e9ce0bc7e63e9",
+          "sha256": "bf7441e3e0224c2b20acf2f5a1b64246389ac00402c2fa7f00e8adc895902fc4",
+          "sha1": "463a2515715187c5503215311131e09f67ec1ed1",
+          "md5": "71d1c0719558624f2543a392c3ca1ca9"
+        }
+      ]
+    },
+    {
+      "name": "watchosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-watchossimulatorarm64-0.6.1-metadata.jar",
+          "url": "lib-watchossimulatorarm64-0.6.1-metadata.jar",
+          "size": 3852,
+          "sha512": "11ac18d3d12bbdf8030d1ba2cfb2c1f08b43dc0857416c2415db3fa9bb3b1a92c25fcec2c22bdcb2bd56a154981b1548bbc87bd8086104c82cc9ef8d3d7495a9",
+          "sha256": "098588864743851cf35fd5e8dd9529618271797b100c3a8c4392100ae297b2f9",
+          "sha1": "d1ca050857c68bb140c4c81f5abba406f2d20896",
+          "md5": "e4afd96e5e7a814568946f6a7b7b9a83"
+        }
+      ]
+    }
+  ]
+}

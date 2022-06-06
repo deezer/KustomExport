@@ -1,0 +1,91 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.6.1/lib-0.6.1.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.6.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-js-0.6.1.klib",
+          "url": "lib-js-0.6.1.klib",
+          "size": 7119,
+          "sha512": "6073fe24ff2a0783caafec10e33b1c1e39a5d86099c33c717c3e34ee9bd0f5f9e963d47368b1d1f8de15ff0f7e1ea35b772544b9a8c87a4dc354ab6ed7171bd3",
+          "sha256": "bdd149e9656aed0a21dc5192174cbbdc94faa8743de9c43d1d3bdce6efcaeccf",
+          "sha1": "8c89727a245dce2ca17904557525b961a0698196",
+          "md5": "ac52b3f17b6671db24a55405a3f5d19d"
+        }
+      ]
+    },
+    {
+      "name": "jsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.6.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.6.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-js-0.6.1.klib",
+          "url": "lib-js-0.6.1.klib",
+          "size": 7119,
+          "sha512": "6073fe24ff2a0783caafec10e33b1c1e39a5d86099c33c717c3e34ee9bd0f5f9e963d47368b1d1f8de15ff0f7e1ea35b772544b9a8c87a4dc354ab6ed7171bd3",
+          "sha256": "bdd149e9656aed0a21dc5192174cbbdc94faa8743de9c43d1d3bdce6efcaeccf",
+          "sha1": "8c89727a245dce2ca17904557525b961a0698196",
+          "md5": "ac52b3f17b6671db24a55405a3f5d19d"
+        }
+      ]
+    }
+  ]
+}
