@@ -143,7 +143,7 @@ kotlin {
     // KMP configuration
 }
 dependencies {
-    add("kspJs", "deezer.kustomexport:compiler:0.6.0")
+    add("kspJs", "deezer.kustomexport:compiler:0.6.1")
 }
 ```
 
