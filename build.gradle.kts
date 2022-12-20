@@ -40,7 +40,6 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJ
 
 if (localProperties.getProperty("REPOSITORY_URL") != null)
     subprojects {
-        apply(plugin = "maven-publish")
         publishing {
             repositories {
                 maven {
