@@ -1,0 +1,107 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.7.0/lib-coroutines-0.7.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.7.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "watchosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "watchos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.7.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-watchosx64-0.7.0.klib",
+          "size": 4204,
+          "sha512": "ffed377189f5abbadcdc4aa984fcdbff870e82479f03be274d914f6c6b99a5e3e023fafc79bce2a3aafcb15e902d2fb8508298c4f1879e1a427cdddba6295805",
+          "sha256": "53b24e7a80386a5d18237482137c0d2127033e9ea870aec082426471f095f900",
+          "sha1": "709b04c0da201c724946a9002d3d6c9c8fda068f",
+          "md5": "75876309b15bb7161fb2ec3913a702b5"
+        }
+      ]
+    },
+    {
+      "name": "watchosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "watchos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.7.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-watchosx64-0.7.0-metadata.jar",
+          "url": "lib-coroutines-watchosx64-0.7.0-metadata.jar",
+          "size": 261,
+          "sha512": "8c4fee81d81b0aa92177a873327e78a09d9cb3f099db1d738f5bd17a8c3c8d200717a6a15d6a903724ec23db9888955c46a5759f930cf06c79f4576620f858b9",
+          "sha256": "fefe673b693e807447e077ed5874e20cba47dee943b3b43f3c855d6c5a0d9fc5",
+          "sha1": "7fd85af2ac18eba4dfd3ac807f1c5695e55bcb97",
+          "md5": "a2d90f9a744297ee6c0aeaf6fd694fbc"
+        }
+      ]
+    }
+  ]
+}
