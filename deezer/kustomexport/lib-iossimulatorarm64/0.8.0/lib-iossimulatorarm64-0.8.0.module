@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.8.0/lib-0.8.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.8.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-iossimulatorarm64-0.8.0.klib",
+          "size": 6898,
+          "sha512": "0d6a0d5ad6a78e29f58be898d3a6a2e90d0c341b5edb6c1fbe29837d1f50e3d44a91a367c1d93bbb29a7ece4c14ef60ea7afba740f69bc1c4fae04497cab0780",
+          "sha256": "d24360784990423a582de81dee1224e9afdceaa4cd4d4056a80c07e8de5732eb",
+          "sha1": "c7290fdd035b134c20cc1e512751740a4b0e677d",
+          "md5": "b24cf5ed8225484c61af6ad2ee8aa341"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-iossimulatorarm64-0.8.0-metadata.jar",
+          "url": "lib-iossimulatorarm64-0.8.0-metadata.jar",
+          "size": 261,
+          "sha512": "ab58035976b7734b1a29020c05e59e79599dad39e2ba1dba0ee004c3fd78ba5b35387e3fa38c752c5ec6499e034a718df14cc85c52042d5f7772dc40e6d6b24e",
+          "sha256": "7440195639ec9aa3ba7e413a884d5b79a7f95393d773be6bdedc9e11b587bd5c",
+          "sha1": "36a1e3c079266174217f1fd5a04787c8ab38d3a5",
+          "md5": "16ea6f7e4728e77f54073af01e9a36ea"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.8.0/lib-0.8.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.8.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "tvosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "tvos_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-tvossimulatorarm64-0.8.0.klib",
+          "size": 6907,
+          "sha512": "997a7fa90cc1928045157964a4c29adb613ee37d90cc0844d9a774365fc7858c4031abfb6d4295b99b7d0879e2ddd8d8a6fc916f1585106e286217a06eb887ae",
+          "sha256": "bbf87288a24a1256dec0a72830ddb98e5f145433da0f9545ce4cc1691828349e",
+          "sha1": "a7d37f63f4a32fb6e499de5f3f81e8e4267000dd",
+          "md5": "689760e03c18de8b8ba30bccd1fed876"
+        }
+      ]
+    },
+    {
+      "name": "tvosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "tvos_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-tvossimulatorarm64-0.8.0-metadata.jar",
+          "url": "lib-tvossimulatorarm64-0.8.0-metadata.jar",
+          "size": 261,
+          "sha512": "355cd008f174fd0b7d4f9ec87f59f8cae26c4e984c63120e21412bb5079a6a29f7e43eb2889475d63ddafdacce80799f07b263e88cce5c36345ebb63a512be8b",
+          "sha256": "8652c69604d1941076d37696a6196c13d64e4be443edcc8ee8af8c7a7b1ee95d",
+          "sha1": "3fe62af9b8d1fa494a29bd1456745cc11764104f",
+          "md5": "133b86ff0d75d38c94648553e5413327"
+        }
+      ]
+    }
+  ]
+}

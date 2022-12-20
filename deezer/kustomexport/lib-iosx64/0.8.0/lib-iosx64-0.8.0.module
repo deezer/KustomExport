@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.8.0/lib-0.8.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.8.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-iosx64-0.8.0.klib",
+          "size": 6795,
+          "sha512": "391096ad7deca3c715b3707b0e9e51e2773f72bc6611ebe21a7c9731ee903cc837a151eb260fa283d3c8b40fdafd811392d8c876a7e0938cb985780745813386",
+          "sha256": "8a74bc2d60c39a2086db635527015a7ca122f653926c2a401dee0e973560f9f1",
+          "sha1": "3e091a2d708a1645c647117388ac7e2e002e97f3",
+          "md5": "446d8c3bb1155018916dbd52350e4844"
+        }
+      ]
+    },
+    {
+      "name": "iosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-iosx64-0.8.0-metadata.jar",
+          "url": "lib-iosx64-0.8.0-metadata.jar",
+          "size": 261,
+          "sha512": "efc427d807c822bc928d83d80f3e53b76b70c980ae51a6dfbc6323c66756959c4179860461a4fa8d7ed894da779258ac5a4bbb895f13a1a3e50f22f9f9c365d7",
+          "sha256": "7316cea17af85de0a5f033b205c82aab04b832b50230f0c69efd8852a786b8ba",
+          "sha1": "7c04cc040459599a9d4f5b751e5da5939ffd4948",
+          "md5": "979d96b793044852d15b49a9c9e24f4f"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.8.0/lib-coroutines-0.8.0.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.8.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.8.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-iossimulatorarm64-0.8.0.klib",
+          "size": 4271,
+          "sha512": "ae4bb9e815251c0fbf0926c072f969f7f03d37683fa810b84efac6dccc34a3aa2046f96a9b50ce4ebe120ff112478bb5111045311632e0fbd060e759d06ac58c",
+          "sha256": "147b6e60bf5f74daaf7253018a97b40cecd159c7732edf9bbb323c10bab17fbb",
+          "sha1": "710dfb1ebf9da728531a6e54a3f13dad19dc4317",
+          "md5": "485efe694d77cc8be575311eacab00f9"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.8.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-iossimulatorarm64-0.8.0-metadata.jar",
+          "url": "lib-coroutines-iossimulatorarm64-0.8.0-metadata.jar",
+          "size": 261,
+          "sha512": "6689f1bb08069b9f302121ffad055d6e73d8d60517fc7482b4a778fe243d2588de4c250fa2c535906796ea767717b8f9cfd98ed98b868721263b2133d32aa843",
+          "sha256": "88aa5ef844080b9d041fd89616b288ec014c0afcd76f2988d005d30920a675d6",
+          "sha1": "46acd34606d6ed1705e3bc8478f51d048eb19f40",
+          "md5": "d982d516852969d90ed7849b3481c1fd"
+        }
+      ]
+    }
+  ]
+}
