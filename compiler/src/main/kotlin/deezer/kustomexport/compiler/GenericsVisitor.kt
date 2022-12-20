@@ -23,14 +23,12 @@ import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import deezer.kustomexport.KustomExportGenerics
 import deezer.kustomexport.KustomGenerics
 
 data class Generics(val exportName: String, val originType: ClassName, val typeParameters: List<ClassName>)
 
-@KotlinPoetKspPreview
 class GenericsVisitor(val resolver: Resolver) : KSVisitorVoid() {
     companion object {
         // Generics interface/class can generate wrappers if the type is "resolved" to a type (interface or class).

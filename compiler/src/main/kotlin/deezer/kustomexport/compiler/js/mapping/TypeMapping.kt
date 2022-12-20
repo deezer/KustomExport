@@ -15,8 +15,6 @@
  * under the License.
  */
 
-@file:OptIn(KotlinPoetKspPreview::class)
-
 package deezer.kustomexport.compiler.js.mapping
 
 import com.squareup.kotlinpoet.ClassName
@@ -25,7 +23,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import deezer.kustomexport.compiler.GenericsVisitor
 import deezer.kustomexport.compiler.js.FormatString
 import deezer.kustomexport.compiler.js.TypeParameterDescriptor

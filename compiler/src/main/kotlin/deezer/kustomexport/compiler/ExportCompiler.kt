@@ -33,7 +33,6 @@ import com.google.devtools.ksp.symbol.KSTypeAlias
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import deezer.kustomexport.KustomExport
 import deezer.kustomexport.KustomExportGenerics
@@ -61,7 +60,6 @@ internal object CompilerArgs {
     var erasePackage: Boolean = false
 }
 
-@KotlinPoetKspPreview
 class ExportCompiler(private val environment: SymbolProcessorEnvironment) : SymbolProcessor {
 
     init {
@@ -93,7 +91,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         return emptyList()
     }
 
-    @KotlinPoetKspPreview
     inner class ExportVisitor(val resolver: Resolver) : KSVisitorVoid() {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             // Skip classes handled by KustomExportGenerics
@@ -187,7 +184,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
     }
 }
 
-@KotlinPoetKspPreview
 class ExportCompilerProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment) =
         ExportCompiler(environment)

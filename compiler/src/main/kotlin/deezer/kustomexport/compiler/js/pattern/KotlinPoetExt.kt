@@ -29,7 +29,6 @@ import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
 import com.squareup.kotlinpoet.ksp.toTypeName
 import deezer.kustomexport.compiler.Logger
@@ -63,7 +62,6 @@ fun TypeName.simpleName(): String =
 // Issue in KSP: https://kotlinlang.slack.com/archives/C013BA8EQSE/p1633948867255800
 // https://github.com/google/ksp/issues/728
 // Instead of crashing during compilation, we try our best to guess the ClassName...
-@KotlinPoetKspPreview
 public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterResolver): TypeName {
     // TODO : resolve().toTypeNamePatch()
     if (this == null) return ANY
@@ -80,7 +78,6 @@ public fun KSTypeReference?.toTypeNamePatch(typeParamResolver: TypeParameterReso
 }
 
 // https://github.com/google/ksp/issues/728
-@KotlinPoetKspPreview
 public fun KSType?.toTypeNamePatch(typeParamResolver: TypeParameterResolver, containingFile: KSFile?): TypeName {
     if (this == null) return ANY
     //if (this.isError) return ANY

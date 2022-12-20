@@ -15,8 +15,6 @@
  * under the License.
  */
 
-@file:OptIn(KotlinPoetKspPreview::class, KotlinPoetKspPreview::class)
-
 package deezer.kustomexport.compiler.js.pattern
 
 import com.google.devtools.ksp.getAllSuperTypes
@@ -36,7 +34,6 @@ import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.THROWABLE
 import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.TypeParameterResolver
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
@@ -71,7 +68,6 @@ fun parseFunction(
     )
 )
 
-@KotlinPoetKspPreview
 fun parseClass(
     classDeclaration: KSClassDeclaration,
     forcedConcreteTypeParameters: List<Pair<String, TypeName>>? = null,
@@ -233,7 +229,6 @@ private val nonExportableFunctions = listOf(
 
     ) + (1..30).map { "component$it" }
 
-@OptIn(KotlinPoetKspPreview::class)
 fun KSClassDeclaration.parseFunctions(
     typeParamResolver: TypeParameterResolver,
     concreteTypeParameters: MutableList<TypeParameterDescriptor>
@@ -285,7 +280,6 @@ private fun KSFunctionDeclaration.toDescriptor(
     )
 }
 
-@OptIn(KotlinPoetKspPreview::class)
 fun KSClassDeclaration.parseProperties(
     typeParamResolver: TypeParameterResolver,
     concreteTypeParameters: MutableList<TypeParameterDescriptor>
