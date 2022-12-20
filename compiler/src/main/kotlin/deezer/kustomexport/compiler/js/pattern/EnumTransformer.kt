@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package deezer.kustomexport.compiler.js.pattern.enum
+package deezer.kustomexport.compiler.js.pattern
 
 import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.ClassName
@@ -30,7 +30,6 @@ import deezer.kustomexport.compiler.js.EnumDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
-import deezer.kustomexport.compiler.js.pattern.overrideGetterSetter
 
 fun EnumDescriptor.transform() = transformEnum(this)
 

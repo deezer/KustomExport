@@ -43,13 +43,9 @@ import deezer.kustomexport.compiler.js.InterfaceDescriptor
 import deezer.kustomexport.compiler.js.SealedClassDescriptor
 import deezer.kustomexport.compiler.js.TopLevelFunctionDescriptor
 import deezer.kustomexport.compiler.js.ValueClassDescriptor
-import deezer.kustomexport.compiler.js.pattern.`class`.transform
-import deezer.kustomexport.compiler.js.pattern.`interface`.transform
-import deezer.kustomexport.compiler.js.pattern.enum.transform
-import deezer.kustomexport.compiler.js.pattern.function.transform
+import deezer.kustomexport.compiler.js.pattern.transform
 import deezer.kustomexport.compiler.js.pattern.parseClass
 import deezer.kustomexport.compiler.js.pattern.parseFunction
-import deezer.kustomexport.compiler.js.pattern.value.transform
 
 // Trick to share the Logger everywhere without injecting the dependency everywhere
 internal lateinit var sharedLogger: KSPLogger

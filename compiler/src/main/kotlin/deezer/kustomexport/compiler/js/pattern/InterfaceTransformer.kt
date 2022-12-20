@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package deezer.kustomexport.compiler.js.pattern.`interface`
+package deezer.kustomexport.compiler.js.pattern
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -33,10 +33,6 @@ import deezer.kustomexport.compiler.js.PropertyDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
-import deezer.kustomexport.compiler.js.pattern.OverrideMode
-import deezer.kustomexport.compiler.js.pattern.buildWrappingFunction
-import deezer.kustomexport.compiler.js.pattern.overrideGetterSetter
-import deezer.kustomexport.compiler.js.pattern.packageName
 import java.util.Locale
 
 fun InterfaceDescriptor.transform() = transformInterface(this)

@@ -15,18 +15,14 @@
  * under the License.
  */
 
-package deezer.kustomexport.compiler.js.pattern.function
+package deezer.kustomexport.compiler.js.pattern
 
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
 import deezer.kustomexport.compiler.js.TopLevelFunctionDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
-import deezer.kustomexport.compiler.js.pattern.addParameters
-import deezer.kustomexport.compiler.js.pattern.buildWrappingFunctionBody
-import deezer.kustomexport.compiler.js.pattern.returnType
 
 fun TopLevelFunctionDescriptor.transform() = transformFunction(this)
 

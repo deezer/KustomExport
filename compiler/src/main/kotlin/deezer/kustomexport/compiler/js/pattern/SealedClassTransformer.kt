@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package deezer.kustomexport.compiler.js.pattern.`class`
+package deezer.kustomexport.compiler.js.pattern
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock

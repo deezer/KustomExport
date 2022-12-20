@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package deezer.kustomexport.compiler.js.pattern.`class`
+package deezer.kustomexport.compiler.js.pattern
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -28,22 +28,8 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import deezer.kustomexport.compiler.js.ALL_KOTLIN_EXCEPTIONS
-import deezer.kustomexport.compiler.js.ClassDescriptor
-import deezer.kustomexport.compiler.js.FormatString
-import deezer.kustomexport.compiler.js.MethodNameDisambiguation
-import deezer.kustomexport.compiler.js.ParameterDescriptor
-import deezer.kustomexport.compiler.js.dynamicCastTo
-import deezer.kustomexport.compiler.js.dynamicNotString
-import deezer.kustomexport.compiler.js.dynamicNull
-import deezer.kustomexport.compiler.js.dynamicString
-import deezer.kustomexport.compiler.js.jsExport
-import deezer.kustomexport.compiler.js.jsPackage
+import deezer.kustomexport.compiler.js.*
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
-import deezer.kustomexport.compiler.js.pattern.asClassName
-import deezer.kustomexport.compiler.js.pattern.buildWrappingFunction
-import deezer.kustomexport.compiler.js.pattern.overrideGetterSetter
-import deezer.kustomexport.compiler.js.pattern.suppress
 
 fun ClassDescriptor.transform() = transformClass(this)
 
@@ -140,9 +126,9 @@ private fun buildExportedClass(
                             // Without that, it fails at runtime because there is no dynamicCastTo method on null.
                             // > TypeError: Cannot read properties of null (reading 'dynamicCastTo')
                             origin.constructorParams
-                                .joinToString { "${it.name}·=·%M${if (ctorDyn == dynamicNull) "?" else ""}.%M<%T>()" },
+                                .joinToString { "${it.name}·=·%M.%M<%T>()" },
                             *origin.constructorParams
-                                .flatMap { listOf(ctorDyn, dynamicCastTo, it.type.exportedTypeName) }.toTypedArray()
+                                .flatMap { listOf(ctorDyn, unsafeCast, it.type.exportedTypeName) }.toTypedArray()
                         )
                     )
                     .addParameter(ParameterSpec("common", originalClass))
@@ -188,7 +174,7 @@ private fun buildExportedClass(
                             b.addSuperclassConstructorParameter(
                                 CodeBlock.of(
                                     "common = %M.%M<%T>()",
-                                    dynamicNull, dynamicCastTo, supr.origin.concreteTypeName.asClassName()
+                                    dynamicNull, unsafeCast, supr.origin.concreteTypeName.asClassName()
                                 )
                             )
                         }
