@@ -17,7 +17,7 @@ val localProperties = java.util.Properties().apply {
 
 plugins {
     id("maven-publish")
-    id("org.ajoberstar.git-publish") version "3.0.1"
+    id("org.ajoberstar.git-publish") version "4.1.1"
     id("org.ajoberstar.grgit") version "4.1.1"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
