@@ -46,11 +46,11 @@ fun transformEnum(origin: EnumDescriptor): FileSpec {
         .addAnnotation(jsExport)
         .primaryConstructor(
             FunSpec.constructorBuilder()
-                .addParameter(delegateName, originalClass, KModifier.INTERNAL)
                 .addModifiers(KModifier.INTERNAL)
+                .addParameter(delegateName, originalClass)
                 .build()
         )
-        .addProperty(PropertySpec.builder(delegateName, originalClass).initializer(delegateName).build())
+        .addProperty(PropertySpec.builder(delegateName, originalClass, KModifier.INTERNAL).initializer(delegateName).build())
         .addProperty(PropertySpec.builder("name", STRING).initializer("$delegateName.name").build())
         .also { builder ->
             origin.properties

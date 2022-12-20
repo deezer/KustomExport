@@ -161,10 +161,10 @@ private fun buildWrapperClass(
         .addModifiers(KModifier.PRIVATE)
         .primaryConstructor(
             FunSpec.constructorBuilder()
-                .addParameter(delegateName, delegatedClass, KModifier.INTERNAL)
+                .addParameter(delegateName, delegatedClass)
                 .build()
         )
-        .addProperty(PropertySpec.builder(delegateName, delegatedClass).initializer(delegateName).build())
+        .addProperty(PropertySpec.builder(delegateName, delegatedClass, KModifier.INTERNAL).initializer(delegateName).build())
         .addSuperinterface(superClass)
         .also { builder ->
             properties.forEach { prop ->
