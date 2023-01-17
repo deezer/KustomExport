@@ -17,10 +17,8 @@
 
 package deezer.kustomexport.compiler
 
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import org.junit.Test
 
-@KotlinPoetKspPreview
 class ExportInterfaceTest {
 
     @Test
