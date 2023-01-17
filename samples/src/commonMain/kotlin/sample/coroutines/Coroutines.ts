@@ -17,7 +17,7 @@ runTest("Coroutines", async () : Promise<void> => {
     assertEquals(42, await p, "execute Kotlin coroutines with 'then'")
 
     class MyComputer implements sample.coroutines.js.IComputer {
-        async longCompute() {
+        async longCompute(abortSignal: AbortSignal): Promise<number> {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     resolve(999);
@@ -30,8 +30,8 @@ runTest("Coroutines", async () : Promise<void> => {
     assertEquals(1998, await tester.testAsync(neverAbortSignal), "parallel setTimeout")
 
     class RejectComputer implements sample.coroutines.js.IComputer {
-        async longCompute() {
-            return new Promise<void>((resolve, reject) => {
+        async longCompute(abortSignal: AbortSignal): Promise<number> {
+            return new Promise<number>((resolve, reject) => {
                 setTimeout(() => {
                     reject(new Error("bug"));
                 }, 1000);
@@ -58,7 +58,7 @@ async function cancelTypescriptPromiseFromKotlin() {
         workAborted: boolean
         // Should be passed in parameters in the longCompute method for cooperative cancellation
         // Cancellation is not available yet.
-        async longCompute(abortSignal) {
+        async longCompute(abortSignal: AbortSignal): Promise<number> {
             return new Promise((resolve, reject) => {
                 var timeout = 5000
                 var currTime = 0
