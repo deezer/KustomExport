@@ -17,7 +17,6 @@
 
 package deezer.kustomexport.compiler
 
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.kspSourcesDir
@@ -32,12 +31,10 @@ import kotlin.test.fail
 data class InputFile(val path: String, @Language("kotlin") val content: String)
 data class ExpectedOutputFile(val path: String, @Language("kotlin") val content: String)
 
-@KotlinPoetKspPreview
 fun assertCompilationOutput(@Language("kotlin") fileContent: String, vararg files: ExpectedOutputFile) {
     assertCompilationOutput(listOf(InputFile("Main.kt", fileContent)), files.asList())
 }
 
-@KotlinPoetKspPreview
 fun assertCompilationOutput(inputFiles: List<InputFile>, expectedOutputFiles: List<ExpectedOutputFile>) {
     // Requires to add the annotation here
     val kustomExport = SourceFile.kotlin(
@@ -68,7 +65,6 @@ fun assertCompilationOutput(inputFiles: List<InputFile>, expectedOutputFiles: Li
     }
 }
 
-@KotlinPoetKspPreview
 private fun compile(
     sourceFiles: List<SourceFile>,
     expectedExitCode: KotlinCompilation.ExitCode = KotlinCompilation.ExitCode.OK
@@ -79,7 +75,6 @@ private fun compile(
     return compilation
 }
 
-@KotlinPoetKspPreview
 private fun prepareCompilation(sourceFiles: List<SourceFile>): KotlinCompilation {
     return KotlinCompilation()
         .apply {
