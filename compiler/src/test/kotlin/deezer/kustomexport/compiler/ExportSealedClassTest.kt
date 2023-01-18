@@ -67,8 +67,9 @@ class ExportSealedClassTest {
                     }
                     
                     public fun CommonSealedParent.exportSealedParent(): SealedParent = when (this) {
-                      is CommonSealedChild1 -> exportSealedChild1()
-                      is CommonSealedChild2 -> exportSealedChild2()
+                          is CommonSealedChild1 -> exportSealedChild1()
+                          is CommonSealedChild2 -> exportSealedChild2()
+                          else -> error("Cannot export $this")
                     }
                     
                     public fun SealedParent.importSealedParent(): CommonSealedParent = when (this) {
@@ -183,10 +184,10 @@ class ExportSealedClassTest {
                     package foo.bar
         
                     import deezer.kustomexport.KustomExport
-                    import java.lang.IllegalStateException // Or else it's interpreted as a typealias and fail in the toClassName() koktlinpoet ext
+                    import java.lang.Throwable // Or else it's interpreted as a typealias and fail in the toClassName() kotlinpoet ext
         
                     @KustomExport
-                    sealed class SealedParent(val ctorParam: Long): IllegalStateException("I'm sealed") {
+                    sealed class SealedParent(val ctorParam: Long): Throwable("I'm sealed") {
                         abstract val field: Long
                     }
                     @KustomExport

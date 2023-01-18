@@ -49,7 +49,7 @@ class ExportEnumTest {
                 
                 @JsExport
                 public class Season internal constructor(
-                    internal val common: CommonSeason
+                    internal val common: CommonSeason,
                 ) {
                     public val name: String = common.name
                 }

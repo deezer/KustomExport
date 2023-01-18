@@ -77,16 +77,16 @@ class ExportClassTest {
                 content = """
                 package foo.bar.js
                 
-                import deezer.kustomexport.dynamicCastTo
                 import deezer.kustomexport.dynamicNull
                 import kotlin.String
                 import kotlin.Suppress
                 import kotlin.js.JsExport
+                import kotlin.js.unsafeCast
                 import foo.bar.BasicClass as CommonBasicClass
                 
                 @JsExport
                 public class BasicClass(
-                    id: String
+                    id: String,
                 ) {
                     internal lateinit var common: CommonBasicClass
                 
@@ -102,8 +102,7 @@ class ExportClassTest {
                         get() = common.id
                 
                     @Suppress("UNNECESSARY_SAFE_CALL")
-                    internal constructor(common: CommonBasicClass) :
-                            this(id = dynamicNull?.dynamicCastTo<String>()) {
+                    internal constructor(common: CommonBasicClass) : this(id = dynamicNull.unsafeCast<String>()) {
                         this.common = common
                     }
                 }

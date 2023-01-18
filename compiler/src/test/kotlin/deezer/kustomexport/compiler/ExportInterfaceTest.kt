@@ -44,11 +44,11 @@ class ExportInterfaceTest {
             public external interface Exportable
             
             private class ImportedExportable(
-                internal val exported: Exportable
+                internal val exported: Exportable,
             ) : CommonExportable
             
             private class ExportedExportable(
-                internal val common: CommonExportable
+                internal val common: CommonExportable,
             ) : Exportable
             
             public fun CommonExportable.exportExportable(): Exportable =
@@ -89,14 +89,14 @@ class ExportInterfaceTest {
             }
             
             private class ImportedBasicInterface(
-                internal val exported: BasicInterface
+                internal val exported: BasicInterface,
             ) : CommonBasicInterface {
                 public override val flex: String
                     get() = exported.flex
             }
             
             private class ExportedBasicInterface(
-                internal val common: CommonBasicInterface
+                internal val common: CommonBasicInterface,
             ) : BasicInterface {
                 public override val flex: String
                     get() = common.flex
@@ -140,7 +140,7 @@ class ExportInterfaceTest {
             }
             
             private class ImportedBasicInterface(
-                internal val exported: BasicInterface
+                internal val exported: BasicInterface,
             ) : CommonBasicInterface {
                 public override var canChange: String
                     get() = exported.canChange
@@ -150,7 +150,7 @@ class ExportInterfaceTest {
             }
             
             private class ExportedBasicInterface(
-                internal val common: CommonBasicInterface
+                internal val common: CommonBasicInterface,
             ) : BasicInterface {
                 public override var canChange: String
                     get() = common.canChange
@@ -201,7 +201,7 @@ class ExportInterfaceTest {
                 }
                 
                 private class ImportedBasicInterface(
-                    internal val exported: BasicInterface
+                    internal val exported: BasicInterface,
                 ) : CommonBasicInterface {
                     public override var numbers: List<Long>
                         get() = exported.numbers.map { it.toLong() }
@@ -211,7 +211,7 @@ class ExportInterfaceTest {
                 }
                 
                 private class ExportedBasicInterface(
-                    internal val common: CommonBasicInterface
+                    internal val common: CommonBasicInterface,
                 ) : BasicInterface {
                     public override var numbers: Array<Double>
                         get() = common.numbers.map { it.toDouble() }.toTypedArray()
@@ -276,7 +276,7 @@ class ExportInterfaceTest {
                     }
                     
                     private class ImportedBasicInterface(
-                        internal val exported: BasicInterface
+                        internal val exported: BasicInterface,
                     ) : CommonBasicInterface {
                         public override fun foo(bar: bar.Bar): Unit {
                             val result = exported.foo(
@@ -287,7 +287,7 @@ class ExportInterfaceTest {
                     }
                     
                     private class ExportedBasicInterface(
-                        internal val common: CommonBasicInterface
+                        internal val common: CommonBasicInterface,
                     ) : BasicInterface {
                         public override fun foo(bar: Bar): Unit {
                             val result = common.foo(
@@ -358,7 +358,7 @@ class ExportInterfaceTest {
                         }
                         
                         private class ImportedBasicInterface(
-                            internal val exported: BasicInterface
+                            internal val exported: BasicInterface,
                         ) : CommonBasicInterface {
                             public override fun foo(bar: bar.Bar): List<Long> {
                                 val result = exported.foo(
@@ -369,7 +369,7 @@ class ExportInterfaceTest {
                         }
                         
                         private class ExportedBasicInterface(
-                            internal val common: CommonBasicInterface
+                            internal val common: CommonBasicInterface,
                         ) : BasicInterface {
                             public override fun foo(bar: Bar): Array<Double> {
                                 val result = common.foo(
