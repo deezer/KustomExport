@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.4.0",
+    "@kustom/Samples": "file:../build/js/packages/@kustom/Samples"
   }
 }
