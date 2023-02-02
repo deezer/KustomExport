@@ -141,11 +141,12 @@ fun FunctionDescriptor.buildWrappingFunctionBody(
     body += "val result = $callStr("
     body += if (parameters.isNotEmpty()) "\n" else ""
     body += params
-    body += if (parameters.isNotEmpty()) ")\n" else ")\n"
+    body += if (parameters.isNotEmpty()) ")" else ")"
+
+    body += if (import && isSuspend) ".%M()\n".toFormatString(coroutinesAwait) else "\n".toFormatString()
 
     body += if (import || !isSuspend) "return·" else ""
     body += returnType.portMethod(import, "result".toFormatString())
-    body += if (import && isSuspend) ".%M()".toFormatString(coroutinesAwait) else "".toFormatString()
 
     if (!import && isSuspend) body += "\n}"
     return body
