@@ -24,7 +24,7 @@ plugins {
 
 allprojects {
     group = "deezer.kustomexport"
-    version = "0.8.0"
+    version = "0.8.1"
 
     repositories {
         mavenLocal()
