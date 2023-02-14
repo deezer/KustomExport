@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-watchosarm64-0.8.1.klib",
-          "size": 6853,
-          "sha512": "f7cd88a32676db6197e42cb04221837433a55e6dc08f1d4d2c74f7f59a7dea7b0c68c6dbdf6c712152b19ecd3ac88ae1eaa428efa962c3d2d3daef290f495849",
-          "sha256": "a52c23af0464aaf8c56466afb1b845a884cc40c70e5c8472b80279753d4cc76e",
-          "sha1": "803110bfcc5ea3d01a775c90bc8136df15d8736d",
-          "md5": "dfccc7cab05b4de2f96ac9e701f3e612"
+          "size": 6846,
+          "sha512": "c7e64074f84ff95b3f9fcc3f20f790551cc44ca495c7145ab52d42351cdcec9b87a4f8aaf2b56a9b602c4a647aa18618fe0399a4ce5cde8a7b92511360f8d75a",
+          "sha256": "5a4e358e10cac21e637811b6e5f110604eaea9aef072036516989319c7ca39b0",
+          "sha1": "886f4f7a540dff5e35b413b2da7030bae2579590",
+          "md5": "c1cd509c8c22a2bec7a7658583f9ac42"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-watchosarm64-0.8.1-metadata.jar",
           "url": "lib-watchosarm64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "fe70f3c8db9bc51c22fcab6243482dc29da6db05402d9da731a33da826a0914a73bac615305f1af8bfe91f54d8ecc0a89522e9b3dc810c5eb4cde49b4c9b3f0f",
-          "sha256": "4fe8900a6807cfe2230fab152512676beb10199711f51f59283cf4b883045019",
-          "sha1": "f992ab00f3736fdc639151152987376f06db02f0",
-          "md5": "0736b015150172c5e5f8aa00454b9f7a"
+          "sha512": "53e8a31b3ff0f5f46e8c8344a049eb539778e30c0c5af81c4c0be2510d5f9f76a05168cc52c459c0234b6c2b6c5b5b7a32c87acf383d639ca74c1ad1a3e977f7",
+          "sha256": "103ae64747c74b94a1ce293d7bc1ce6bc60fc50d3eae9a2d5ca35435985e4840",
+          "sha1": "6f1b941bef52bd0cdd709ebe4ec43c97814c641c",
+          "md5": "cff1e0328352612266636e8540f9ee6e"
         }
       ]
     }

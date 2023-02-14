@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-tvosarm64-0.8.1.klib",
-          "size": 4198,
-          "sha512": "c5d8a84ad26873d0d57adaf406e4033e52fe4372124893c92df396498ee1dad8ad4f47c408ed9ec830deda9b3f3b9e4298943620ed7e99c233911757198fab4b",
-          "sha256": "b82f1d86efeb2835ea2227e02604872b972e87a5a7fcf6fb363804830999648b",
-          "sha1": "26fe9ae4a6fe8cd73a5891b314fb65e1caf6a20f",
-          "md5": "c655b487e85dfa694926f42eef1c6456"
+          "size": 4195,
+          "sha512": "58b63320e821412c55b803ee68dd695a5d140f3dca4ab51c7a59f4013cd5daf8c7aa31d3dfdf8d3eb38079eb04587c083803a12f8e9532e05d8fc5383de26a0b",
+          "sha256": "e85b166bf709da843f78b45c8131084ee13b90aed68bfa4bece4841116c0d6c5",
+          "sha1": "c7dcccd644c19c2822a5ff7cc48dff7ca8a1eb31",
+          "md5": "9bddfb6161458f687b7063323dbb37d9"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-tvosarm64-0.8.1-metadata.jar",
           "url": "lib-coroutines-tvosarm64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "e8b346b31b24f98bd0c473d22d792a4b64f5a4ff958319df46a694ba0a7d0c5ea1da117edea0e160b433d7ffd8b742d6bd018528704be601c109d61d6a80fe75",
-          "sha256": "e7c00aa036dd042891a9fd39ad587d0de3f893b1d7cd83fc3f2f1a1e75db34bf",
-          "sha1": "12a68f3270763ea7d69c7be9050b077083cc2e1e",
-          "md5": "7fac7dfe750638b190f1438a791e0526"
+          "sha512": "caeda8ac1ca3b13c659b37be3d1a136c0ab0d4f81090ecf7b536c592c8da0480819d0561606f2a28ca81472b9bf7788cf540ba370d3bda4f65e3fcf83ea63c38",
+          "sha256": "3b67d495b4848f66757324b8a224d3cf6c17b47af101920e408223907a4fd691",
+          "sha1": "37962c78d514fa2db977fc049b5234697bd1d429",
+          "md5": "6a6a79f70e297ff0ebef279974656209"
         }
       ]
     }

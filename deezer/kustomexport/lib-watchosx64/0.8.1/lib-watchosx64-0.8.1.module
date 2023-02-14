@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-watchosx64-0.8.1.klib",
-          "size": 6836,
-          "sha512": "0d12350c93ed436429fee61524ad3e29e4beff6e442949f9e2dffffe5f54149026ebfbe60f3ba1f2220e9750dbf8982950b6968b51de3617f9e7305d2ea4f05c",
-          "sha256": "22a2c03691bd778ae6e206a50e1bf30136254f45cea3ba39559c2f6c4118964a",
-          "sha1": "88eb4619dfdb2f973a373f9eb05be6aacc7666c9",
-          "md5": "f97eb81812993d0393ba70536b0b8983"
+          "size": 6829,
+          "sha512": "2d958e71292a37f2363c4250fcf0ac82f954f28f3dd62dd530e08b222de9a0817b9a1fc5fd454f69a0734f3a014b990609b2455abef1412538f3303b84061abc",
+          "sha256": "17823d3a65dbecc60156f0f56254be01ddda5885f7d7d4b6227fe7b6d1babc7c",
+          "sha1": "7746fc9018adae0cc98a71a1be6d0128ea8c31b2",
+          "md5": "f8de3a970e6fb68ce58502793c132c65"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-watchosx64-0.8.1-metadata.jar",
           "url": "lib-watchosx64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "423e49116a634e8aaa867de91a06912e4b61d154c5f037e1f2916a11424770e76a2c43a6b4b1c73e7b16a4e146a19bbdf2bbbed3dafb42d7284e01fbf7b3a3c8",
-          "sha256": "0132130f8ade1e3a99b62e8574d23b7d183e8fc37953495599049cbe388bbd90",
-          "sha1": "0665cd0f2292f88f5d74b52c01b7c98bf900b433",
-          "md5": "aeccf2fbd22fb8aaab8e971985631e63"
+          "sha512": "1b1a931f5359752216160f7f20855dfb44529ea0fa3f8859d17f1f6c1360cac5ef4633da85108469884ef3a6661e73d12713404320668d166a65618d88869fcd",
+          "sha256": "17054fcc38a962adc236ddfe7d011ed2f954a3a9079983f52b69bbbb54388f4b",
+          "sha1": "26b0936bd2cd15dba601980e13aa21ca1bbb87d2",
+          "md5": "6335f5ecd9a3e04c2c51deffbb217945"
         }
       ]
     }

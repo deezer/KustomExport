@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-watchosx64-0.8.1.klib",
-          "size": 4207,
-          "sha512": "78835a230de3d6bd3e40963aff77c912286a601d75f2b6059fa731169421d4d145ef89f786a7fe8f64a0794e41bd5deb272da3195dbd1a552d56e77cdf00d3eb",
-          "sha256": "45a5ece7ffcb0b7d3967379195c36c94d511a782108295f54799e9c4ccbd9881",
-          "sha1": "b144bd36c709eadb8b6e53a17fc43a106f53ac93",
-          "md5": "2fd32a92363ae4166483348aecab7ae4"
+          "size": 4204,
+          "sha512": "ffed377189f5abbadcdc4aa984fcdbff870e82479f03be274d914f6c6b99a5e3e023fafc79bce2a3aafcb15e902d2fb8508298c4f1879e1a427cdddba6295805",
+          "sha256": "53b24e7a80386a5d18237482137c0d2127033e9ea870aec082426471f095f900",
+          "sha1": "709b04c0da201c724946a9002d3d6c9c8fda068f",
+          "md5": "75876309b15bb7161fb2ec3913a702b5"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-watchosx64-0.8.1-metadata.jar",
           "url": "lib-coroutines-watchosx64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "d29f85c07f0895251db43e5d191ada0ae5373fabbb2e15a83db81a9a553df440293d6e92b87ca16e18c88c6b7fafe3e133c71ce4f13bcc62da6a844887faf782",
-          "sha256": "940f3fa718a93b6e296926f225be7ac2693c61b7a24f8682e3478872f48e7414",
-          "sha1": "6ee95a4031eeaee2f0974d39e7ae4bedf6dc875d",
-          "md5": "55c47710c3dae257fa757e257ed8493a"
+          "sha512": "09b098b869d6ce6afe5bbae94508363bebb3dd5c75333f7a9ee0d581968c313041c1bb25fbbd94cba94e19118ef9939aeedaaccf25488ce2c1233decf36c7cfe",
+          "sha256": "ac2252335fe5da724853af52caca5409d71a406bd3eee6e9b4234463936e3f75",
+          "sha1": "8ddda4114699d4e7d728f38ef71da356f1497046",
+          "md5": "b9bb6ecfa7f091d3d88b7c1c4d3b638a"
         }
       ]
     }

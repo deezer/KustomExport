@@ -39,10 +39,10 @@
           "name": "compiler-0.8.1.jar",
           "url": "compiler-0.8.1.jar",
           "size": 224271,
-          "sha512": "697f2d92ec72c3030467a9c172747b046a5315d6d6fe3e8c7e1c01316054057df4b55a993ba4aabf23d7c9f5b874aa3feae08619c59dfcbc5e7f435d24186b09",
-          "sha256": "489b0d9cedb129bcb9ef65e874abd0faee9427fe238ee3ca3575ff0e2af91a9e",
-          "sha1": "9219b937654fc570f89fcc4ff4a6bd9f8e30bde8",
-          "md5": "89a6590b008a9e9b751b1d3eed01e25f"
+          "sha512": "e28c2b94950536967a065fa663c19d2a8a18fd65fe4288375b86455f784897f512136bd98966a5e7c6e19bccda41b74c15ff0e2ef10636475a95454e507795c5",
+          "sha256": "b6df4ba21c64c1bd34a4cf4cd2094c2817e189d3fddc16e954df09b958555584",
+          "sha1": "ddf0c39e1567ba910857344781cf4e40668a314d",
+          "md5": "c0d1b3d0d332912dc90b1d2e6b8157f8"
         }
       ]
     },
@@ -126,10 +126,10 @@
           "name": "compiler-0.8.1.jar",
           "url": "compiler-0.8.1.jar",
           "size": 224271,
-          "sha512": "697f2d92ec72c3030467a9c172747b046a5315d6d6fe3e8c7e1c01316054057df4b55a993ba4aabf23d7c9f5b874aa3feae08619c59dfcbc5e7f435d24186b09",
-          "sha256": "489b0d9cedb129bcb9ef65e874abd0faee9427fe238ee3ca3575ff0e2af91a9e",
-          "sha1": "9219b937654fc570f89fcc4ff4a6bd9f8e30bde8",
-          "md5": "89a6590b008a9e9b751b1d3eed01e25f"
+          "sha512": "e28c2b94950536967a065fa663c19d2a8a18fd65fe4288375b86455f784897f512136bd98966a5e7c6e19bccda41b74c15ff0e2ef10636475a95454e507795c5",
+          "sha256": "b6df4ba21c64c1bd34a4cf4cd2094c2817e189d3fddc16e954df09b958555584",
+          "sha1": "ddf0c39e1567ba910857344781cf4e40668a314d",
+          "md5": "c0d1b3d0d332912dc90b1d2e6b8157f8"
         }
       ]
     }

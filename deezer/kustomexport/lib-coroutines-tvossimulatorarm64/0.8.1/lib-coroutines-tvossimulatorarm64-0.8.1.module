@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-tvossimulatorarm64-0.8.1.klib",
-          "size": 4283,
-          "sha512": "5800930c937abcccfc8e9eee9689f23fa6ef64426064d6bb5f84f57fc97c50cdf9575497d92a556645be5be7ee505921a4f9ef87a7dc1e8f80c5b3e18c50db9a",
-          "sha256": "6427eee41c9f890012edafa1cb3854b4c0264783a6ddc8a3ed40b95ae2ae8cdd",
-          "sha1": "b0d71d41763b038710bf3c41fc88036f4e0585e6",
-          "md5": "0b233a6174fb6df0046db85e398c0c0d"
+          "size": 4280,
+          "sha512": "3dcd31b552a13bbf5be541ba2e0369ac79da48d88a29b3184a667fa3ff96e8846e8a3d06147b0667daf43fd42b472c829cdbde9650086be7bfbe84b5ed6e938d",
+          "sha256": "af1b08bf4e8e9abaf23b64ef1b278961abb7ec183ef005480053bc1b759a27f9",
+          "sha1": "8be48abb85049a7028336beaff13246ffcccd41a",
+          "md5": "12920b4d29c559f3f4a7b13d87cdfba5"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-tvossimulatorarm64-0.8.1-metadata.jar",
           "url": "lib-coroutines-tvossimulatorarm64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "e8b346b31b24f98bd0c473d22d792a4b64f5a4ff958319df46a694ba0a7d0c5ea1da117edea0e160b433d7ffd8b742d6bd018528704be601c109d61d6a80fe75",
-          "sha256": "e7c00aa036dd042891a9fd39ad587d0de3f893b1d7cd83fc3f2f1a1e75db34bf",
-          "sha1": "12a68f3270763ea7d69c7be9050b077083cc2e1e",
-          "md5": "7fac7dfe750638b190f1438a791e0526"
+          "sha512": "f684e14b6c5296633a8973ae0844b311204f4a0ec9ca7147d10815871c441db78e59fc9de876fac8bf9b08cb4c63fa7768fd2c8adef326498a78be613e442ce0",
+          "sha256": "4a5b1208c596a32f133220756e797da7a12e31569e4ef871111c2753476b51e9",
+          "sha1": "82f72c6731f7a52d057669b36596c7b1e5b46a64",
+          "md5": "48a17ded0e34ce7199211ca2ba01d6ab"
         }
       ]
     }

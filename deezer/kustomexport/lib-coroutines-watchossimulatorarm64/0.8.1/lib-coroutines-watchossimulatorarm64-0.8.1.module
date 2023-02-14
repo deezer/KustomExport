@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-watchossimulatorarm64-0.8.1.klib",
-          "size": 4310,
-          "sha512": "c0b47eabedf35308d8380b5676f6cb6126e46e5813fadb3a37f61825d8abac71a18b06aa90ba6b7635bd120bf0f1263501f6f96cf27f1b0bc9b3b86b23f3cde5",
-          "sha256": "9a9654127ce6de36cc5d635b7c9a005ab435c758aedba5e8dc6a71890bbfe51d",
-          "sha1": "3e3cbd957e0c6b27fa3cf6464797ebc82a89193c",
-          "md5": "97a61c4b50f4356defa402b5a1ad7f2b"
+          "size": 4307,
+          "sha512": "353c4900b89403ab48e9eb8bb8de7bb7b0f14f79f96bd45db26c72cf3090c72e5b6f6093cc9e0bd28e9ed4a2dbef76b6694373f34300f31bba0cc0ce2825907b",
+          "sha256": "c04a8dcf2e58549aa860fffb3ff1c1ceb75ce7ff6864b6a92587d7d91ee9dcec",
+          "sha1": "545cb2073b6ff3f0a721ba8e3cc1be8fe159bd70",
+          "md5": "8b38aa44c80e8a3f6953c5b8a93205b5"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-watchossimulatorarm64-0.8.1-metadata.jar",
           "url": "lib-coroutines-watchossimulatorarm64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "2fc688f10ab328d9578d7912d64fe86da9a1f93210523529a256f19504cec50610777325070d8281eba5adcefa83959dd70e8b5f1c913dfa8432eb0d574a70e9",
-          "sha256": "7b8af4d49584929626b595dd322661e139d18385b70a209508c8099fa92515c2",
-          "sha1": "4f6036c66982c54d4608f8e96ea03718404b3288",
-          "md5": "2fa10259d10e35c77c2785494184b7e4"
+          "sha512": "92359bebf03c8fd943f7fbd449e1ea294391d9bc4f0e89bbd3695f3179428f3e8e6d65e804baaa51a7f1bfe013aa2e7701fa653aba760819fb5b3de25a1b1622",
+          "sha256": "b9a5a0d6d6a4e56e32aa4c1c356450df165c22d6eac2798590220be35f6e9099",
+          "sha1": "ee5c7371b0afe25be478492283cdbc48b97e07e2",
+          "md5": "5337fa770794ec2df029dfd2a0606cca"
         }
       ]
     }

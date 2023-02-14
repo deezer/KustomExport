@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-iossimulatorarm64-0.8.1.klib",
-          "size": 6905,
-          "sha512": "4ff2a0ade5fda550aa7ae12f4e25152654ad05945017e78c5ea316926587f669c584d0a94feca048152bd86dbffb81193ce0420796c3a81d40de395eb7417c1c",
-          "sha256": "9ad8c469be19d3a2e96bfb69ddf3fe31938388f4a5915af57b5861e6015a7a39",
-          "sha1": "b55725ce4b8eab8cc7401b266421aa19d36361b1",
-          "md5": "dc6477b0108a118f71a9bde98647ba69"
+          "size": 6898,
+          "sha512": "0d6a0d5ad6a78e29f58be898d3a6a2e90d0c341b5edb6c1fbe29837d1f50e3d44a91a367c1d93bbb29a7ece4c14ef60ea7afba740f69bc1c4fae04497cab0780",
+          "sha256": "d24360784990423a582de81dee1224e9afdceaa4cd4d4056a80c07e8de5732eb",
+          "sha1": "c7290fdd035b134c20cc1e512751740a4b0e677d",
+          "md5": "b24cf5ed8225484c61af6ad2ee8aa341"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-iossimulatorarm64-0.8.1-metadata.jar",
           "url": "lib-iossimulatorarm64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "f3dc7a2921f3ece1daea626484e21bbc3438b80b67dea90717b2e8ce1cdc48924d4791f5542e4ed27e3cabd41fac56f7f1423da3d71401d764271fd6e56af78a",
-          "sha256": "59f4d7dded4fc235184e54dd4d2ec6c034fea2b1c9d8ae6cdc3a25deccb56a5d",
-          "sha1": "16f455566fa157ffc21795503949dde3ceb32caf",
-          "md5": "5a35a78817fbaee7d4e8feeef4ae73e1"
+          "sha512": "442edfcd86a2f9206a95398088e1c6814d52225084f06831ef7cc90c528a1de18ab528b5c60d5d7d46e83543b2af787cb39d31ba62554f31e78739ad90362cfe",
+          "sha256": "b2f7247e8ee420e83361634341476879177feaaaac8ac7e5d7007856f694834e",
+          "sha1": "45875a3a254549b7396090873f8821579aede216",
+          "md5": "8e57dadd92b0b7fbd2c231342a115179"
         }
       ]
     }
