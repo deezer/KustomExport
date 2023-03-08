@@ -47,6 +47,6 @@ fun OutputStream.appendText(str: String) {
 fun TypeName.firstParameterizedType() = (this as ParameterizedTypeName).typeArguments.first()
 fun TypeName.secondParameterizedType() = (this as ParameterizedTypeName).typeArguments[1]
 
-@Suppress("UNCHECKED")
+@Suppress("UNCHECKED_CAST")
 fun <T> KSAnnotation.getArg(kProp: KProperty1<*, *>) =
     arguments.firstOrNull { it.name?.asString() == kProp.name }?.value as T

@@ -15,6 +15,8 @@
  * under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package deezer.kustomexport.compiler
 
 import com.google.devtools.ksp.KspExperimental
@@ -62,7 +64,6 @@ class ExportCompiler(private val environment: SymbolProcessorEnvironment) : Symb
         sharedLogger = environment.logger
     }
 
-    @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
         CompilerArgs.erasePackage = environment.options["erasePackage"] == "true"
 

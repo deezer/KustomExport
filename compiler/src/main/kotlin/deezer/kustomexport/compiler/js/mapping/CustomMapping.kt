@@ -181,7 +181,7 @@ fun initCustomMapping() {
                     returnType.importedMethod(targetName + "(" + importedArgs + ")") +
                     "\n}"
             },
-            exportMethod = { targetName, typeName, _, typeArgs ->
+            exportMethod = { targetName, _, _, typeArgs ->
                 val returnType = typeArgs.last()
 
                 if (typeArgs.size == 1) {

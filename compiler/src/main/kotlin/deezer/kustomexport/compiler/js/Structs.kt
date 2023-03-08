@@ -17,6 +17,7 @@
 
 package deezer.kustomexport.compiler.js
 
+import com.google.devtools.ksp.symbol.KSNode
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -39,7 +40,7 @@ data class ParameterDescriptor(
 ) {
     val exportedMethod by lazy { type.exportedMethod(name.toFormatString()) }
     val importedMethod by lazy { type.importedMethod(name.toFormatString()) }
-    inline fun portMethod(import: Boolean) = if (import) importedMethod else exportedMethod
+    fun portMethod(import: Boolean) = if (import) importedMethod else exportedMethod
 }
 
 data class TopLevelFunctionDescriptor(
@@ -142,6 +143,7 @@ data class EnumDescriptor(
     val classSimpleName: String,
     val properties: List<PropertyDescriptor>,
     val entries: List<Entry>,
+    val symbol: KSNode
 ) : Descriptor() {
     data class Entry(val name: String)
 

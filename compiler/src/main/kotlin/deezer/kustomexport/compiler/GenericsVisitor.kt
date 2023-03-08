@@ -15,6 +15,8 @@
  * under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package deezer.kustomexport.compiler
 
 import com.google.devtools.ksp.processing.Resolver
@@ -43,6 +45,7 @@ class GenericsVisitor(val resolver: Resolver) : KSVisitorVoid() {
             .filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == KustomExportGenerics::class.qualifiedName }
             // Pick the first arguments matching 'exportGenerics' and flatmap all entries
             .flatMap {
+                @Suppress("UNCHECKED_CAST")
                 it.arguments
                     .first { arg -> arg.name?.asString() == KustomExportGenerics::exportGenerics.name }
                     .value as List<KSAnnotation>

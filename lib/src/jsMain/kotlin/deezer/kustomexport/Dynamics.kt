@@ -17,6 +17,6 @@
 
 package deezer.kustomexport
 
-val dynamicNull: dynamic = null
-val dynamicString: dynamic = "marker"
-val dynamicNotString: dynamic = 123456
+public val dynamicNull: dynamic = null
+public val dynamicString: dynamic = "marker"
+public val dynamicNotString: dynamic = 123456

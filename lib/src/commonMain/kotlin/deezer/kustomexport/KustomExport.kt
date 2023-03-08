@@ -33,17 +33,21 @@ public annotation class KustomExport(
      * In this setup, if a middle-level module expose the generic class, it will
      * require knowing the class is mapped or not by the compiler at some point.
      */
-    val usedByKustomExportGeneric: Boolean = false
+    @Deprecated("Kotlin 1.8 now correctly supports generics. KustomExportGenerics is therefore not needed anymore and will be removed in the future.")
+    public val usedByKustomExportGeneric: Boolean = false
 )
 
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FILE)
+@Deprecated("Kotlin 1.8 now correctly supports generics. KustomExportGenerics is therefore not needed anymore and will be removed in the future.")
 public annotation class KustomExportGenerics(
+    @Suppress("DEPRECATION")
     public val exportGenerics: Array<KustomGenerics> = []
 )
 
 @Retention(AnnotationRetention.BINARY)
 @Target() // No target, only there for data container
+@Deprecated("Kotlin 1.8 now correctly supports generics. KustomExportGenerics is therefore not needed anymore and will be removed in the future.")
 public annotation class KustomGenerics(
     public val kClass: KClass<*>,
     public val typeParameters: Array<KClass<*>>,

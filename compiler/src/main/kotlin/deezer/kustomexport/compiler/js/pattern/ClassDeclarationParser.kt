@@ -188,7 +188,8 @@ fun parseClass(
             entries = classDeclaration.declarations
                 .filterIsInstance<KSClassDeclaration>()
                 .map { EnumDescriptor.Entry(it.simpleName.asString()) }
-                .toList()
+                .toList(),
+            symbol = classDeclaration
         )
         else -> error("The compiler can't handle '${classDeclaration.classKind}' class kind")
     }

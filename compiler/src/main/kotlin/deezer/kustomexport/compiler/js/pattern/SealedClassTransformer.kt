@@ -39,7 +39,7 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
     // Impossible to get the value from a constructor to another. Ex:
     // class Foo(): Bar(33) // Cannot retrieve 33 as it's only available at runtime
     // So instead we create an empty constructor and all properties are abstract
-    val ctorParams = origin.constructorParams.map {
+    origin.constructorParams.map {
         ParameterSpec(it.name, it.type.exportedTypeName)
     }
     val ctor = FunSpec.constructorBuilder()
@@ -77,7 +77,7 @@ fun transformSealedClass(origin: SealedClassDescriptor): FileSpec {
             origin.subClasses.forEach { subClass ->
                 it.addStatement("$INDENTATION${INDENTATION}is %T -> export${subClass.classSimpleName}()", subClass.asClassName)
             }
-            it.addStatement("$INDENTATION${INDENTATION}else -> error(\"Cannot export \$this\")")
+//            it.addStatement("$INDENTATION${INDENTATION}else -> error(\"Cannot export \$this\")")
             if (origin.subClasses.isEmpty()) {
                 it.addComment("TODO: no subclasses found, bad configuration?")
             }

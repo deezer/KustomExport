@@ -19,31 +19,7 @@ package deezer.kustomexport.compiler
 
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
-import com.google.devtools.ksp.symbol.KSAnnotated
-import com.google.devtools.ksp.symbol.KSAnnotation
-import com.google.devtools.ksp.symbol.KSCallableReference
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSClassifierReference
-import com.google.devtools.ksp.symbol.KSDeclaration
-import com.google.devtools.ksp.symbol.KSDeclarationContainer
-import com.google.devtools.ksp.symbol.KSDynamicReference
-import com.google.devtools.ksp.symbol.KSFile
-import com.google.devtools.ksp.symbol.KSFunctionDeclaration
-import com.google.devtools.ksp.symbol.KSModifierListOwner
-import com.google.devtools.ksp.symbol.KSNode
-import com.google.devtools.ksp.symbol.KSParenthesizedReference
-import com.google.devtools.ksp.symbol.KSPropertyAccessor
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
-import com.google.devtools.ksp.symbol.KSPropertyGetter
-import com.google.devtools.ksp.symbol.KSPropertySetter
-import com.google.devtools.ksp.symbol.KSReferenceElement
-import com.google.devtools.ksp.symbol.KSTypeAlias
-import com.google.devtools.ksp.symbol.KSTypeArgument
-import com.google.devtools.ksp.symbol.KSTypeParameter
-import com.google.devtools.ksp.symbol.KSTypeReference
-import com.google.devtools.ksp.symbol.KSValueArgument
-import com.google.devtools.ksp.symbol.KSValueParameter
-import com.google.devtools.ksp.symbol.KSVisitor
+import com.google.devtools.ksp.symbol.*
 
 class LoggerVisitor(private val environment: SymbolProcessorEnvironment) : KSVisitor<Unit, Unit> {
     private val debugFile = environment.codeGenerator.createNewFile(Dependencies(false), "com.greg", "debug", "txt")
@@ -147,5 +123,9 @@ class LoggerVisitor(private val environment: SymbolProcessorEnvironment) : KSVis
 
     override fun visitValueParameter(valueParameter: KSValueParameter, data: Unit) {
         log("visitValueParameter: $valueParameter $data")
+    }
+
+    override fun visitDefNonNullReference(reference: KSDefNonNullReference, data: Unit) {
+        log("visitDefNonNullReference: $reference $data")
     }
 }

@@ -17,6 +17,8 @@
 
 package deezer.kustomexport.compiler.js
 
+import java.util.*
+
 /**
  * You should create 1 instance of this class by generated class.
  */
@@ -32,8 +34,8 @@ class MethodNameDisambiguation {
         }
 
         val homonym = generatedNames.filterValues { it == origin.name }.keys.first()
-        val newParams = origin.parameters - homonym.parameters
-        val newName = origin.name + newParams.firstOrNull()?.name?.capitalize()
+        val newParams = origin.parameters - homonym.parameters.toSet()
+        val newName = origin.name + newParams.firstOrNull()?.name?.replaceFirstChar {it.titlecase() }
         if (!generatedNames.containsValue(newName)) {
             generatedNames[origin] = newName
             return newName

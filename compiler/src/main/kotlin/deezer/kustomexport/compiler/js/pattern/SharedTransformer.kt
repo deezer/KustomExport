@@ -17,11 +17,7 @@
 
 package deezer.kustomexport.compiler.js.pattern
 
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.STRING
-import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.*
 import deezer.kustomexport.compiler.js.FormatString
 import deezer.kustomexport.compiler.js.FunctionDescriptor
 import deezer.kustomexport.compiler.js.MethodNameDisambiguation
@@ -42,13 +38,20 @@ enum class OverrideMode { FORCE_OVERRIDE, FORCE_NO_OVERRIDE, AUTO }
 
 fun FunctionDescriptor.returnType(
     import: Boolean,
+    suppress: (String) -> Unit = {}
 ): TypeName {
     val returns = if (import) {
         returnType.concreteTypeName
     } else {
         returnType.exportedTypeName
     }
-    return if (!import && isSuspend) returns.asCoroutinesPromise() else returns
+    return if (!import && isSuspend) {
+        // https://youtrack.jetbrains.com/issue/KT-57192/KJS-IR-JsExport-PromiseUnit-wrongly-produces-non-exportable-type-warning
+        if (returns == UNIT) {
+            suppress("NON_EXPORTABLE_TYPE")
+        }
+        returns.asCoroutinesPromise()
+    } else returns
 }
 
 fun FunSpec.Builder.addParameters(
@@ -82,7 +85,7 @@ fun FunctionDescriptor.buildWrappingFunction(
 
     val fb = FunSpec.builder(if (!import) funExportedName else name)
     if (isClassOpen) fb.addModifiers(KModifier.OPEN)
-    fb.returns(returnType(import))
+    fb.returns(returnType(import) { fb.suppress(it) })
 
     if (overrideMode != OverrideMode.FORCE_NO_OVERRIDE &&
         (overrideMode == OverrideMode.FORCE_OVERRIDE || isOverride)
@@ -101,7 +104,8 @@ fun FunctionDescriptor.buildWrappingFunction(
             buildWrappingFunctionBody(
                 import = import,
                 receiver = delegateName,
-                functionName = if (import) funExportedName else name
+                functionName = if (import) funExportedName else name,
+                returnsUnit = returnType.concreteTypeName == UNIT
             ).asCode()
         )
     }
@@ -111,12 +115,15 @@ fun FunctionDescriptor.buildWrappingFunction(
 fun FunctionDescriptor.buildWrappingFunctionBody(
     import: Boolean,
     receiver: String?,
-    functionName: String
+    functionName: String,
+    returnsUnit: Boolean
 ): FormatString {
     var body = "".toFormatString()
-    if (!import && isSuspend) {
+    val indent = if (!import && isSuspend) {
+        body += "@OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)\n"
         body += "return %T.%M·{\n".toFormatString(coroutinesGlobalScope, coroutinesPromiseFunc)
-    }
+        INDENTATION
+    } else ""
     if (import && isSuspend) {
         body += "val abortController = %T()\n".toFormatString(abortController)
         body += "val abortSignal = abortController.signal\n"
@@ -125,30 +132,35 @@ fun FunctionDescriptor.buildWrappingFunctionBody(
         )
     }
     if (!import && isSuspend) {
-        body += "abortSignal.onabort = { %M.%M.cancel() }\n".toFormatString(coroutinesContext, coroutinesContextJob)
-        body += "if (abortSignal.aborted) { %M.%M.cancel() }\n".toFormatString(coroutinesContext, coroutinesContextJob)
+        body += "${indent}abortSignal.onabort = { %M.%M.cancel() }\n".toFormatString(coroutinesContext, coroutinesContextJob)
+        body += "${indent}if (abortSignal.aborted) { %M.%M.cancel() }\n".toFormatString(coroutinesContext, coroutinesContextJob)
     }
 
     var params = parameters.fold(FormatString("")) { acc, item ->
-        acc + "$INDENTATION${item.name} = ".toFormatString() + item.portMethod(!import) + ",\n"
+        acc + "${indent}$INDENTATION${item.name} = ".toFormatString() + item.portMethod(!import) + ",\n"
     }
     if (import && isSuspend) {
-        params += FormatString("${INDENTATION}abortSignal = abortSignal")
+        params += FormatString("${indent}${INDENTATION}abortSignal = abortSignal")
     }
 
     //TODO: Opti : could save the local "result" variable here
-    val callStr = if (receiver == null) "$functionName" else "$receiver.$functionName"
-    body += "val result = $callStr("
+    val callStr = if (receiver == null) functionName else "$receiver.$functionName"
+    body += if (returnsUnit) "${indent}$callStr(" else "${indent}val result = $callStr("
     body += if (parameters.isNotEmpty()) "\n" else ""
     body += params
-    body += if (parameters.isNotEmpty()) ")" else ")"
+    body += if (parameters.isNotEmpty()) "${indent})" else ")"
 
-    body += if (import && isSuspend) ".%M()\n".toFormatString(coroutinesAwait) else "\n".toFormatString()
+    body += if (import && isSuspend) "${indent}.%M()\n".toFormatString(coroutinesAwait) else "\n".toFormatString()
 
-    body += if (import || !isSuspend) "return·" else ""
-    body += returnType.portMethod(import, "result".toFormatString())
+    if (!returnsUnit) {
+        body += if (import || !isSuspend) "${indent}return " else indent
+        body += returnType.portMethod(import, "result".toFormatString())
+        body += "\n"
+    }
 
-    if (!import && isSuspend) body += "\n}"
+    if (!import && isSuspend) {
+        body += "}"
+    }
     return body
 }
 

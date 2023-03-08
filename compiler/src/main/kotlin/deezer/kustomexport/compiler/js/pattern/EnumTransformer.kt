@@ -30,10 +30,16 @@ import deezer.kustomexport.compiler.js.EnumDescriptor
 import deezer.kustomexport.compiler.js.jsExport
 import deezer.kustomexport.compiler.js.jsPackage
 import deezer.kustomexport.compiler.js.mapping.INDENTATION
+import deezer.kustomexport.compiler.sharedLogger
 
 fun EnumDescriptor.transform() = transformEnum(this)
 
 fun transformEnum(origin: EnumDescriptor): FileSpec {
+    sharedLogger.warn(
+        symbol = origin.symbol,
+        message = "@KustomExport support for Enum Classes is now deprecated and will be removed in a future release!\n" +
+                "    @JsExport supports Enum classes since Kotlin 1.7.20. Please update ${origin.packageName}.${origin.classSimpleName}."
+    )
     val jsClassPackage = origin.packageName.jsPackage()
     val originalClass = ClassName(origin.packageName, origin.classSimpleName)
     val jsExportedClass = ClassName(jsClassPackage, origin.classSimpleName)
