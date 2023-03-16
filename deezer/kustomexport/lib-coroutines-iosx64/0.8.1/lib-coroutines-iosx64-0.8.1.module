@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-iosx64-0.8.1.klib",
-          "size": 4168,
-          "sha512": "70daeea5e8e86133dc43c101d4420bc03cf27c6014348e0817d0289a4f9d1c22c0ee4297b27b37cfb31bb99770173cc88d32f8f573271c14dcd2bbfb4c2aece1",
-          "sha256": "c18c12bbd55f54cd55fdf6fa357186eb28dac6995ce0857af4b0fcfd790bddb8",
-          "sha1": "39bed6ac81c752cf1f54346867e1ef893f83ecca",
-          "md5": "c8afff7da5925266fdc762a6ed604898"
+          "size": 4171,
+          "sha512": "812a150354d9835aa6c9a604804fa12fd6550ff62864ede0a536942e9d29bb3b7abb35dc4ee0e3543b6815be0cb687c2607f44e2db610aad83818c8c42760528",
+          "sha256": "2f171554b5c41aaa343432770e6de76f9e22c2b885f836dc94c7a108fae2fea6",
+          "sha1": "6ab8b31060e1f5a358c2c79c6bfc836b51b27077",
+          "md5": "1ecf420d78ef7597b8ec5d7ac943a2b2"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-iosx64-0.8.1-metadata.jar",
           "url": "lib-coroutines-iosx64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "2e1493a891792f2d6ef60b9e2e7f72561a51a0f4e835d799d8fe8bd41e8c1322d937a21d1234fef0bafa31039b476b8a36d4e02d9e769c8e9d577f18548a0d57",
-          "sha256": "0476ea283ef56f26bce40e5c3913d4fa4197176e97041af85de869cfef24bfa0",
-          "sha1": "1f2c22eb43917fd415e2276bde98fb2cdab3ab14",
-          "md5": "87cfac8e9d78c8b324c91e21bd984149"
+          "sha512": "f44f047ac2b0af45f3e563c3999981bb640f1fab60e27aa7bedcc83838f8f2591ec1ba7910e03c404ad142f69f5cf58e514b8b604e939e9a73ec2077ee1edbc5",
+          "sha256": "f02ac83f65030fa6d824138b5fa0a3408abeb877e15c071f30b0efe519c14b2a",
+          "sha1": "2124f1e45a2fa5df7c87922ccc27081a8b2d5066",
+          "md5": "a950aecc98c6498d4ea9621c059c77ed"
         }
       ]
     }

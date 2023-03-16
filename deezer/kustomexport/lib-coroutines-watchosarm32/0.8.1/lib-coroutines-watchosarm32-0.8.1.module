@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-watchosarm32-0.8.1.klib",
-          "size": 4221,
-          "sha512": "ae6acbd6cce449dd72a059cfff7e4fb25c42378037d130ea9c5ea9dbe020d4e24781f05f56d2eb808dd96304bbe915e56d74c36c6577cf266adc605070d4f398",
-          "sha256": "d055590b4865fc04e5822a5e19cb47fe113ec3dd967140f5abb6a88816167f20",
-          "sha1": "0f342fa15f68ef2887a79c18c8b3926ae514363c",
-          "md5": "878bcb60275bdb361748fefef1a05562"
+          "size": 4224,
+          "sha512": "b68e647c7f40ce791b6d548c614dc8174e9cc893f365faf69b4056d6e04eae80aa788631b4ba64e703bccd111ea452bedc0f9fb0030c40278743c6727c9e4e1e",
+          "sha256": "03df7b6fbeda7adf44ec6aba6136a2b6191696d28a56ab20347db8a0635ebd90",
+          "sha1": "dcb6543191ed15a95fcc88b4077ab2883f6ef724",
+          "md5": "11d26452b2f9ea2c7c238e170ed3e874"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-watchosarm32-0.8.1-metadata.jar",
           "url": "lib-coroutines-watchosarm32-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "aca0347259c3e90c2e916cfcd5724b61bad7d08c0c08c3c0daa6fe51814f79ca82e08ebc7e28b53c2bf2999959a889487ff88062cdb53ccf2a69669deee9e870",
-          "sha256": "0698e44658ae19f0e4363f950a9c5ff46b8f33166c92651c28aa4070d4289a9d",
-          "sha1": "2d2d1a465f2c5b3e583694ac156ce1b485be7fa2",
-          "md5": "b51432dd368b5368357a461ec4992d37"
+          "sha512": "2fc688f10ab328d9578d7912d64fe86da9a1f93210523529a256f19504cec50610777325070d8281eba5adcefa83959dd70e8b5f1c913dfa8432eb0d574a70e9",
+          "sha256": "7b8af4d49584929626b595dd322661e139d18385b70a209508c8099fa92515c2",
+          "sha1": "4f6036c66982c54d4608f8e96ea03718404b3288",
+          "md5": "2fa10259d10e35c77c2785494184b7e4"
         }
       ]
     }

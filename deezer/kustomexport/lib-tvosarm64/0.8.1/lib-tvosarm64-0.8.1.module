@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-tvosarm64-0.8.1.klib",
-          "size": 6820,
-          "sha512": "19a6906390e1132fb7b2cb40abeffc57d2d2a2c0adcbb78fcc3824a25272c223c85eb5bf0975e916d457d98e04da2be907af13f2b90a5591baff6ad1423f628d",
-          "sha256": "8324fe9a721b044225dd447301506a8ba0dd30c17b52050fb22f046f13577d70",
-          "sha1": "8fd702a68956b44c174c5412f168176f7bb09225",
-          "md5": "7ee57b26e14cb6f156e3ff1cd00bc4ac"
+          "size": 6827,
+          "sha512": "666a39936b9ea43bc17e07dcc2b09b11900c15acd044cb8059347cef40ca080f701f09a3e2e0a3e633b89128caf5c552da842f16c643ab02efd66493a2d2ddb3",
+          "sha256": "5490438ef1e8399ea37c3e98ce593dd374fd04b414fd2111e7df6e5fa9bf21ae",
+          "sha1": "83a3d8c655eb235438f66ea7de5e3a70a1e80ccb",
+          "md5": "725d8fb5318f5637bcdefe0b2cc7b6e0"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-tvosarm64-0.8.1-metadata.jar",
           "url": "lib-tvosarm64-0.8.1-metadata.jar",
           "size": 261,
-          "sha512": "4acf53c6e89d9a3af9752f054e22e9941c6fb49e89be68595bef5dfdadc891ad4952e532c3f21a2929139d89002f5f283fbc194da90dded6609caf9cca76eb96",
-          "sha256": "da52af3ac8dcec6411270ddf3ec15dcd4a4a95aa496aeceb7331259500ebbcf1",
-          "sha1": "e65669310b4e8df77a61cd422f27cd532c694da0",
-          "md5": "625829f4079b497dd5f04d7b782c71f7"
+          "sha512": "b9a937732554f02648c109a83944abd69dee304e3617bfc82a3a3a3843ca741a54137800ac19ef9cdff54a0a71ac6a01941091159e32f528a0c65f40c938e945",
+          "sha256": "fd1cdc685a77cc396fb0fd0b7f0c9e15e2bcf65aafdde26e2d36759696c53555",
+          "sha1": "7397d4457631ff0950c4f4d7c1a1c031ece6f341",
+          "md5": "5b0fb17abdf645741ef6f7005020bf26"
         }
       ]
     }

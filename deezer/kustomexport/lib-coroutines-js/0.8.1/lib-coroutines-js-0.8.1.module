@@ -57,11 +57,11 @@
         {
           "name": "lib-coroutines-js-0.8.1.klib",
           "url": "lib-coroutines-js-0.8.1.klib",
-          "size": 4530,
-          "sha512": "cbc9b472127beeeefd435daa36b8eea429c977ad3dd21f8a27963249fe7df40617618605514bbcdb9669e428131752b2de21281d2baf25800f7440ccec0ddee3",
-          "sha256": "88f64e94f0bf2626d40d6c66e3bc46e5f486998572c94ce5d7dc027a4a82f465",
-          "sha1": "4603c9279f27332a0a7c4219a565ff84f402dd69",
-          "md5": "eb362b25a85fdc576346acbfd883a344"
+          "size": 4533,
+          "sha512": "8f022cce86de90eb5e8e40118fc74ee50400f27270ebb65077bccfacd09aa0949f5ee9463309c6bf5a86023a51cd9dc0db0a7303fcf71b0c97ab8263e6b3a146",
+          "sha256": "581a6c062be6231db2bc803e2b2d974dd0eba555d923b278841b3ddc40ecea39",
+          "sha1": "f622de8d7fcf9b64cf2d4fbd891dccc60d15d613",
+          "md5": "20fe82745dfbfbd6d523eb2bf647c5e0"
         }
       ]
     },
@@ -107,11 +107,11 @@
         {
           "name": "lib-coroutines-js-0.8.1.klib",
           "url": "lib-coroutines-js-0.8.1.klib",
-          "size": 4530,
-          "sha512": "cbc9b472127beeeefd435daa36b8eea429c977ad3dd21f8a27963249fe7df40617618605514bbcdb9669e428131752b2de21281d2baf25800f7440ccec0ddee3",
-          "sha256": "88f64e94f0bf2626d40d6c66e3bc46e5f486998572c94ce5d7dc027a4a82f465",
-          "sha1": "4603c9279f27332a0a7c4219a565ff84f402dd69",
-          "md5": "eb362b25a85fdc576346acbfd883a344"
+          "size": 4533,
+          "sha512": "8f022cce86de90eb5e8e40118fc74ee50400f27270ebb65077bccfacd09aa0949f5ee9463309c6bf5a86023a51cd9dc0db0a7303fcf71b0c97ab8263e6b3a146",
+          "sha256": "581a6c062be6231db2bc803e2b2d974dd0eba555d923b278841b3ddc40ecea39",
+          "sha1": "f622de8d7fcf9b64cf2d4fbd891dccc60d15d613",
+          "md5": "20fe82745dfbfbd6d523eb2bf647c5e0"
         }
       ]
     }
