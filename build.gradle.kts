@@ -74,9 +74,19 @@ tasks.create<Sync>("copyMavenLocalArtifacts") {
 
     from(localRepository) {
         include("*/${project.version}/**")
+        include("*/maven-metadata*.xml")
     }
 
-    into("$buildDir/mvn-repo/$groupDir/")
+    val basePath = "$buildDir/mvn-repo/$groupDir/"
+    into(basePath)
+    doLast {
+        File(basePath).listFiles()?.forEach {
+            val metadataLocal = File(it.absolutePath+ "/maven-metadata-local.xml")
+            if (metadataLocal.exists()) {
+                metadataLocal.renameTo(File(it.absolutePath + "/maven-metadata.xml"))
+            }
+        }
+    }
 }
 
 gitPublish {
