@@ -186,6 +186,58 @@ class TypeMappingTest {
     }
 
     @Test
+    fun maps() {
+        assertCompilationOutput(
+            """
+            package foo.bar
+            import deezer.kustomexport.KustomExport
+
+            @KustomExport
+            class ClassWithMaps {
+                var myMap: Map<String, Int>
+            }
+    """,
+            ExpectedOutputFile(
+                path = "foo/bar/js/ClassWithMaps.kt",
+                content = """
+                package foo.bar.js
+                
+                import kotlin.Int
+                import kotlin.String
+                import kotlin.Suppress
+                import kotlin.collections.Map
+                import kotlin.js.JsExport
+                import foo.bar.ClassWithMaps as CommonClassWithMaps
+                
+                @JsExport
+                public class ClassWithMaps() {
+                    internal var common: CommonClassWithMaps
+                
+                    init {
+                        common = CommonClassWithMaps()
+                    }
+                
+                    public var myMap: Map<String, Int>
+                        get() = common.myMap
+                        set(setValue) {
+                            common.myMap = setValue
+                        }
+                
+                    @Suppress("UNNECESSARY_SAFE_CALL")
+                    internal constructor(common: CommonClassWithMaps) : this() {
+                        this.common = common
+                    }
+                }
+                
+                public fun CommonClassWithMaps.exportClassWithMaps(): ClassWithMaps = ClassWithMaps(this)
+                
+                public fun ClassWithMaps.importClassWithMaps(): CommonClassWithMaps = this.common
+                """.trimIndent()
+            )
+        )
+    }
+
+    @Test
     fun from_Long_to_Double() {
         assertCompilationOutput(
             """

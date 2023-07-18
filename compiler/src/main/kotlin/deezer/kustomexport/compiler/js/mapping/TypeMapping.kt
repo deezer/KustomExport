@@ -47,7 +47,7 @@ class OriginTypeName(
     val exportedTypeName: TypeName by lazy {
         // Remove TypeParameter: because we can't export generic in a cool manner yet, so we produce concrete from generics.
         // See @KustomExportGenerics
-        exportedType().removeTypeParameter()
+        exportedType()
     }
 
     fun exportedMethod(name: FormatString) = exportMethod(name)
