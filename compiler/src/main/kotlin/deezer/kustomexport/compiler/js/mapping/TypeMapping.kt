@@ -45,9 +45,13 @@ class OriginTypeName(
     fun importedMethod(name: FormatString) = importMethod(name)
 
     val exportedTypeName: TypeName by lazy {
-        // Remove TypeParameter: because we can't export generic in a cool manner yet, so we produce concrete from generics.
-        // See @KustomExportGenerics
-        exportedType()
+        var type = exportedType()
+        if(isKustomExportAnnotated) {
+            // Remove TypeParameter: because we can't export generic in a cool manner yet, so we produce concrete from generics.
+            // See @KustomExportGenerics
+            type = type.removeTypeParameter()
+        }
+        type
     }
 
     fun exportedMethod(name: FormatString) = exportMethod(name)
