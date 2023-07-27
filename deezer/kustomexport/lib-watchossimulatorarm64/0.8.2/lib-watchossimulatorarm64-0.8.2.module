@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-watchossimulatorarm64-0.8.2.klib",
-          "size": 6940,
-          "sha512": "095df3c4f927ff940cbd2cbb4b7a214351db938c99238a3c249d2c427b1b05fa65caf877baec99f223a3995a4e084f5f5d2d15c9e2ba5216bcfeacbf31ff0cf0",
-          "sha256": "771498355e4f031bd412a71605d8851bae4708a7eb39a50bac6e585124bee49a",
-          "sha1": "fb3820f0937fc9924c07f6aa927cb98e688336f6",
-          "md5": "eb74bcacddccb0b80d314324fe7bc0bb"
+          "size": 6933,
+          "sha512": "c6b4bf7260fb5c348dcf3251a76a17a70658ea6cac972b5774c2e82108f41961243cfa2e561a158dae1f175f7462686385f06da0e94d42147719b7d81d17d2ef",
+          "sha256": "89e068a4826f63c6ea93c4bffb47edbd86a2388ea6ef20a7e0c31254b97321a1",
+          "sha1": "a407c9830fa35e73e39f499358116dbcfc832705",
+          "md5": "14151e5deb027ba92ec2540e95bc51bd"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-watchossimulatorarm64-0.8.2-metadata.jar",
           "url": "lib-watchossimulatorarm64-0.8.2-metadata.jar",
           "size": 261,
-          "sha512": "1114106ad86ed934b36d2bfd215594003fc2428bdd9a64370cb14a3e87fc822ac25d4b0da437bf1fbc5b3bc8d4625965c114d072b39c7fe212430e680fb022fb",
-          "sha256": "73bfedea55b77919132415b76c35b16f63ca334d7da5e266aaf940acb835295a",
-          "sha1": "058515cc916a0897e07abc03b6e01054e97309cd",
-          "md5": "2c2374cf41332b3532c608f7c8407e3e"
+          "sha512": "0cae9526c6f4ef4c5c9382ade86b8a39d5c342fad246dad534072bea4bb84276247a10e58c753f4b3f09676a25d9a17e0feb7a9351633237a85c7b46f41bdb74",
+          "sha256": "039ac479e95a11c6d00598941aa403d9d1e180bc4babc356c03c01ded73366d8",
+          "sha1": "766af9c127658846361dfdf7599aa39c00778fe7",
+          "md5": "192b0a443daeebff4b400d7ac1ea34bf"
         }
       ]
     }

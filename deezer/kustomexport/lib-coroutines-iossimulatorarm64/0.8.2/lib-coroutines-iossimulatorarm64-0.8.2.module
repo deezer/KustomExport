@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-iossimulatorarm64-0.8.2.klib",
-          "size": 4274,
-          "sha512": "1f80054a75b5278729a536433473ee2477e8069bcdcc79a2efb6f162ef0c2d7d39c60cf1151cda61ab15fbb4be622ffc03e778355d74aa4b74990922b373b89d",
-          "sha256": "e3912c78a1cb8a755ee0dd5576d12aafdf20855736dbde70e2c42a428d69eefd",
-          "sha1": "0ad9157a3562e8b27f32c44a93d1611b5e171373",
-          "md5": "43d088bb625cec1365c435b4ec3dee93"
+          "size": 4271,
+          "sha512": "ae4bb9e815251c0fbf0926c072f969f7f03d37683fa810b84efac6dccc34a3aa2046f96a9b50ce4ebe120ff112478bb5111045311632e0fbd060e759d06ac58c",
+          "sha256": "147b6e60bf5f74daaf7253018a97b40cecd159c7732edf9bbb323c10bab17fbb",
+          "sha1": "710dfb1ebf9da728531a6e54a3f13dad19dc4317",
+          "md5": "485efe694d77cc8be575311eacab00f9"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-iossimulatorarm64-0.8.2-metadata.jar",
           "url": "lib-coroutines-iossimulatorarm64-0.8.2-metadata.jar",
           "size": 261,
-          "sha512": "a7c981e8cd85184cadfbdcbf9229afd9d14b375d451f4437ddd84f226723dcbb14e16c3106ce0bbbc0f370902c8ad5017d299c19f5302fb54af7d6161a667703",
-          "sha256": "01002e6345840be0d5aafa913b1520d2c50960ea57f4c216b07a66ba7d6daf5d",
-          "sha1": "f3c0f579dcbdcf3af127703d482a6a5098bc59e0",
-          "md5": "ed9549d71dd949c3e9575b0ffd8fc98c"
+          "sha512": "44f1d9e3827a8a94cabe82ca0a77b485d75f115fbd206c5c2164b0a903b2c1c90299bb556ce085ede844b74a3c067edefaf390e6077990e9ad81a12602de6aa0",
+          "sha256": "917a11549bab7e188ff655fa7239fce25d66248749f7a1d6d2cefa173779e36f",
+          "sha1": "a6b05705e4440eded8ad5ec46558045e2476305f",
+          "md5": "0259e2a4a00462427216e01bcfeb44c8"
         }
       ]
     }

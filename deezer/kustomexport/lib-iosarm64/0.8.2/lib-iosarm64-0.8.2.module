@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-iosarm64-0.8.2.klib",
-          "size": 6819,
-          "sha512": "1c0fa99e6eb270f36f2e8e412df2090c81db1912af8c89dfb5c6b4d4beeaa6d13921c0eeaa0815a28b5f247b4e6eebf40ab3fd5073d4b832cad488ef09216410",
-          "sha256": "22ee576abc141bf9f37c4d4f79c090cd7cc37034f34e5476480130829b5ddfb2",
-          "sha1": "21a124ec2af5a223604d53ee791c70a302cc4b3c",
-          "md5": "ef16eb2b18a4ea9e1c13a70e7e13e2fe"
+          "size": 6812,
+          "sha512": "57509f248e8fca38fe0c6134d44cd82163fc876f67ce116fa589b77425b9c0a3dc56a4b95739e83fa213aec4b5c942275826734e39fbad73d3e709a8f49c35a3",
+          "sha256": "e59e24d9e65aa676ce806b76787559da1495fef6aafcbb5889863b9f1e8697ce",
+          "sha1": "28188106942edc1ed61458bb8b67d51aeeb0a1ee",
+          "md5": "94942edb39bf3fcfd63d4c6dbfeb89ac"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-iosarm64-0.8.2-metadata.jar",
           "url": "lib-iosarm64-0.8.2-metadata.jar",
           "size": 261,
-          "sha512": "bd9f32f5e4adde7aaf42f9979fbdf91a7fd23c0da3bacf08992caa477ad5762ecdad872cf09bcb92bb46b27ab7943741710580040fc2f8230594bd36ae5bd7db",
-          "sha256": "e5cc3b43e7ece3f8a66ce0c19da0ef30a84ab277460cd927fd9ea7ba5729ce4d",
-          "sha1": "3ebc4ac36a3e03779ec38b59f92c1763c9f73044",
-          "md5": "728f223c3e9320ed8c0821c8562b19bc"
+          "sha512": "761df28d2f7a4ddf5de17423f2fb32d9ba47d42c0fee00e3c9f49d1027f2d27076165fe2e9423f61b3a0328b64cf741099a928f2f7690375ddc1c0a43880cd5c",
+          "sha256": "f3e7338f382abbdea8f0947c47614271d72297fbd792e384dbc8cadc4a24ab77",
+          "sha1": "cfe93aa231345935af2f2dbf056e75469f9774b6",
+          "md5": "591823da8c9fa275d6f15ef817da9405"
         }
       ]
     }

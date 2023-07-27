@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-iosx64-0.8.2.klib",
-          "size": 6802,
-          "sha512": "c1cdd1aabb1650adbaf438980bf27a691b47a9c302807336c194a3e151325aa18f4f2c1264933c94e2b7cb5812b39990177ca7c29c5aafe9977814a52608c188",
-          "sha256": "8a208417635c4e0393d6d1a09846214b0e81cb1b2448929166f202aa0ec11eef",
-          "sha1": "267aade19d0c7ad52b15938372b83dac4b6dde71",
-          "md5": "eb5e4c4c78b391220e98d6e8d818989f"
+          "size": 6795,
+          "sha512": "391096ad7deca3c715b3707b0e9e51e2773f72bc6611ebe21a7c9731ee903cc837a151eb260fa283d3c8b40fdafd811392d8c876a7e0938cb985780745813386",
+          "sha256": "8a74bc2d60c39a2086db635527015a7ca122f653926c2a401dee0e973560f9f1",
+          "sha1": "3e091a2d708a1645c647117388ac7e2e002e97f3",
+          "md5": "446d8c3bb1155018916dbd52350e4844"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-iosx64-0.8.2-metadata.jar",
           "url": "lib-iosx64-0.8.2-metadata.jar",
           "size": 261,
-          "sha512": "e64a5cb08a8996d5aec618e15f429b4d4384bc41344e4356c959c9816ea0d2fc46ff305925de5d7e97ab2f05b811275667c7d64d670202456fb10f711300bd69",
-          "sha256": "9e5e21f705634144d28dac296c5e37a6c4a0a44ee297841a77f14f7562e39c33",
-          "sha1": "74e771dbf1f469698a81ed6f5932f90d2c29c383",
-          "md5": "067943c58e3a92927bd43a4e1f4fa44b"
+          "sha512": "7cdbc82687a67975c2edaa17b14ad0d916abcd74ea5ecbb3ea296383524043403267e3bb8f41aa4c5a5dd89b2cd92822b33472e84b96d95ed7b2c9967ed030d5",
+          "sha256": "85c820b307462f16fccd2fa8975a82f09b60b15d09b96ae708ba125b02b1e72a",
+          "sha1": "2cd04ca28bc1f16058aee89dbc4b4d0503ad3ee1",
+          "md5": "90db32ffbd87ac7869cce1134ef1b9c4"
         }
       ]
     }

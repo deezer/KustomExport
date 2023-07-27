@@ -37,11 +37,11 @@
         {
           "name": "lib.klib",
           "url": "lib-tvossimulatorarm64-0.8.2.klib",
-          "size": 6914,
-          "sha512": "0d45749f049f6c04aba42ec7400f720d77af96b5b08bd51cc39bf16a4cdc2353f4f66dfa148329f4d344f52c38db2cd1a291ca038847c8056f1786bfea9a5487",
-          "sha256": "d7060c89c5ff51b22eb806dd5e2d2a16ef7dec95b381d22253ca7aa05c5135f1",
-          "sha1": "7d02781fd7d9d0a68bd4ecd110e430d22591f58b",
-          "md5": "14bc322d6ad6fc71798b2d5f7a67bb7c"
+          "size": 6907,
+          "sha512": "997a7fa90cc1928045157964a4c29adb613ee37d90cc0844d9a774365fc7858c4031abfb6d4295b99b7d0879e2ddd8d8a6fc916f1585106e286217a06eb887ae",
+          "sha256": "bbf87288a24a1256dec0a72830ddb98e5f145433da0f9545ce4cc1691828349e",
+          "sha1": "a7d37f63f4a32fb6e499de5f3f81e8e4267000dd",
+          "md5": "689760e03c18de8b8ba30bccd1fed876"
         }
       ]
     },
@@ -68,10 +68,10 @@
           "name": "lib-tvossimulatorarm64-0.8.2-metadata.jar",
           "url": "lib-tvossimulatorarm64-0.8.2-metadata.jar",
           "size": 261,
-          "sha512": "e80978b64de6300942ead3c1ae7550b2396e939b16a45e441be65d7e4bc90b1e837c14232a3f8696e05a16d4656c3a1af438f8d20f0f5c27b8d7b8c1ee556cb8",
-          "sha256": "4cc3ecc7fc0e6a9440d226dd9bfa934192c59c88e8d7d63c0375ead5342247e5",
-          "sha1": "23ff90f5fa00dfd50c033d604dc11d79e4a420bd",
-          "md5": "e6271c16e5712039fe2a231ca2bc7697"
+          "sha512": "724be7c47c93f09615edb7d65433c97aa8c0b040a878051b4585f813d5a4f2fb4bcfe459807af9d1b829b65d85d85a10b9e6c6fe5a561d6e5e621c28f025a05c",
+          "sha256": "cbdf0baaafb9ef696c49a3327eeb3cdd7fed6bd4ab7cc5a17c2a94f215360f3e",
+          "sha1": "4697c419a8b1fdd34a508195ba0d60720ae84a17",
+          "md5": "bff12eeeedcbf0c92009faa5bded5b60"
         }
       ]
     }

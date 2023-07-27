@@ -51,11 +51,11 @@
         {
           "name": "lib-coroutines.klib",
           "url": "lib-coroutines-iosarm64-0.8.2.klib",
-          "size": 4188,
-          "sha512": "422c928e7edefa06bc60d502c31dce8adb2d1ebf511420edf1f45600bece679243019ae50595ebc11cccbbb297e3035d9c943462ee639f223b68096890d87368",
-          "sha256": "b62d2c00718d394fb03bf470f9c0a7ede4bff690053216c1611a3a4f6356b813",
-          "sha1": "aac0dcaacb4bef9a85a3c81484d5076bb48d635f",
-          "md5": "19e23b041fce026ed3ca21420d4ff58b"
+          "size": 4185,
+          "sha512": "f02a4142fa2c25eb3f81e88bb55a0db917930b1ba3fdcfb01e662e1964b16e6be69ebe6f08fd1523958d576e51c853db120ef28bfeb661abfa636fbea50bec47",
+          "sha256": "871d52d959eacbb171f6730db3f11d26c388e58b921559dfd49e5ee6d4c90532",
+          "sha1": "c05caa693b464555ffdb370fab5206e8e14e2b74",
+          "md5": "a4666da7de74d3fbbd5528005fabe0cd"
         }
       ]
     },
@@ -96,10 +96,10 @@
           "name": "lib-coroutines-iosarm64-0.8.2-metadata.jar",
           "url": "lib-coroutines-iosarm64-0.8.2-metadata.jar",
           "size": 261,
-          "sha512": "a7c981e8cd85184cadfbdcbf9229afd9d14b375d451f4437ddd84f226723dcbb14e16c3106ce0bbbc0f370902c8ad5017d299c19f5302fb54af7d6161a667703",
-          "sha256": "01002e6345840be0d5aafa913b1520d2c50960ea57f4c216b07a66ba7d6daf5d",
-          "sha1": "f3c0f579dcbdcf3af127703d482a6a5098bc59e0",
-          "md5": "ed9549d71dd949c3e9575b0ffd8fc98c"
+          "sha512": "0c2cdb5e477909efdb16ed1f8d693acde1427cb1a0865f000e06283cb419b56fce1eae45554f0db8989d91a67567d310096f98c8b888222346f2f8884eb09523",
+          "sha256": "d121e510b079086ee466911db5f2f9105fe91a64679c0b018bfec749a4e85fa4",
+          "sha1": "8fba10c9e7cc75ec19ff9cc6fa8011bd0cb5a8ad",
+          "md5": "ad979e532597442ef4b0e8f310b327e8"
         }
       ]
     }
