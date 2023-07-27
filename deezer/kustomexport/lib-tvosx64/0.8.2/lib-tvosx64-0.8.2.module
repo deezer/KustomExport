@@ -1,0 +1,79 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib/0.8.2/lib-0.8.2.module",
+    "group": "deezer.kustomexport",
+    "module": "lib",
+    "version": "0.8.2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "tvosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "tvos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib.klib",
+          "url": "lib-tvosx64-0.8.2.klib",
+          "size": 6810,
+          "sha512": "ee33b5ee19eacfffcb3053bc12e2368b42b4bf1687d9dc424c3061f5bf8b9cb4940037b0110b65b7007c97f42a11ace589b503ea6ef3802e07d4dde9ca571150",
+          "sha256": "45ac072da7e82ac50f23bdd0fcb314396878ea3e781d5a75e5dbc7ef35910a3d",
+          "sha1": "3a0f4a40d1333a15609da970ba849cd172057897",
+          "md5": "5848158b196fe8352e00c1fc8c21e511"
+        }
+      ]
+    },
+    {
+      "name": "tvosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "tvos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-tvosx64-0.8.2-metadata.jar",
+          "url": "lib-tvosx64-0.8.2-metadata.jar",
+          "size": 261,
+          "sha512": "e80978b64de6300942ead3c1ae7550b2396e939b16a45e441be65d7e4bc90b1e837c14232a3f8696e05a16d4656c3a1af438f8d20f0f5c27b8d7b8c1ee556cb8",
+          "sha256": "4cc3ecc7fc0e6a9440d226dd9bfa934192c59c88e8d7d63c0375ead5342247e5",
+          "sha1": "23ff90f5fa00dfd50c033d604dc11d79e4a420bd",
+          "md5": "e6271c16e5712039fe2a231ca2bc7697"
+        }
+      ]
+    }
+  ]
+}

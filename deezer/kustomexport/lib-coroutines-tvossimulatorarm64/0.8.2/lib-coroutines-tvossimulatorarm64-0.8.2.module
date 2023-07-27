@@ -1,0 +1,107 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../lib-coroutines/0.8.2/lib-coroutines-0.8.2.module",
+    "group": "deezer.kustomexport",
+    "module": "lib-coroutines",
+    "version": "0.8.2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "tvosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "tvos_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.8.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines.klib",
+          "url": "lib-coroutines-tvossimulatorarm64-0.8.2.klib",
+          "size": 4283,
+          "sha512": "5800930c937abcccfc8e9eee9689f23fa6ef64426064d6bb5f84f57fc97c50cdf9575497d92a556645be5be7ee505921a4f9ef87a7dc1e8f80c5b3e18c50db9a",
+          "sha256": "6427eee41c9f890012edafa1cb3854b4c0264783a6ddc8a3ed40b95ae2ae8cdd",
+          "sha1": "b0d71d41763b038710bf3c41fc88036f4e0585e6",
+          "md5": "0b233a6174fb6df0046db85e398c0c0d"
+        }
+      ]
+    },
+    {
+      "name": "tvosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "tvos_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.7.22"
+          }
+        },
+        {
+          "group": "deezer.kustomexport",
+          "module": "lib",
+          "version": {
+            "requires": "0.8.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lib-coroutines-tvossimulatorarm64-0.8.2-metadata.jar",
+          "url": "lib-coroutines-tvossimulatorarm64-0.8.2-metadata.jar",
+          "size": 261,
+          "sha512": "d08a8c9ec870a5d2472ca75f3695c2ba047d93f37f3bccd75a9b18bd2ea919691077ce46631b7fab6fb6f0e067a5526215255fc87054570c3fafc04c05488874",
+          "sha256": "efc15389adc1d3509594ad7dabb4a723f497a24eecc5a81cb5d6e6f631b57cde",
+          "sha1": "4a85d7f39c4ab997e19bc7c54fb2ced6ecbb00ef",
+          "md5": "1c0f91abd85a4372f1cedaedbfc86aa1"
+        }
+      ]
+    }
+  ]
+}
