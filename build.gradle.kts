@@ -24,7 +24,7 @@ plugins {
 
 allprojects {
     group = "deezer.kustomexport"
-    version = "0.8.1"
+    version = "0.8.2"
 
     repositories {
         mavenLocal()
@@ -34,9 +34,9 @@ allprojects {
 }
 
 // Required by M1 for now (no node build for v14 on M1)
-rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
+/*rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().nodeVersion = "16.0.0"
-}
+}*/
 
 if (localProperties.getProperty("REPOSITORY_URL") != null)
     subprojects {
