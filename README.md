@@ -1,3 +1,12 @@
+## KustomExport: DEPRECATED
+
+This tool was helpful with Kotlin 1.5 especially. Since then, Kotlin javascript support has evolved and this tool is not so relevant anymore:
+- the added cost doesn't deliver enough value (generated code impacts total bundle size).
+- the extra dependency to this tool is too risky for most projects
+- as the only developer on it, I'm not using it for years and don't plan to maintain it anymore.
+
+---
+
 # KustomExport: a KSP generator of JS facade
 
 ![](doc/demo_kustom.png)
